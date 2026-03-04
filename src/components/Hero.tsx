@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import MagneticButton from "./MagneticButton";
 
 const TypewriterText = () => {
     const text = "Serial entrepreneur and developer with 11 years of experience building custom apps and websites, engineering AI-powered solutions, and creating automated workflows that scale businesses effortlessly.";
@@ -19,22 +20,6 @@ const TypewriterText = () => {
             return () => clearTimeout(timeout);
         }
     }, [index, text]);
-
-    // Highlighting logic
-    const highlightWords = [
-        { phrase: "11 years of experience", class: "text-white font-semibold" },
-        { phrase: "apps and websites", class: "text-white font-normal" }
-    ];
-
-    let renderText = displayedText;
-    highlightWords.forEach(hw => {
-        if (renderText.includes(hw.phrase)) {
-            renderText = renderText.replace(hw.phrase, `<span class="${hw.class}">${hw.phrase}</span>`);
-        } else {
-            // Partial match highlighting logic would be overly complex for a simple typewriter, 
-            // so we just render plain text until the full phrase is typed, or use a simpler approach.
-        }
-    });
 
     // Simpler approach: Just render the chunks if they match exactly.
     // Instead of complex parsing, let's just use dangerouslySetInnerHTML for the highlights once they appear, 
@@ -83,26 +68,32 @@ export default function Hero() {
 
                     <TypewriterText />
 
-                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto">
-                        <a
-                            href="#ventures"
-                            className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide hover:scale-105 transition-all duration-300 w-full sm:w-auto overflow-hidden"
-                        >
-                            <span className="relative z-10 flex items-center gap-2">Explore Ventures <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
-                            <div className="absolute inset-0 bg-white group-hover:bg-gray-100 transition-colors z-0"></div>
-                        </a>
-                        <a
-                            href="#executive-profile"
-                            className="flex items-center justify-center px-8 py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full sm:w-auto"
-                        >
-                            Executive Profile
-                        </a>
-                        <a
-                            href="#contact"
-                            className="flex items-center justify-center px-8 py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full sm:w-auto group"
-                        >
-                            <span className="group-hover:text-white transition-colors">Contact</span>
-                        </a>
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto z-20 relative">
+                        <MagneticButton strength={40} className="w-full sm:w-auto">
+                            <a
+                                href="#ventures"
+                                className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide transition-all duration-300 w-full overflow-hidden shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_25px_rgba(255,255,255,0.4)]"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">Explore Ventures <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
+                                <div className="absolute inset-0 bg-white group-hover:bg-gray-100 transition-colors z-0"></div>
+                            </a>
+                        </MagneticButton>
+                        <MagneticButton strength={25} className="w-full sm:w-auto">
+                            <a
+                                href="#executive-profile"
+                                className="flex items-center justify-center px-8 py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full"
+                            >
+                                Executive Profile
+                            </a>
+                        </MagneticButton>
+                        <MagneticButton strength={30} className="w-full sm:w-auto">
+                            <a
+                                href="#contact"
+                                className="flex items-center justify-center px-8 py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full group"
+                            >
+                                <span className="group-hover:text-white transition-colors">Contact</span>
+                            </a>
+                        </MagneticButton>
                     </div>
 
                     <div className="mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-8 text-xs text-gray-400 uppercase tracking-widest border-t border-white/10 pt-8 md:pt-10">

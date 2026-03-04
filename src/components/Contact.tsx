@@ -1,9 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 
 export default function Contact() {
+    const [formState, setFormState] = useState({ name: "", email: "", subject: "", message: "" });
+    const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    // Simple validation criteria
+    const validState = {
+        name: formState.name.length > 2,
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email),
+        subject: formState.subject.length > 2,
+        message: formState.message.length > 10,
+    };
+
+    const isReadyToSubmit = Object.values(validState).every(Boolean);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!isReadyToSubmit) return;
+
+        setIsSubmitting(true);
+        // Simulate network delay for anticipation
+        setTimeout(() => {
+            setIsSubmitting(false);
+            setIsSuccess(true);
+
+            // Auto reset after showing celebration
+            setTimeout(() => {
+                setIsSuccess(false);
+                setFormState({ name: "", email: "", subject: "", message: "" });
+            }, 4000);
+        }, 800);
+    };
+
     return (
         <section id="contact" className="py-32 relative bg-[var(--color-charcoal-medium)] overflow-hidden cyber-grid">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-electric-blue)]/5 blur-[120px] rounded-full -z-10 animate-pulse-glow"></div>
@@ -68,45 +102,128 @@ export default function Contact() {
                         transition={{ duration: 1, ease: [0.23, 1, 0.32, 1], delay: 0.2 }}
                         className="glass-card p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border-white/5 relative"
                     >
-                        <form className="space-y-8">
+                        <form onSubmit={handleSubmit} className="space-y-8 relative">
+                            <AnimatePresence>
+                                {isSuccess && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md rounded-2xl"
+                                    >
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: [1.5, 1] }}
+                                            transition={{ type: "spring", bounce: 0.5 }}
+                                            className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-4"
+                                        >
+                                            <CheckCircle2 className="w-10 h-10 text-green-400" />
+                                        </motion.div>
+                                        <h3 className="text-2xl font-bold text-white mb-2">Message Sent</h3>
+                                        <p className="text-[var(--color-text-muted)] text-center max-w-[250px]">Thank you for reaching out. I will respond to your inquiry shortly.</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
                             <div className="grid md:grid-cols-2 gap-8">
-                                <div className="space-y-3">
-                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1">Full Name</label>
+                                <div className="space-y-3 relative group">
+                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1 flex justify-between items-center">
+                                        Full Name
+                                        {validState.name && focusedField !== "name" && (
+                                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" />
+                                            </motion.div>
+                                        )}
+                                    </label>
                                     <input
                                         type="text"
+                                        value={formState.name}
+                                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                                        onFocus={() => setFocusedField("name")}
+                                        onBlur={() => setFocusedField(null)}
                                         placeholder="John Doe"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all"
+                                        className={`w-full bg-white/5 border ${validState.name ? 'border-emerald-500/30' : 'border-white/10'} rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
-                                <div className="space-y-3">
-                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1">Email Address</label>
+                                <div className="space-y-3 relative group">
+                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1 flex justify-between items-center">
+                                        Email Address
+                                        {validState.email && focusedField !== "email" && (
+                                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" />
+                                            </motion.div>
+                                        )}
+                                    </label>
                                     <input
                                         type="email"
+                                        value={formState.email}
+                                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                                        onFocus={() => setFocusedField("email")}
+                                        onBlur={() => setFocusedField(null)}
                                         placeholder="john@example.com"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all"
+                                        className={`w-full bg-white/5 border ${validState.email ? 'border-emerald-500/30' : 'border-white/10'} rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
                             </div>
-                            <div className="space-y-3">
-                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1">Subject</label>
+                            <div className="space-y-3 relative group">
+                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1 flex justify-between items-center">
+                                    Subject
+                                    {validState.subject && focusedField !== "subject" && (
+                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" />
+                                        </motion.div>
+                                    )}
+                                </label>
                                 <input
                                     type="text"
+                                    value={formState.subject}
+                                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                                    onFocus={() => setFocusedField("subject")}
+                                    onBlur={() => setFocusedField(null)}
                                     placeholder="Executive Opportunity"
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all"
+                                    className={`w-full bg-white/5 border ${validState.subject ? 'border-emerald-500/30' : 'border-white/10'} rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                 />
                             </div>
-                            <div className="space-y-3">
-                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1">Message</label>
+                            <div className="space-y-3 relative group">
+                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase ml-1 flex justify-between items-center">
+                                    Message
+                                    {validState.message && focusedField !== "message" && (
+                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" />
+                                        </motion.div>
+                                    )}
+                                </label>
                                 <textarea
                                     rows={4}
+                                    value={formState.message}
+                                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                                    onFocus={() => setFocusedField("message")}
+                                    onBlur={() => setFocusedField(null)}
                                     placeholder="Enter your message..."
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all resize-none"
+                                    className={`w-full bg-white/5 border ${validState.message ? 'border-emerald-500/30' : 'border-white/10'} rounded-2xl px-6 py-4 text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all resize-none`}
                                 />
                             </div>
-                            <button className="w-full bg-white text-black font-bold py-5 rounded-2xl hover:bg-[var(--color-electric-blue)] hover:shadow-[0_0_25px_rgba(0,102,255,0.5)] transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 group">
-                                <Send className="w-5 h-5 group-hover:text-white transition-colors" />
-                                <span className="group-hover:text-shimmer transition-colors">Send Message</span>
-                            </button>
+
+                            <motion.button
+                                animate={isReadyToSubmit ? {
+                                    scale: [1, 1.02, 1],
+                                    boxShadow: ["0 0 0px rgba(0,102,255,0)", "0 0 20px rgba(0,102,255,0.6)", "0 0 0px rgba(0,102,255,0)"]
+                                } : {}}
+                                transition={{ repeat: isReadyToSubmit ? Infinity : 0, duration: 2 }}
+                                disabled={!isReadyToSubmit || isSubmitting}
+                                className={`w-full font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 group relative overflow-hidden ${isReadyToSubmit ? 'bg-white text-black hover:bg-[var(--color-electric-blue)] hover:text-white cursor-pointer' : 'bg-white/5 text-white/30 cursor-not-allowed border border-white/5'}`}
+                            >
+                                {isSubmitting ? (
+                                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                    <>
+                                        <Send className={`w-5 h-5 ${isReadyToSubmit ? 'group-hover:text-white transition-colors' : 'text-white/30'}`} />
+                                        <span className={isReadyToSubmit ? 'group-hover:text-shimmer transition-colors' : ''}>
+                                            {isReadyToSubmit ? 'Send Message' : 'Complete All Fields'}
+                                        </span>
+                                    </>
+                                )}
+                            </motion.button>
                         </form>
                     </motion.div>
 

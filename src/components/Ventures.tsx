@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Milestone } from "lucide-react";
+import TiltCard from "./TiltCard";
 
 const ventures = [
     {
@@ -93,30 +94,33 @@ export default function Ventures() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                                className="glass-card rounded-2xl group hover:border-transparent transition-all duration-500 overflow-hidden relative glow-border"
                             >
-                                {/* Background image with overlay */}
-                                <div className="h-36 w-full relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500 z-10" />
-                                    <img
-                                        src={venture.image}
-                                        alt={`${venture.title} background`}
-                                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    {/* Logo badge */}
-                                    <div className="absolute top-4 left-4 z-20 h-12 w-12 rounded-xl bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 overflow-hidden p-1.5">
-                                        <img
-                                            src={venture.logo}
-                                            alt={`${venture.title} logo`}
-                                            className="w-full h-full object-contain"
-                                        />
+                                <TiltCard maxTilt={12}>
+                                    <div className="glass-card rounded-2xl group transition-all duration-500 overflow-hidden relative glow-border h-full">
+                                        {/* Background image with overlay */}
+                                        <div className="h-36 w-full relative overflow-hidden" style={{ transform: "translateZ(30px)" }}>
+                                            <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500 z-10" />
+                                            <img
+                                                src={venture.image}
+                                                alt={`${venture.title} background`}
+                                                className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                            {/* Logo badge */}
+                                            <div className="absolute top-4 left-4 z-20 h-12 w-12 rounded-xl bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 overflow-hidden p-1.5" style={{ transform: "translateZ(50px)" }}>
+                                                <img
+                                                    src={venture.logo}
+                                                    alt={`${venture.title} logo`}
+                                                    className="w-full h-full object-contain"
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* Content */}
+                                        <div className="p-6 relative z-10 bg-black/40 backdrop-blur-sm h-[calc(100%-9rem)]" style={{ transform: "translateZ(20px)" }}>
+                                            <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-[var(--color-electric-blue)] transition-colors text-white">{venture.title}</h3>
+                                            <p className="text-[var(--color-text-muted)] text-sm leading-relaxed font-light">{venture.description}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                {/* Content */}
-                                <div className="p-6 relative z-10 bg-black/40 backdrop-blur-sm h-full">
-                                    <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-shimmer transition-colors text-white">{venture.title}</h3>
-                                    <p className="text-[var(--color-text-muted)] text-sm leading-relaxed font-light">{venture.description}</p>
-                                </div>
+                                </TiltCard>
                             </motion.div>
                         ))}
                     </div>
