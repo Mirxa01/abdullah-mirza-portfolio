@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -39,12 +38,8 @@ export const metadata: Metadata = {
     },
 };
 
-// Dynamic imports for non-critical client components — reduces initial JS bundle
-const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
-const ScrollObserver = dynamic(
-    () => import("@/components/ScrollObserver").then(mod => ({ default: mod.ScrollObserver })),
-    { ssr: false }
-);
+import CustomCursor from "@/components/CustomCursor";
+import { ScrollObserver } from "@/components/ScrollObserver";
 
 import { ToastProvider } from "@/components/ToastProvider";
 
