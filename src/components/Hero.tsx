@@ -105,7 +105,7 @@ export default function Hero() {
                         </a>
                     </div>
 
-                    <div className="mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-8 text-xs text-gray-500 uppercase tracking-widest border-t border-white/10 pt-8 md:pt-10">
+                    <div className="mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-8 text-xs text-gray-400 uppercase tracking-widest border-t border-white/10 pt-8 md:pt-10">
                         <div>
                             <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">Expertise</p>
                             <p className="leading-relaxed">
@@ -160,7 +160,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2, duration: 1 }}
-                className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center text-gray-500 z-10"
+                className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center text-gray-400 z-10"
             >
                 <div className="w-[1px] h-12 bg-gradient-to-b from-[var(--color-electric-blue)]/50 to-transparent mb-4"></div>
                 <motion.div
