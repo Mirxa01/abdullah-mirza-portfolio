@@ -17,6 +17,10 @@
   --animate-shimmer: shimmer 2s linear infinite;
 }
 
+:root {
+  --bg-primary: #050505;
+}
+
 @layer base {
 
   html,
@@ -26,10 +30,11 @@
   }
 
   body {
-    background-color: var(--color-charcoal-base);
+    background-color: var(--bg-primary);
     color: var(--color-text-main);
     font-family: var(--font-inter), sans-serif;
     letter-spacing: -0.01em;
+    transition: background-color 0.1s ease-out;
   }
 
   ::selection {

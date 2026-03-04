@@ -40,6 +40,7 @@ export const metadata: Metadata = {
 
 import CustomCursor from "@/components/CustomCursor";
 import { ToastProvider } from "@/components/ToastProvider";
+import { ScrollObserver } from "@/components/ScrollObserver";
 
 export default function RootLayout({
     children,
@@ -48,7 +49,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${inter.variable} scroll-smooth`}>
-            <body className="antialiased min-h-screen relative bg-[#111111] text-white overflow-x-hidden">
+            {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
+            <body className="antialiased min-h-screen relative text-white overflow-x-hidden transition-colors duration-500">
+                <ScrollObserver />
                 <CustomCursor />
                 {/* Ambient background glows */}
                 <div className="glow-effect" style={{ top: '-10%', left: '-5%' }}></div>

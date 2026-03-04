@@ -44,7 +44,7 @@ const bulletPoints = [
 
 export default function Ventures() {
     return (
-        <section id="ventures" className="py-32 relative bg-[var(--color-charcoal-light)] overflow-hidden">
+        <section id="ventures" className="py-32 relative overflow-hidden transition-colors duration-500 hover:bg-white/[0.02]">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
                 <div className="grid lg:grid-cols-12 gap-16 items-start">
 

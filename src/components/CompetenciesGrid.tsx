@@ -39,7 +39,7 @@ const itemVariants: Variants = {
 
 export default function CompetenciesGrid() {
     return (
-        <section id="competencies" className="py-32 relative bg-[var(--color-charcoal-light)]">
+        <section id="competencies" className="py-32 relative transition-colors duration-500 hover:bg-white/[0.02]">
             <div className="max-w-6xl mx-auto px-6 md:px-12">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

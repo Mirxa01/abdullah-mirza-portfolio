@@ -44,7 +44,8 @@ export default function Hero() {
     return (
         <section className="relative min-h-[96vh] flex items-center pt-28 pb-20 md:pt-24 md:pb-16 overflow-hidden cyber-grid" id="hero">
             <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse" style={{ animationDuration: "8s" }}></div>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a] pointer-events-none z-0"></div>
+            {/* Soft gradient to black at the bottom to merge with global background without hardcoding a hex */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none z-0"></div>
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col md:grid md:grid-cols-12 gap-10 md:gap-12 items-center z-10 mt-12 md:mt-0">
                 <motion.div
