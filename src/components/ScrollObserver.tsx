@@ -19,13 +19,17 @@ export function ScrollObserver() {
 
     useMotionValueEvent(backgroundTransform, "change", (latest) => {
         // Apply the interpolated hex code natively to the document root
-        document.documentElement.style.setProperty("--bg-primary", latest);
+        if (typeof document !== "undefined") {
+            document.documentElement.style.setProperty("--bg-primary", latest);
+        }
     });
 
     // Cleanup on unmount, resetting to default top-page color
     useEffect(() => {
         return () => {
-            document.documentElement.style.setProperty("--bg-primary", startColor);
+            if (typeof document !== "undefined") {
+                document.documentElement.style.setProperty("--bg-primary", startColor);
+            }
         };
     }, []);
 

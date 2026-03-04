@@ -16,7 +16,7 @@ export default function CustomCursor() {
 
     // Check for touch device in useEffect (SSR-safe)
     useEffect(() => {
-        if (window.matchMedia("(pointer: coarse)").matches) {
+        if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
             setIsTouchDevice(true);
         }
     }, []);
