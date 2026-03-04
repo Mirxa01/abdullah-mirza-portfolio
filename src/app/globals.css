@@ -267,8 +267,12 @@
 
   /* Text colors for print legibility - override Tailwind's text-* utilities massively */
   * {
-    color: #111 !important;
-    -webkit-text-fill-color: initial !important;
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
   }
 
   h1,
@@ -280,13 +284,6 @@
     color: #000 !important;
   }
 
-  /* Labels and subtitles */
-  .text-white\/40,
-  .text-white\/50,
-  .text-white\/60,
-  .text-white\/80 {
-    color: #666 !important;
-  }
 
   /* Ensure images print */
   img {
