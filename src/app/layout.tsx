@@ -50,7 +50,7 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${inter.variable} scroll-smooth`}>
             {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
-            <body className="antialiased min-h-screen relative text-white overflow-x-hidden transition-colors duration-500">
+            <body className="antialiased min-h-screen relative text-white overflow-x-hidden">
                 <ScrollObserver />
                 <CustomCursor />
                 {/* Ambient background glows */}

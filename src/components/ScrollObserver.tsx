@@ -8,8 +8,8 @@ export function ScrollObserver() {
 
     // The dark color mapped at the top of the page
     const startColor = "#050505";
-    // The brighter charcoal/blue tint mapped to the bottom of the page
-    const endColor = "#1a1f2e";
+    // Increase brightness significantly - a rich, elevated state-blue charcoal
+    const endColor = "#1e293b";
 
     const backgroundTransform = useTransform(
         scrollYProgress,
