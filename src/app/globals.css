@@ -265,14 +265,16 @@
     overflow: visible !important;
   }
 
-  /* Text colors for print legibility - override Tailwind's text-* utilities massively */
-  * {
-    color: #000 !important;
-    -webkit-text-fill-color: #000 !important;
-    opacity: 1 !important;
+  /* Typography base for print */
+  body,
+  p,
+  span,
+  div,
+  li,
+  a {
+    color: #1a1a1a !important;
+    -webkit-text-fill-color: initial !important;
     text-shadow: none !important;
-    filter: none !important;
-    -webkit-filter: none !important;
   }
 
   h1,
@@ -281,7 +283,35 @@
   h4,
   h5,
   h6 {
-    color: #000 !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+
+  /* Specific overrides for Tailwind's opacity-based text classes */
+  .text-white,
+  .text-gray-200,
+  .text-gray-300,
+  .text-white\/40,
+  .text-white\/50,
+  .text-white\/60,
+  .text-white\/80,
+  .text-gray-400,
+  .text-gray-500 {
+    color: #555555 !important;
+    -webkit-text-fill-color: #555555 !important;
+    opacity: 1 !important;
+  }
+
+  /* Override custom text variables */
+  .text-\[var\(--color-text-muted\)\] {
+    color: #666666 !important;
+    -webkit-text-fill-color: #666666 !important;
+  }
+
+  /* Ensure brand electric blue stays legible */
+  .text-\[var\(--color-electric-blue\)\] {
+    color: #0052cc !important;
+    -webkit-text-fill-color: #0052cc !important;
   }
 
 
