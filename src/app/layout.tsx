@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${inter.variable} scroll-smooth`}>
-            <body className="antialiased min-h-screen relative bg-[#111111] text-white">
+            <body className="antialiased min-h-screen relative bg-[#111111] text-white overflow-x-hidden">
                 <CustomCursor />
                 {/* Ambient background glows */}
                 <div className="glow-effect" style={{ top: '-10%', left: '-5%' }}></div>

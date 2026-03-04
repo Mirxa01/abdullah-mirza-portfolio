@@ -66,7 +66,7 @@ export default function Contact() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 1, ease: [0.23, 1, 0.32, 1], delay: 0.2 }}
-                        className="glass-card p-10 md:p-16 rounded-[3rem] border-white/5 relative"
+                        className="glass-card p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border-white/5 relative"
                     >
                         <form className="space-y-8">
                             <div className="grid md:grid-cols-2 gap-8">

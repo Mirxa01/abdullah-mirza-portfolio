@@ -43,7 +43,7 @@ const TypewriterText = () => {
     // Let's just use plain text with a flickering cursor, it looks more "tech".
 
     return (
-        <p className="text-lg md:text-xl text-[var(--color-text-muted)] mb-12 max-w-2xl leading-relaxed font-light min-h-[120px]">
+        <p className="text-lg md:text-xl text-[var(--color-text-muted)] mb-12 max-w-2xl leading-relaxed font-light min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
             {displayedText}
             <motion.span
                 animate={{ opacity: [1, 0] }}
@@ -60,12 +60,12 @@ export default function Hero() {
             <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse" style={{ animationDuration: "8s" }}></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a] pointer-events-none z-0"></div>
 
-            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col-reverse md:grid md:grid-cols-12 gap-10 md:gap-12 items-center z-10 mt-8 md:mt-0">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col md:grid md:grid-cols-12 gap-10 md:gap-12 items-center z-10 mt-12 md:mt-0">
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                    className="md:col-span-7 lg:col-span-8"
+                    className="md:col-span-7 lg:col-span-8 order-2 md:order-1"
                 >
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -129,7 +129,7 @@ export default function Hero() {
                     initial={{ opacity: 0, scale: 0.9, x: 30 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
                     transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
-                    className="md:col-span-5 lg:col-span-4 relative"
+                    className="md:col-span-5 lg:col-span-4 relative order-1 md:order-2 w-[280px] sm:w-[340px] md:w-full mx-auto mb-4 md:mb-0"
                 >
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card p-1">
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10" />

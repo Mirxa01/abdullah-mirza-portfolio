@@ -62,7 +62,7 @@ export default function CompetenciesGrid() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.5 }}
-                        className="md:col-span-2 lg:col-span-2 glass-card p-8 md:p-10 rounded-3xl bg-gradient-to-br from-[var(--color-charcoal-medium)] to-black flex flex-col justify-center border-transparent relative overflow-hidden group glow-border"
+                        className="md:col-span-2 lg:col-span-2 glass-card p-6 md:p-10 rounded-3xl bg-gradient-to-br from-[var(--color-charcoal-medium)] to-black flex flex-col justify-center border-transparent relative overflow-hidden group glow-border"
                     >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-electric-blue)]/10 blur-3xl -z-10 group-hover:bg-[var(--color-electric-blue)]/20 transition-colors"></div>
 

@@ -72,7 +72,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-2xl border-b border-white/10 py-10 px-6 md:hidden flex flex-col items-center gap-8"
+                        className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-2xl border-b border-white/10 py-10 px-6 md:hidden flex flex-col items-center gap-8 max-h-[85vh] overflow-y-auto"
                     >
                         {navLinks.map((link) => (
                             <a
