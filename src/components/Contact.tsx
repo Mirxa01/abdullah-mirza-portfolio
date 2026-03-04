@@ -3,8 +3,10 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { useToast } from "./ToastProvider";
 
 export default function Contact() {
+    const { addToast } = useToast();
     const [formState, setFormState] = useState({ name: "", email: "", subject: "", message: "" });
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +31,7 @@ export default function Contact() {
         setTimeout(() => {
             setIsSubmitting(false);
             setIsSuccess(true);
+            addToast("Your message has been successfully routed.", "success");
 
             // Auto reset after showing celebration
             setTimeout(() => {
@@ -63,7 +66,14 @@ export default function Contact() {
                         </p>
 
                         <div className="space-y-10">
-                            <a href="mailto:abdullahmirxa786@gmail.com" className="group flex items-center gap-6">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigator.clipboard.writeText("abdullahmirxa786@gmail.com");
+                                    addToast("Email address copied to clipboard", "info");
+                                }}
+                                className="group flex items-center gap-6 w-full text-left"
+                            >
                                 <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-[var(--color-electric-blue)]/10 group-hover:border-[var(--color-electric-blue)]/20 transition-all">
                                     <Mail className="w-6 h-6 text-[var(--color-electric-blue)]" />
                                 </div>
@@ -71,9 +81,16 @@ export default function Contact() {
                                     <div className="text-xs font-bold tracking-widest text-white/40 uppercase mb-1">Email</div>
                                     <div className="text-xl font-medium text-white group-hover:text-[var(--color-electric-blue)] transition-colors">abdullahmirxa786@gmail.com</div>
                                 </div>
-                            </a>
+                            </button>
 
-                            <a href="tel:+966590040418" className="group flex items-center gap-6">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigator.clipboard.writeText("+966590040418");
+                                    addToast("Phone number copied to clipboard", "info");
+                                }}
+                                className="group flex items-center gap-6 w-full text-left"
+                            >
                                 <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-[var(--color-muted-gold)]/10 group-hover:border-[var(--color-muted-gold)]/20 transition-all">
                                     <Phone className="w-6 h-6 text-[var(--color-muted-gold)]" />
                                 </div>
@@ -81,9 +98,9 @@ export default function Contact() {
                                     <div className="text-xs font-bold tracking-widest text-white/40 uppercase mb-1">Direct Line</div>
                                     <div className="text-xl font-medium text-white group-hover:text-[var(--color-muted-gold)] transition-colors">+966 590 04 0418</div>
                                 </div>
-                            </a>
+                            </button>
 
-                            <div className="group flex items-center gap-6">
+                            <div className="group flex items-center gap-6 w-full text-left">
                                 <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
                                     <MapPin className="w-6 h-6 text-emerald-400" />
                                 </div>

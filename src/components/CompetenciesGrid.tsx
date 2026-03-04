@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import {
     Network, TrendingUp, Settings,
     Box, Truck, Handshake,
@@ -16,6 +16,26 @@ const competencies = [
     { name: "Operational Process Engineering", icon: <Target className="w-5 h-5 text-amber-400" /> },
     { name: "Business Intelligence & Analytics", icon: <BarChart className="w-5 h-5 text-cyan-400" /> }
 ];
+const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.3,
+        }
+    }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    show: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { type: "spring" as const, stiffness: 300, damping: 24 }
+    }
+};
 
 export default function CompetenciesGrid() {
     return (
@@ -37,15 +57,19 @@ export default function CompetenciesGrid() {
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
                     {competencies.map((comp, i) => (
                         <motion.div
                             key={i}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.05 }}
+                            variants={itemVariants}
                             className="glass-card p-6 rounded-2xl flex items-center gap-5 transition-all duration-300 group glow-border border-transparent"
+                            style={{ transform: "translateZ(0)" }}
                         >
                             <div className="bg-white/5 p-4 rounded-xl border border-white/5 shrink-0 group-hover:scale-110 group-hover:border-[var(--color-electric-blue)] transition-all z-10">
                                 {comp.icon}
@@ -55,11 +79,9 @@ export default function CompetenciesGrid() {
                     ))}
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.5 }}
+                        variants={itemVariants}
                         className="md:col-span-2 lg:col-span-2 glass-card p-6 md:p-10 rounded-3xl bg-gradient-to-br from-[var(--color-charcoal-medium)] to-black flex flex-col justify-center border-transparent relative overflow-hidden group glow-border"
+                        style={{ transform: "translateZ(0)" }}
                     >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-electric-blue)]/10 blur-3xl -z-10 group-hover:bg-[var(--color-electric-blue)]/20 transition-colors"></div>
 
@@ -83,7 +105,7 @@ export default function CompetenciesGrid() {
                             ))}
                         </div>
                     </motion.div>
-                </div>
+                </motion.div>
             </div>
         </section>
     );

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import InteractiveButton from "./InteractiveButton";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -29,7 +30,6 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
                 <div className={`transition-all duration-500 rounded-full px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-between relative ${scrolled ? "bg-black/80 backdrop-blur-xl shadow-2xl glow-border" : "bg-transparent"}`}>
 
-                    {/* Brand */}
                     <div className="flex items-center gap-3 group cursor-pointer">
                         <div className="w-8 h-8 rounded-lg bg-[var(--color-electric-blue)] flex items-center justify-center text-white font-black text-xl italic group-hover:scale-110 transition-transform">A</div>
                         <span className="text-xl font-black tracking-tighter text-white uppercase italic">Abdullah <span className="text-[var(--color-electric-blue)] group-hover:text-white transition-colors">Mirza</span></span>
@@ -47,12 +47,13 @@ export default function Navbar() {
                                 <span className="absolute -bottom-1.5 left-0 w-0 h-[2px] bg-gradient-to-r from-[var(--color-electric-blue)] to-[var(--color-muted-gold)] transition-all duration-300 group-hover:w-full"></span>
                             </a>
                         ))}
-                        <a
+                        <InteractiveButton
+                            as="a"
                             href="#contact"
-                            className="bg-white text-black text-xs font-black tracking-[0.2em] uppercase px-6 lg:px-8 py-3 rounded-full hover:bg-transparent hover:text-white border-2 border-transparent hover:border-white transition-all transform hover:scale-105 active:scale-95"
+                            className="bg-white text-black text-xs font-black tracking-[0.2em] uppercase px-6 lg:px-8 py-3 rounded-full hover:bg-transparent hover:text-white border-2 border-transparent hover:border-white transition-all"
                         >
                             Contact
-                        </a>
+                        </InteractiveButton>
                     </div>
 
                     {/* Mobile Toggle */}

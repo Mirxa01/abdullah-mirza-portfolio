@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, useReducedMotion } from "framer-motion";
 
 interface TiltCardProps {
     children: React.ReactNode;
@@ -20,8 +20,10 @@ export default function TiltCard({ children, className = "", maxTilt = 15 }: Til
     const scale = useSpring(1, springConfig);
     const shimmerPosition = useSpring(-100, springConfig);
 
+    const prefersReducedMotion = useReducedMotion();
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!ref.current) return;
+        if (!ref.current || prefersReducedMotion) return;
 
         const rect = ref.current.getBoundingClientRect();
 
@@ -38,11 +40,13 @@ export default function TiltCard({ children, className = "", maxTilt = 15 }: Til
     };
 
     const handleMouseEnter = () => {
+        if (prefersReducedMotion) return;
         setIsHovering(true);
         scale.set(1.02); // Slight pop forward on hover
     };
 
     const handleMouseLeave = () => {
+        if (prefersReducedMotion) return;
         setIsHovering(false);
         rotateX.set(0);
         rotateY.set(0);

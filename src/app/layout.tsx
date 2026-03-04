@@ -39,6 +39,7 @@ export const metadata: Metadata = {
 };
 
 import CustomCursor from "@/components/CustomCursor";
+import { ToastProvider } from "@/components/ToastProvider";
 
 export default function RootLayout({
     children,
@@ -54,7 +55,9 @@ export default function RootLayout({
                 <div className="glow-effect" style={{ top: '40%', right: '-10%' }}></div>
                 <div className="glow-effect" style={{ bottom: '-5%', left: '20%' }}></div>
 
-                {children}
+                <ToastProvider>
+                    {children}
+                </ToastProvider>
             </body>
         </html>
     );

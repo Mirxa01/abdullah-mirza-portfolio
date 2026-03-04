@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import MagneticButton from "./MagneticButton";
+import InteractiveButton from "./InteractiveButton";
 
 const TypewriterText = () => {
     const text = "Serial entrepreneur and developer with 11 years of experience building custom apps and websites, engineering AI-powered solutions, and creating automated workflows that scale businesses effortlessly.";
@@ -70,29 +71,32 @@ export default function Hero() {
 
                     <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto z-20 relative">
                         <MagneticButton strength={40} className="w-full sm:w-auto">
-                            <a
+                            <InteractiveButton
+                                as="a"
                                 href="#ventures"
                                 className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide transition-all duration-300 w-full overflow-hidden shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_25px_rgba(255,255,255,0.4)]"
                             >
                                 <span className="relative z-10 flex items-center gap-2">Explore Ventures <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
                                 <div className="absolute inset-0 bg-white group-hover:bg-gray-100 transition-colors z-0"></div>
-                            </a>
+                            </InteractiveButton>
                         </MagneticButton>
                         <MagneticButton strength={25} className="w-full sm:w-auto">
-                            <a
+                            <InteractiveButton
+                                as="a"
                                 href="#executive-profile"
                                 className="flex items-center justify-center px-8 py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full"
                             >
                                 Executive Profile
-                            </a>
+                            </InteractiveButton>
                         </MagneticButton>
                         <MagneticButton strength={30} className="w-full sm:w-auto">
-                            <a
+                            <InteractiveButton
+                                as="a"
                                 href="#contact"
                                 className="flex items-center justify-center px-8 py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full group"
                             >
                                 <span className="group-hover:text-white transition-colors">Contact</span>
-                            </a>
+                            </InteractiveButton>
                         </MagneticButton>
                     </div>
 

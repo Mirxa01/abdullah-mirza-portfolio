@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { GraduationCap, Award, BookOpen, CheckCircle2 } from "lucide-react";
 
 const certifications = [
@@ -17,6 +17,24 @@ const certifications = [
     "Advanced Workflow Automation (Make/Zapier)",
     "AI Solutions & Prompt Engineering"
 ];
+
+const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: { staggerChildren: 0.05 }
+    }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.9, y: 15 },
+    show: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { type: "spring" as const, stiffness: 400, damping: 20 }
+    }
+};
 
 export default function EducationCertifications() {
     return (
@@ -63,21 +81,25 @@ export default function EducationCertifications() {
                             <h2 className="text-3xl font-bold tracking-tight uppercase tracking-[0.1em] animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Certifications</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <motion.div
+                            variants={containerVariants}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, margin: "-50px" }}
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                        >
                             {certifications.map((cert, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: 0.4 + (i * 0.05) }}
+                                    variants={itemVariants}
                                     className="bg-white/[0.03] border-transparent p-5 rounded-2xl text-sm font-semibold text-gray-300 transition-all cursor-default flex items-center gap-3 group glow-border"
+                                    style={{ transform: "translateZ(0)" }}
                                 >
                                     <CheckCircle2 className="w-4 h-4 text-[var(--color-electric-blue)] bg-[var(--color-electric-blue)]/10 rounded-full opacity-40 group-hover:opacity-100 transition-opacity shrink-0 relative z-10" />
                                     <span className="leading-snug group-hover:text-shimmer transition-colors relative z-10">{cert}</span>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </motion.div>
 
                 </div>
