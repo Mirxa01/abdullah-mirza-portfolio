@@ -208,6 +208,13 @@
     min-height: auto !important;
     max-width: none !important;
     display: block !important;
+    position: static !important;
+  }
+
+  main {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
   }
 
   /* Hide purely interactive / decorative elements */
@@ -245,11 +252,16 @@
 
   /* Section styling */
   section {
-    padding-top: 1.5rem !important;
-    padding-bottom: 1.5rem !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
     background: transparent !important;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    position: static !important;
+    overflow: visible !important;
   }
 
   /* Text colors for print legibility */
