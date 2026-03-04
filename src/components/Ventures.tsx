@@ -35,10 +35,10 @@ const ventures = [
 ];
 
 const bulletPoints = [
-    "Engineering scalable SaaS & marketplace ecosystems",
-    "Vision 2030-aligned infrastructure & innovation",
-    "Designing operational & commercial go-to-market frameworks",
-    "Full product lifecycle — from ideation to scale"
+    "Engineering scalable Apps, Websites & SaaS platforms",
+    "Integrating AI to unlock operational efficiency",
+    "Automating workflows to reduce manual overhead",
+    "Full product lifecycle — from ideation to deployment"
 ];
 
 export default function Ventures() {
@@ -60,12 +60,12 @@ export default function Ventures() {
                         </div>
 
                         <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
-                            Founder & <br />
-                            <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Platform Builder</span>
+                            Developer & <br />
+                            <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Solutions Architect</span>
                         </h2>
 
                         <p className="text-[var(--color-text-muted)] text-lg mb-10 leading-relaxed font-light">
-                            From concept to revenue — building technology ventures that solve real infrastructure gaps across logistics, hospitality, AI, and e-commerce in the Saudi and GCC markets.
+                            Building custom software that solves real business challenges — from high-performance apps and websites to sophisticated AI integrations and zero-touch automated workflows.
                         </p>
 
                         <div className="space-y-4">

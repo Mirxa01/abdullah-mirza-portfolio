@@ -8,16 +8,13 @@ import {
 } from "lucide-react";
 
 const competencies = [
-    { name: "AI-First Logistics & Supply Chain Platforms", icon: <Network className="w-5 h-5 text-[var(--color-electric-blue)]" /> },
-    { name: "E-Commerce Fulfillment & Marketplace Scaling", icon: <TrendingUp className="w-5 h-5 text-[var(--color-muted-gold)]" /> },
-    { name: "End-to-End Supply Chain Architecture", icon: <Settings className="w-5 h-5 text-indigo-400" /> },
-    { name: "Warehouse Automation & Infrastructure Design", icon: <Box className="w-5 h-5 text-emerald-400" /> },
-    { name: "Last-Mile Delivery Network Optimization", icon: <Truck className="w-5 h-5 text-blue-400" /> },
-    { name: "Enterprise Business Development & B2B Deals", icon: <Handshake className="w-5 h-5 text-amber-400" /> },
-    { name: "SaaS Architecture & Digital Transformation", icon: <Code2 className="w-5 h-5 text-pink-400" /> },
-    { name: "Operational Excellence & Process Engineering", icon: <Target className="w-5 h-5 text-red-400" /> },
-    { name: "Business Intelligence & Predictive Analytics", icon: <BarChart className="w-5 h-5 text-cyan-400" /> },
-    { name: "Customer Experience & GTM Strategy", icon: <Users className="w-5 h-5 text-orange-400" /> }
+    { name: "Full-Stack App & Website Development", icon: <Code2 className="w-5 h-5 text-[var(--color-electric-blue)]" /> },
+    { name: "AI Solutions & GPT Integrations", icon: <Network className="w-5 h-5 text-[var(--color-muted-gold)]" /> },
+    { name: "Automated Workflows (Make, Zapier, n8n)", icon: <Settings className="w-5 h-5 text-indigo-400" /> },
+    { name: "SaaS Architecture & Infrastructure", icon: <Box className="w-5 h-5 text-emerald-400" /> },
+    { name: "E-Commerce Scaling & Platforms", icon: <TrendingUp className="w-5 h-5 text-blue-400" /> },
+    { name: "Operational Process Engineering", icon: <Target className="w-5 h-5 text-amber-400" /> },
+    { name: "Business Intelligence & Analytics", icon: <BarChart className="w-5 h-5 text-cyan-400" /> }
 ];
 
 export default function CompetenciesGrid() {
@@ -73,11 +70,11 @@ export default function CompetenciesGrid() {
 
                         <div className="grid sm:grid-cols-2 gap-x-12 gap-y-4">
                             {[
-                                "Scales operations from zero-to-one and one-to-enterprise",
-                                "Leads and mentors teams from 10 to 2,500+",
-                                "Pairs operational instinct with data-driven decision-making",
-                                "Thrives under high-pressure, high-volume constraints",
-                                "Delivers compounding growth in complex, multi-stakeholder environments"
+                                "Builds elegant, high-performing websites and mobile apps",
+                                "Automates repetitive tasks to save hundreds of hours",
+                                "Integrates cutting-edge AI to solve complex business problems",
+                                "Architects scalable infrastructure from zero-to-one",
+                                "Pairs technical execution with deep entrepreneurial strategy"
                             ].map((strength, idx) => (
                                 <div key={idx} className="flex gap-4 items-center py-2 border-b border-white/5">
                                     <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-electric-blue)]"></div>

@@ -6,7 +6,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 
 const TypewriterText = () => {
-    const text = "Serial entrepreneur and C-level executive with 11 years of experience engineering logistics ecosystems, launching AI-powered platforms, and scaling high-volume commerce operations across Saudi Arabia and the GCC.";
+    const text = "Serial entrepreneur and developer with 11 years of experience building custom apps and websites, engineering AI-powered solutions, and creating automated workflows that scale businesses effortlessly.";
     const [displayedText, setDisplayedText] = useState("");
     const [index, setIndex] = useState(0);
 
@@ -23,7 +23,7 @@ const TypewriterText = () => {
     // Highlighting logic
     const highlightWords = [
         { phrase: "11 years of experience", class: "text-white font-semibold" },
-        { phrase: "Saudi Arabia and the GCC.", class: "text-white font-normal" }
+        { phrase: "apps and websites", class: "text-white font-normal" }
     ];
 
     let renderText = displayedText;
@@ -78,7 +78,7 @@ export default function Hero() {
                     </motion.div>
 
                     <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-8">
-                        <span className="animated-gradient">Architecting</span> the Future of Logistics, AI & Commerce.
+                        <span className="animated-gradient">Architecting</span> Intelligent Apps, Websites & Automated Solutions.
                     </h1>
 
                     <TypewriterText />
@@ -107,19 +107,19 @@ export default function Hero() {
 
                     <div className="mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-8 text-xs text-gray-500 uppercase tracking-widest border-t border-white/10 pt-8 md:pt-10">
                         <div>
-                            <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">Track Record</p>
+                            <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">Expertise</p>
                             <p className="leading-relaxed">
-                                Founded SourceKom · HabibiStay · Arabclue · DaddysCart <br />
-                                Head of BD — 5S Logistics <br />
-                                Former COO — Hubex (Noon.com 3PL Partner)
+                                Full-Stack App & Website Development <br />
+                                Custom AI Solutions & Integrations <br />
+                                Automated Workflows & Process Engineering
                             </p>
                         </div>
                         <div>
                             <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">By the Numbers</p>
                             <p className="leading-relaxed">
-                                $10M+ in B2B partnerships closed <br />
-                                9 warehouses · ~1M sqft capacity <br />
-                                45,000 daily orders at peak throughput
+                                11+ Years of Entrepreneurial Experience <br />
+                                4 High-Growth Ventures Founded <br />
+                                Hundreds of Hours Saved via Automation
                             </p>
                         </div>
                     </div>

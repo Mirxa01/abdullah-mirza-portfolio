@@ -48,15 +48,15 @@ export default function ExecutiveProfile() {
                     </h2>
 
                     <p className="text-2xl md:text-3xl lg:text-4xl font-light leading-[1.5] text-gray-300">
-                        A <span className="text-white font-bold">serial entrepreneur</span> and senior executive with <span className="text-white font-bold">11 years</span> of deep expertise spanning supply chain strategy, AI-enabled platform architecture, multi-warehouse 3PL operations, and high-volume e-commerce infrastructure across <span className="animated-gradient font-bold drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Saudi Arabia and the GCC</span>.
+                        A <span className="text-white font-bold">serial entrepreneur</span> and developer with <span className="text-white font-bold">11 years</span> of expertise. I specialize in <span className="text-white font-bold">App & Website Development</span>, crafting custom <span className="animated-gradient font-bold drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">AI-based solutions</span>, and building powerful automated workflows that transform business operations.
                     </p>
 
                     <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 relative z-10">
                         {[
-                            { value: 11, suffix: "+", label: "Years of Experience" },
-                            { value: 4, label: "Ventures Founded" },
-                            { value: 10, prefix: "$", suffix: "M+", label: "Partnerships Closed" },
-                            { value: 45, suffix: "K", label: "Daily Orders at Peak" }
+                            { value: 11, suffix: "+", prefix: "", label: "Years of Experience" },
+                            { value: 4, prefix: "", label: "Ventures Founded" },
+                            { value: 50, prefix: "", suffix: "+", label: "Automated Workflows" },
+                            { value: 100, prefix: "", suffix: "%", label: "Custom Solutions" }
                         ].map((stat, i) => (
                             <motion.div
                                 key={i}
