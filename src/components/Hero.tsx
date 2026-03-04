@@ -36,7 +36,7 @@ const TypewriterText = () => {
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[96vh] flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 md:pt-24 md:pb-16 overflow-hidden cyber-grid" id="hero">
+        <section className="relative min-h-[96vh] print:min-h-0 print:h-auto flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 md:pt-24 md:pb-16 overflow-hidden print:overflow-visible cyber-grid" id="hero">
             <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse print:hidden" style={{ animationDuration: "8s" }}></div>
             {/* Soft gradient to black at the bottom */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none z-0 print:hidden"></div>

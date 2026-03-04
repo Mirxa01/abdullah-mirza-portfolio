@@ -55,7 +55,7 @@ export default function RootLayout({
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             </head>
             {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
-            <body className="antialiased min-h-screen relative text-white overflow-x-hidden">
+            <body className="antialiased min-h-screen relative text-white overflow-x-hidden print:overflow-visible">
                 <ScrollObserver />
                 <CustomCursor />
                 {/* Ambient background glows */}

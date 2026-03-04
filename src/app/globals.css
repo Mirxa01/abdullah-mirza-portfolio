@@ -204,6 +204,10 @@
     font-size: 11pt !important;
     line-height: 1.5 !important;
     overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-width: none !important;
+    display: block !important;
   }
 
   /* Hide purely interactive / decorative elements */
