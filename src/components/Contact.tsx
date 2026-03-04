@@ -83,7 +83,7 @@ export default function Contact() {
                             <button
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    navigator.clipboard.writeText("+966590040418");
+                                    navigator.clipboard.writeText("+966599996575");
                                     addToast("Phone number copied to clipboard", "info");
                                 }}
                                 className="group flex items-center gap-4 sm:gap-6 w-full text-left"
@@ -93,7 +93,7 @@ export default function Contact() {
                                 </div>
                                 <div className="min-w-0">
                                     <div className="text-[10px] sm:text-xs font-bold tracking-widest text-white/40 uppercase mb-1">Direct Line</div>
-                                    <div className="text-base sm:text-lg md:text-xl font-medium text-white group-hover:text-[var(--color-muted-gold)] transition-colors">+966 590 04 0418</div>
+                                    <div className="text-base sm:text-lg md:text-xl font-medium text-white group-hover:text-[var(--color-muted-gold)] transition-colors">+966 59 999 6575</div>
                                 </div>
                             </button>
 
