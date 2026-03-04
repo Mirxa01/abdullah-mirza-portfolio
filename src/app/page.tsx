@@ -13,12 +13,19 @@ export default function Home() {
         <main className="min-h-screen">
             <Navbar />
             <Hero />
+            <div className="section-divider" />
             <ExecutiveProfile />
+            <div className="section-divider" />
             <Ventures />
+            <div className="section-divider" />
             <CorporateLeadership />
+            <div className="section-divider" />
             <CareerTimeline />
+            <div className="section-divider" />
             <CompetenciesGrid />
+            <div className="section-divider" />
             <EducationCertifications />
+            <div className="section-divider" />
             <Contact />
         </main>
     );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -38,9 +39,14 @@ export const metadata: Metadata = {
     },
 };
 
-import CustomCursor from "@/components/CustomCursor";
+// Dynamic imports for non-critical client components — reduces initial JS bundle
+const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
+const ScrollObserver = dynamic(
+    () => import("@/components/ScrollObserver").then(mod => ({ default: mod.ScrollObserver })),
+    { ssr: false }
+);
+
 import { ToastProvider } from "@/components/ToastProvider";
-import { ScrollObserver } from "@/components/ScrollObserver";
 
 export default function RootLayout({
     children,
@@ -49,14 +55,18 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${inter.variable} scroll-smooth`}>
+            <head>
+                <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            </head>
             {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
             <body className="antialiased min-h-screen relative text-white overflow-x-hidden">
                 <ScrollObserver />
                 <CustomCursor />
                 {/* Ambient background glows */}
-                <div className="glow-effect" style={{ top: '-10%', left: '-5%' }}></div>
-                <div className="glow-effect" style={{ top: '40%', right: '-10%' }}></div>
-                <div className="glow-effect" style={{ bottom: '-5%', left: '20%' }}></div>
+                <div className="glow-effect print:hidden" style={{ top: '-10%', left: '-5%' }}></div>
+                <div className="glow-effect print:hidden" style={{ top: '40%', right: '-10%' }}></div>
+                <div className="glow-effect print:hidden" style={{ bottom: '-5%', left: '20%' }}></div>
 
                 <ToastProvider>
                     {children}

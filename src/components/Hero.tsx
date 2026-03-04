@@ -17,19 +17,13 @@ const TypewriterText = () => {
             const timeout = setTimeout(() => {
                 setDisplayedText((prev) => prev + text.charAt(index));
                 setIndex((prev) => prev + 1);
-            }, 15); // typing speed
+            }, 15);
             return () => clearTimeout(timeout);
         }
     }, [index, text]);
 
-    // Simpler approach: Just render the chunks if they match exactly.
-    // Instead of complex parsing, let's just use dangerouslySetInnerHTML for the highlights once they appear, 
-    // or just let it type out plain text and apply a subtle glow. 
-    // Actually, a better way is to just apply the typewriter to the exact HTML structure if possible, but that's hard.
-    // Let's just use plain text with a flickering cursor, it looks more "tech".
-
     return (
-        <p className="text-lg md:text-xl text-[var(--color-text-muted)] mb-12 max-w-2xl leading-relaxed font-light min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
+        <p className="text-base sm:text-lg md:text-xl text-[var(--color-text-muted)] mb-8 sm:mb-12 max-w-2xl leading-relaxed font-light min-h-[200px] xs:min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
             {displayedText}
             <motion.span
                 animate={{ opacity: [1, 0] }}
@@ -42,12 +36,12 @@ const TypewriterText = () => {
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[96vh] flex items-center pt-28 pb-20 md:pt-24 md:pb-16 overflow-hidden cyber-grid" id="hero">
-            <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse" style={{ animationDuration: "8s" }}></div>
-            {/* Soft gradient to black at the bottom to merge with global background without hardcoding a hex */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none z-0"></div>
+        <section className="relative min-h-[96vh] flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 md:pt-24 md:pb-16 overflow-hidden cyber-grid" id="hero">
+            <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse print:hidden" style={{ animationDuration: "8s" }}></div>
+            {/* Soft gradient to black at the bottom */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none z-0 print:hidden"></div>
 
-            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col md:grid md:grid-cols-12 gap-10 md:gap-12 items-center z-10 mt-12 md:mt-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 w-full flex flex-col md:grid md:grid-cols-12 gap-8 md:gap-12 items-center z-10 mt-8 sm:mt-12 md:mt-0">
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -58,24 +52,24 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-muted-gold)] mb-8"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-muted-gold)] mb-6 sm:mb-8"
                     >
                         <span className="w-2 h-2 rounded-full bg-[var(--color-muted-gold)] animate-pulse"></span>
                         Founder · Operator · Architect
                     </motion.div>
 
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-8">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight mb-6 sm:mb-8">
                         <span className="animated-gradient">Architecting</span> Intelligent Apps, Websites & Automated Solutions.
                     </h1>
 
                     <TypewriterText />
 
-                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto z-20 relative">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-auto z-20 relative">
                         <MagneticButton strength={40} className="w-full sm:w-auto">
                             <InteractiveButton
                                 as="a"
                                 href="#ventures"
-                                className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide transition-all duration-300 w-full overflow-hidden shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_25px_rgba(255,255,255,0.4)]"
+                                className="group relative flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide transition-all duration-300 w-full overflow-hidden shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_25px_rgba(255,255,255,0.4)]"
                             >
                                 <span className="relative z-10 flex items-center gap-2">Explore Ventures <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
                                 <div className="absolute inset-0 bg-white group-hover:bg-gray-100 transition-colors z-0"></div>
@@ -85,7 +79,7 @@ export default function Hero() {
                             <InteractiveButton
                                 as="a"
                                 href="#executive-profile"
-                                className="flex items-center justify-center px-8 py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full"
+                                className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full"
                             >
                                 Executive Profile
                             </InteractiveButton>
@@ -94,16 +88,16 @@ export default function Hero() {
                             <InteractiveButton
                                 as="a"
                                 href="#contact"
-                                className="flex items-center justify-center px-8 py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full group"
+                                className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full group"
                             >
                                 <span className="group-hover:text-white transition-colors">Contact</span>
                             </InteractiveButton>
                         </MagneticButton>
                     </div>
 
-                    <div className="mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-8 text-xs text-gray-400 uppercase tracking-widest border-t border-white/10 pt-8 md:pt-10">
+                    <div className="mt-10 sm:mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-6 sm:gap-8 text-xs text-gray-400 uppercase tracking-widest border-t border-white/10 pt-6 sm:pt-8 md:pt-10">
                         <div>
-                            <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">Expertise</p>
+                            <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">Expertise</p>
                             <p className="leading-relaxed">
                                 Full-Stack App & Website Development <br />
                                 Custom AI Solutions & Integrations <br />
@@ -111,7 +105,7 @@ export default function Hero() {
                             </p>
                         </div>
                         <div>
-                            <p className="font-bold text-white mb-3 text-[var(--color-muted-gold)]">By the Numbers</p>
+                            <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">By the Numbers</p>
                             <p className="leading-relaxed">
                                 11+ Years of Entrepreneurial Experience <br />
                                 4 High-Growth Ventures Founded <br />
@@ -125,7 +119,7 @@ export default function Hero() {
                     initial={{ opacity: 0, scale: 0.9, x: 30 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
                     transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
-                    className="md:col-span-5 lg:col-span-4 relative order-1 md:order-2 w-[280px] sm:w-[340px] md:w-full mx-auto mb-4 md:mb-0"
+                    className="md:col-span-5 lg:col-span-4 relative order-1 md:order-2 w-[240px] sm:w-[280px] md:w-full mx-auto mb-4 md:mb-0"
                 >
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card p-1">
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10" />
@@ -147,8 +141,8 @@ export default function Hero() {
                         </motion.div>
                     </div>
 
-                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--color-electric-blue)]/10 blur-3xl -z-10"></div>
-                    <div className="absolute -top-10 -left-10 w-48 h-48 bg-[var(--color-muted-gold)]/5 blur-3xl -z-10"></div>
+                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--color-electric-blue)]/10 blur-3xl -z-10 print:hidden"></div>
+                    <div className="absolute -top-10 -left-10 w-48 h-48 bg-[var(--color-muted-gold)]/5 blur-3xl -z-10 print:hidden"></div>
                 </motion.div>
             </div>
 
@@ -156,7 +150,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2, duration: 1 }}
-                className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center text-gray-400 z-10"
+                className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center text-gray-400 z-10 print:hidden"
             >
                 <div className="w-[1px] h-12 bg-gradient-to-b from-[var(--color-electric-blue)]/50 to-transparent mb-4"></div>
                 <motion.div

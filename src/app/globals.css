@@ -50,6 +50,10 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
+.glass-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
 .glow-effect {
   position: absolute;
   width: 500px;
@@ -67,6 +71,14 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* --- Section Divider Utility --- */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.06) 20%, rgba(0, 102, 255, 0.15) 50%, rgba(255, 255, 255, 0.06) 80%, transparent 100%);
+  margin: 0 auto;
+  max-width: 80%;
 }
 
 /* --- Advanced Animations & Effects --- */
@@ -166,4 +178,151 @@
 
 .glow-border:hover::before {
   opacity: 1;
+}
+
+/* ============================
+   PRINT / PDF STYLES
+   ============================ */
+@media print {
+
+  /* Reset to clean white background */
+  :root {
+    --bg-primary: #ffffff !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: #111 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    overflow: visible !important;
+  }
+
+  /* Hide purely interactive / decorative elements */
+  .glow-effect,
+  .glow-border::before,
+  .cyber-grid::before,
+  .cyber-grid::after {
+    display: none !important;
+    opacity: 0 !important;
+  }
+
+  /* Disable all blur, glow, backdrop-filter */
+  .glass-card {
+    background: #f8f8f8 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .glow-border::before {
+    display: none !important;
+  }
+
+  /* Remove animated text effects */
+  .animated-gradient,
+  .text-shimmer,
+  .text-gradient {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: #111 !important;
+    animation: none !important;
+  }
+
+  /* Section styling */
+  section {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+    background: transparent !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Text colors for print legibility */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+  }
+
+  p,
+  span,
+  li,
+  div {
+    color: #333 !important;
+  }
+
+  /* Labels and subtitles */
+  .text-white\/40,
+  .text-white\/50,
+  .text-white\/60,
+  .text-white\/80 {
+    color: #666 !important;
+  }
+
+  /* Ensure images print */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Links: show URL after for print */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+    font-style: italic;
+  }
+
+  a[href^="#"]::after {
+    content: none;
+  }
+
+  /* Section dividers for print */
+  .section-divider {
+    background: #ddd !important;
+    height: 1px !important;
+    margin: 1rem auto !important;
+  }
+
+  /* Page break controls */
+  #hero {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  #leadership,
+  #career-progression,
+  #contact {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Reduce motion element sizes */
+  nav {
+    position: static !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Print margins */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Milestone } from "lucide-react";
+import Image from "next/image";
 import TiltCard from "./TiltCard";
 
 const ventures = [
@@ -44,9 +45,9 @@ const bulletPoints = [
 
 export default function Ventures() {
     return (
-        <section id="ventures" className="py-32 relative overflow-hidden transition-colors duration-500 hover:bg-white/[0.02]">
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
-                <div className="grid lg:grid-cols-12 gap-16 items-start">
+        <section id="ventures" className="py-24 sm:py-32 relative overflow-hidden transition-colors duration-500 hover:bg-white/[0.02]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+                <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
 
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -60,12 +61,12 @@ export default function Ventures() {
                             <span className="text-xs font-bold tracking-[0.2em] uppercase">Venture Portfolio</span>
                         </div>
 
-                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">
                             Developer & <br />
                             <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Solutions Architect</span>
                         </h2>
 
-                        <p className="text-[var(--color-text-muted)] text-lg mb-10 leading-relaxed font-light">
+                        <p className="text-[var(--color-text-muted)] text-base sm:text-lg mb-10 leading-relaxed font-light">
                             Building custom software that solves real business challenges — from high-performance apps and websites to sophisticated AI integrations and zero-touch automated workflows.
                         </p>
 
@@ -86,7 +87,7 @@ export default function Ventures() {
                         </div>
                     </motion.div>
 
-                    <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
+                    <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                         {ventures.map((venture, i) => (
                             <motion.div
                                 key={venture.title}
@@ -98,26 +99,32 @@ export default function Ventures() {
                                 <TiltCard maxTilt={12}>
                                     <div className="glass-card rounded-2xl group transition-all duration-500 overflow-hidden relative glow-border h-full">
                                         {/* Background image with overlay */}
-                                        <div className="h-36 w-full relative overflow-hidden" style={{ transform: "translateZ(30px)" }}>
+                                        <div className="h-32 sm:h-36 w-full relative overflow-hidden" style={{ transform: "translateZ(30px)" }}>
                                             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500 z-10" />
-                                            <img
+                                            <Image
                                                 src={venture.image}
                                                 alt={`${venture.title} background`}
+                                                fill
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                                                loading="lazy"
                                                 className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
                                             />
                                             {/* Logo badge */}
-                                            <div className="absolute top-4 left-4 z-20 h-12 w-12 rounded-xl bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 overflow-hidden p-1.5" style={{ transform: "translateZ(50px)" }}>
-                                                <img
+                                            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 overflow-hidden p-1 sm:p-1.5" style={{ transform: "translateZ(50px)" }}>
+                                                <Image
                                                     src={venture.logo}
                                                     alt={`${venture.title} logo`}
+                                                    width={40}
+                                                    height={40}
+                                                    loading="lazy"
                                                     className="w-full h-full object-contain"
                                                 />
                                             </div>
                                         </div>
                                         {/* Content */}
-                                        <div className="p-6 relative z-10 bg-black/40 backdrop-blur-sm h-[calc(100%-9rem)]" style={{ transform: "translateZ(20px)" }}>
-                                            <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-[var(--color-electric-blue)] transition-colors text-white">{venture.title}</h3>
-                                            <p className="text-[var(--color-text-muted)] text-sm leading-relaxed font-light">{venture.description}</p>
+                                        <div className="p-4 sm:p-6 relative z-10 bg-black/40 backdrop-blur-sm" style={{ transform: "translateZ(20px)" }}>
+                                            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight group-hover:text-[var(--color-electric-blue)] transition-colors text-white">{venture.title}</h3>
+                                            <p className="text-[var(--color-text-muted)] text-xs sm:text-sm leading-relaxed font-light">{venture.description}</p>
                                         </div>
                                     </div>
                                 </TiltCard>
@@ -129,4 +136,3 @@ export default function Ventures() {
         </section>
     );
 }
-
