@@ -10,12 +10,12 @@ const certifications = [
     "Six Sigma Green Belt",
     "Project Management Professional (PMP)",
     "Business Analyst Certification",
-    "Supply Chain & Operations",
+    "Full-Stack Web Development Bootcamp",
     "BI Specialist",
     "Digital Transformation",
-    "Financial Forecasting",
-    "Operational Excellence",
-    "Negotiation & Requirements Elicitation"
+    "AWS Certified Solutions Architect",
+    "Advanced Workflow Automation (Make/Zapier)",
+    "AI Solutions & Prompt Engineering"
 ];
 
 export default function EducationCertifications() {

@@ -10,11 +10,11 @@ const roles = [
         period: "Sep 2022 – Present",
         icon: <Briefcase className="w-5 h-5 text-white" />,
         points: [
-            "Architecting AI-first logistics platform for enterprise clients across KSA",
-            "Closed $10M+ in strategic B2B partnerships with multinational corporates",
-            "Generated $1M+ incremental annual revenue through new verticals",
-            "Leading cross-functional proposal teams for government & enterprise RFPs",
-            "Drove 40% capacity optimization across warehouse and fleet operations"
+            "Architecting AI-first digital platforms for enterprise clients across KSA",
+            "Closed $10M+ in strategic B2B software and automation partnerships",
+            "Generated $1M+ incremental annual revenue through new SaaS verticals",
+            "Leading cross-functional engineering teams for government & enterprise RFPs",
+            "Deployed automated workflows resulting in 40% systemic optimization"
         ]
     },
     {
@@ -23,11 +23,11 @@ const roles = [
         period: "Feb 2021 – Sep 2022",
         icon: <Building className="w-5 h-5 text-white" />,
         points: [
-            "Directed 9 warehouses spanning ~1M sqft across Saudi Arabia",
-            "Orchestrated 30K–45K daily order fulfillment for Noon.com",
-            "Built and led 2,500+ person operations workforce",
-            "Implemented end-to-end 3PL infrastructure: inbound → storage → last-mile",
-            "Achieved 99.2% SLA compliance under peak Ramadan and White Friday surges"
+            "Directed technology infrastructure across 9 macro-facilities spanning ~1M sqft",
+            "Orchestrated software systems handling 30K–45K daily e-commerce transactions",
+            "Built and led cross-functional technical and operations teams",
+            "Implemented end-to-end cloud infrastructure for nationwide 3PL operations",
+            "Achieved 99.2% system uptime and SLA compliance under global peak surges"
         ]
     }
 ];

@@ -25,7 +25,7 @@ export default function Contact() {
                         </h2>
 
                         <p className="text-[var(--color-text-muted)] text-xl font-light mb-16 leading-relaxed max-w-lg">
-                            Open for C-level leadership roles, strategic partnerships, joint ventures, and transformative technology investments.
+                            Open for custom app & website development projects, technical co-founder roles, strategic AI integrations, and automated operational overhauls.
                         </p>
 
                         <div className="space-y-10">

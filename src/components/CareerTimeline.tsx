@@ -8,58 +8,58 @@ const timelineEvents = [
         role: "General Manager",
         company: "SafeBox",
         highlights: [
-            "Spearheading regional operations, P&L ownership, and strategic growth initiatives",
-            "Establishing market-entry frameworks for new service verticals"
+            "Spearheading regional technical operations, SaaS P&L ownership, and digital growth initiatives",
+            "Establishing software go-to-market frameworks for new service verticals"
         ]
     },
     {
         role: "Regional Operations Manager",
         company: "Safe Arrival",
         highlights: [
-            "Launched a 32,000 m² automated fulfillment center in under 90 days",
-            "Scaled daily order volume by 200% within the first quarter",
-            "Delivered 30% YoY revenue growth through operational excellence",
-            "Eliminated 75% of fulfillment backlogs via process re-engineering"
+            "Launched a 32,000 m² automated fulfillment center powered by custom software systems",
+            "Scaled digital transaction volume by 200% within the first quarter",
+            "Delivered 30% YoY revenue growth through software-driven excellence",
+            "Eliminated 75% of process backlogs via technical re-engineering and automation"
         ]
     },
     {
         role: "Operations Manager",
         company: "SLS Express",
         highlights: [
-            "Managed high-volume last-mile delivery networks spanning multiple cities",
-            "Introduced real-time fleet tracking and route optimization systems"
+            "Managed high-volume digital delivery networks spanning multiple cities",
+            "Architected real-time fleet tracking apps and AI-driven route optimization algorithms"
         ]
     },
     {
         role: "Operations Supervisor",
         company: "SLS Express",
         highlights: [
-            "Supervised cross-dock operations with 300+ daily fleet movements",
-            "Reduced average delivery time by 18% through dispatch optimization"
+            "Supervised API integrations for cross-dock operations with 300+ daily systemic movements",
+            "Reduced average data processing time by 18% through workflow automation scripts"
         ]
     },
     {
         role: "Inventory Supervisor",
         company: "Jollychic",
         highlights: [
-            "Led 300+ inventory staff across large-scale e-commerce warehouse operations",
-            "Maintained 99.5% inventory accuracy across 500K+ SKUs"
+            "Led tech implementation for staff across large-scale e-commerce warehouse operations",
+            "Maintained 99.5% systemic data accuracy across 500K+ digital SKUs via custom dashboards"
         ]
     },
     {
         role: "Inbound Supervisor",
         company: "Jollychic",
         highlights: [
-            "Directed 170+ staff ensuring 99%+ inbound processing SLA compliance",
-            "Processed 50K+ units daily during peak promotional periods"
+            "Directed staff training on custom ERPs ensuring 99%+ automated SLA compliance",
+            "Automated processing for 50K+ units daily during peak technical promotional periods"
         ]
     },
     {
         role: "Direct Sales Supervisor",
         company: "Callem Middle East",
         highlights: [
-            "Built and managed high-performance B2C acquisition teams",
-            "Exceeded quarterly revenue targets by 25% consistently"
+            "Built and managed high-performance SaaS B2C acquisition teams",
+            "Exceeded quarterly software revenue targets by 25% consistently"
         ]
     }
 ];
