@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import InteractiveButton from "./InteractiveButton";
 import PrintButton from "./PrintButton";
+import { navLinks } from "@/lib/data";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -17,14 +18,6 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    const navLinks = [
-        { name: "Profile", href: "#executive-profile" },
-        { name: "Ventures", href: "#ventures" },
-        { name: "Leadership", href: "#leadership" },
-        { name: "Expertise", href: "#competencies" },
-        { name: "Contact", href: "#contact" },
-    ];
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 print:static print:bg-white print:py-4 ${scrolled ? "py-4 md:py-6" : "py-6 md:py-8"}`}>
@@ -64,6 +57,7 @@ export default function Navbar() {
                         <button
                             className="md:hidden text-white print:hidden"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                         >
                             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                         </button>

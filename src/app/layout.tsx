@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import CustomCursor from "@/components/CustomCursor";
+import { ScrollObserver } from "@/components/ScrollObserver";
+import { ToastProvider } from "@/components/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -38,10 +41,22 @@ export const metadata: Metadata = {
     },
 };
 
-import CustomCursor from "@/components/CustomCursor";
-import { ScrollObserver } from "@/components/ScrollObserver";
-
-import { ToastProvider } from "@/components/ToastProvider";
+/** JSON-LD structured data for rich search results */
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Abdullah Mirza",
+    jobTitle: "Entrepreneur & AI Platform Builder",
+    url: "https://abdullahmirza.com",
+    description: "Serial entrepreneur and developer with 11 years of experience building custom apps, AI-powered solutions, and automated workflows.",
+    address: {
+        "@type": "PostalAddress",
+        addressLocality: "Riyadh",
+        addressCountry: "SA",
+    },
+    sameAs: [],
+    knowsAbout: ["AI Solutions", "Full-Stack Development", "Workflow Automation", "E-Commerce", "Logistics"],
+};
 
 export default function RootLayout({
     children,
@@ -53,6 +68,10 @@ export default function RootLayout({
             <head>
                 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
             </head>
             {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
             <body className="antialiased min-h-screen relative text-white overflow-x-hidden print:overflow-visible">

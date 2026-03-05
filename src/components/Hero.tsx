@@ -6,21 +6,25 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import MagneticButton from "./MagneticButton";
 import InteractiveButton from "./InteractiveButton";
+import { typewriterText, heroExpertise, heroNumbers, heroTagline } from "@/lib/data";
+import { FLUID_EASE } from "@/lib/constants";
 
+/**
+ * Typewriter effect component — types out text character by character.
+ */
 const TypewriterText = () => {
-    const text = "Serial entrepreneur and developer with 11 years of experience building custom apps and websites, engineering AI-powered solutions, and creating automated workflows that scale businesses effortlessly.";
     const [displayedText, setDisplayedText] = useState("");
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        if (index < text.length) {
+        if (index < typewriterText.length) {
             const timeout = setTimeout(() => {
-                setDisplayedText((prev) => prev + text.charAt(index));
+                setDisplayedText((prev) => prev + typewriterText.charAt(index));
                 setIndex((prev) => prev + 1);
             }, 15);
             return () => clearTimeout(timeout);
         }
-    }, [index, text]);
+    }, [index]);
 
     return (
         <p className="text-base sm:text-lg md:text-xl text-[var(--color-text-muted)] mb-8 sm:mb-12 max-w-2xl leading-relaxed font-light min-h-[200px] xs:min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
@@ -45,7 +49,7 @@ export default function Hero() {
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 1, ease: FLUID_EASE }}
                     className="md:col-span-7 lg:col-span-8 order-2 md:order-1"
                 >
                     <motion.div
@@ -55,7 +59,7 @@ export default function Hero() {
                         className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-muted-gold)] mb-6 sm:mb-8"
                     >
                         <span className="w-2 h-2 rounded-full bg-[var(--color-muted-gold)] animate-pulse"></span>
-                        Founder · Operator · Architect
+                        {heroTagline}
                     </motion.div>
 
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight mb-6 sm:mb-8">
@@ -99,17 +103,17 @@ export default function Hero() {
                         <div>
                             <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">Expertise</p>
                             <p className="leading-relaxed">
-                                Full-Stack App & Website Development <br />
-                                Custom AI Solutions & Integrations <br />
-                                Automated Workflows & Process Engineering
+                                {heroExpertise.map((item, i) => (
+                                    <span key={item}>{item}{i < heroExpertise.length - 1 && <br />}</span>
+                                ))}
                             </p>
                         </div>
                         <div>
                             <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">By the Numbers</p>
                             <p className="leading-relaxed">
-                                11+ Years of Entrepreneurial Experience <br />
-                                4 High-Growth Ventures Founded <br />
-                                Hundreds of Hours Saved via Automation
+                                {heroNumbers.map((item, i) => (
+                                    <span key={item}>{item}{i < heroNumbers.length - 1 && <br />}</span>
+                                ))}
                             </p>
                         </div>
                     </div>
@@ -118,7 +122,7 @@ export default function Hero() {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9, x: 30 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}
-                    transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
+                    transition={{ duration: 1.2, ease: FLUID_EASE, delay: 0.3 }}
                     className="md:col-span-5 lg:col-span-4 relative order-1 md:order-2 w-[240px] sm:w-[280px] md:w-full mx-auto mb-4 md:mb-0"
                 >
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card p-1">

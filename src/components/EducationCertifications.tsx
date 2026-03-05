@@ -1,40 +1,9 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { GraduationCap, Award, BookOpen, CheckCircle2 } from "lucide-react";
-
-const certifications = [
-    "CPSM",
-    "Harvard Business School Online – Leadership & Management",
-    "Six Sigma Black Belt",
-    "Six Sigma Green Belt",
-    "Project Management Professional (PMP)",
-    "Business Analyst Certification",
-    "Full-Stack Web Development Bootcamp",
-    "BI Specialist",
-    "Digital Transformation",
-    "AWS Certified Solutions Architect",
-    "Advanced Workflow Automation (Make/Zapier)",
-    "AI Solutions & Prompt Engineering"
-];
-
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    show: {
-        opacity: 1,
-        transition: { staggerChildren: 0.05 }
-    }
-};
-
-const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.9, y: 15 },
-    show: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: { type: "spring" as const, stiffness: 400, damping: 20 }
-    }
-};
+import { certifications } from "@/lib/data";
+import { slideInLeft, slideInRight, fastStaggerContainer, fastStaggerItem } from "@/lib/constants";
 
 export default function EducationCertifications() {
     return (
@@ -44,10 +13,7 @@ export default function EducationCertifications() {
 
                     {/* Education */}
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                        {...slideInLeft}
                         className="lg:col-span-5"
                     >
                         <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-10 text-[var(--color-muted-gold)]">
@@ -70,10 +36,7 @@ export default function EducationCertifications() {
 
                     {/* Certifications */}
                     <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 1, ease: [0.23, 1, 0.32, 1], delay: 0.2 }}
+                        {...slideInRight}
                         className="lg:col-span-7"
                     >
                         <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-10 text-[var(--color-electric-blue)]">
@@ -82,16 +45,16 @@ export default function EducationCertifications() {
                         </div>
 
                         <motion.div
-                            variants={containerVariants}
+                            variants={fastStaggerContainer}
                             initial="hidden"
                             whileInView="show"
                             viewport={{ once: true, margin: "-50px" }}
                             className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                         >
-                            {certifications.map((cert, i) => (
+                            {certifications.map((cert) => (
                                 <motion.div
-                                    key={i}
-                                    variants={itemVariants}
+                                    key={cert}
+                                    variants={fastStaggerItem}
                                     className="bg-white/[0.03] border-transparent p-3.5 sm:p-5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold text-gray-300 transition-all cursor-default flex items-center gap-2.5 sm:gap-3 group glow-border"
                                     style={{ transform: "translateZ(0)" }}
                                 >

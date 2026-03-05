@@ -4,44 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Milestone } from "lucide-react";
 import Image from "next/image";
 import TiltCard from "./TiltCard";
-
-const ventures = [
-    {
-        title: "SourceKom",
-        description: "Enterprise-grade asset booking & exchange platform connecting industrial suppliers with procurement teams across Saudi Arabia.",
-        logo: "/logos/sourcekom.png",
-        color: "var(--color-electric-blue)",
-        image: "/generated_images/venture-sourcekom.png"
-    },
-    {
-        title: "HabibiStay",
-        description: "AI-enhanced hospitality marketplace transforming short-term rentals in KSA. Powered by SARA — an intelligent booking concierge.",
-        logo: "/logos/habibistay.webp",
-        color: "var(--color-muted-gold)",
-        image: "/generated_images/venture-habibistay.png"
-    },
-    {
-        title: "Arabclue",
-        description: "AI-powered digital intelligence engine turning regional market data into actionable business insights.",
-        logo: "/logos/arabclue.png",
-        color: "#a855f7",
-        image: "/generated_images/venture-arabclue.png"
-    },
-    {
-        title: "DaddysCart",
-        description: "Full-stack e-commerce venture engineering next-generation digital retail experiences for the Saudi consumer.",
-        logo: "/logos/daddyscart.png",
-        color: "#34d399",
-        image: "/generated_images/venture-daddyscart.png"
-    }
-];
-
-const bulletPoints = [
-    "Engineering scalable Apps, Websites & SaaS platforms",
-    "Integrating AI to unlock operational efficiency",
-    "Automating workflows to reduce manual overhead",
-    "Full product lifecycle — from ideation to deployment"
-];
+import { ventures, ventureBulletPoints } from "@/lib/data";
+import { slideInLeft } from "@/lib/constants";
 
 export default function Ventures() {
     return (
@@ -50,10 +14,7 @@ export default function Ventures() {
                 <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
 
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 1 }}
+                        {...slideInLeft}
                         className="lg:col-span-5"
                     >
                         <div className="flex items-center gap-3 mb-6 text-[var(--color-electric-blue)]">
@@ -71,9 +32,9 @@ export default function Ventures() {
                         </p>
 
                         <div className="space-y-4">
-                            {bulletPoints.map((point, i) => (
+                            {ventureBulletPoints.map((point, i) => (
                                 <motion.div
-                                    key={i}
+                                    key={point}
                                     initial={{ opacity: 0, y: 10 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}

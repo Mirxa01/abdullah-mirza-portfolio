@@ -2,8 +2,14 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { stats } from "@/lib/data";
+import { sectionFadeIn } from "@/lib/constants";
 
-const AnimatedCounter = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
+/**
+ * Animated counter that counts up from 0 to the target value
+ * when the element scrolls into view.
+ */
+const AnimatedCounter = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -38,10 +44,7 @@ export default function ExecutiveProfile() {
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 text-center">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                    {...sectionFadeIn}
                 >
                     <h2 className="text-[var(--color-muted-gold)] font-bold tracking-[0.3em] uppercase text-xs mb-8 sm:mb-10">
                         Executive Profile
@@ -52,14 +55,9 @@ export default function ExecutiveProfile() {
                     </p>
 
                     <div className="mt-10 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12 relative z-10">
-                        {[
-                            { value: 11, suffix: "+", prefix: "", label: "Years of Experience" },
-                            { value: 4, prefix: "", label: "Ventures Founded" },
-                            { value: 50, prefix: "", suffix: "+", label: "Automated Workflows" },
-                            { value: 100, prefix: "", suffix: "%", label: "Custom Solutions" }
-                        ].map((stat, i) => (
+                        {stats.map((stat, i) => (
                             <motion.div
-                                key={i}
+                                key={stat.label}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}

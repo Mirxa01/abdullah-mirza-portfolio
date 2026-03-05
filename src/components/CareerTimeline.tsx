@@ -2,67 +2,8 @@
 
 import { motion } from "framer-motion";
 import { History } from "lucide-react";
-
-const timelineEvents = [
-    {
-        role: "General Manager",
-        company: "SafeBox",
-        highlights: [
-            "Spearheading regional technical operations, SaaS P&L ownership, and digital growth initiatives",
-            "Establishing software go-to-market frameworks for new service verticals"
-        ]
-    },
-    {
-        role: "Regional Operations Manager",
-        company: "Safe Arrival",
-        highlights: [
-            "Launched a 32,000 m² automated fulfillment center powered by custom software systems",
-            "Scaled digital transaction volume by 200% within the first quarter",
-            "Delivered 30% YoY revenue growth through software-driven excellence",
-            "Eliminated 75% of process backlogs via technical re-engineering and automation"
-        ]
-    },
-    {
-        role: "Operations Manager",
-        company: "SLS Express",
-        highlights: [
-            "Managed high-volume digital delivery networks spanning multiple cities",
-            "Architected real-time fleet tracking apps and AI-driven route optimization algorithms"
-        ]
-    },
-    {
-        role: "Operations Supervisor",
-        company: "SLS Express",
-        highlights: [
-            "Supervised API integrations for cross-dock operations with 300+ daily systemic movements",
-            "Reduced average data processing time by 18% through workflow automation scripts"
-        ]
-    },
-    {
-        role: "Inventory Supervisor",
-        company: "Jollychic",
-        highlights: [
-            "Led tech implementation for staff across large-scale e-commerce warehouse operations",
-            "Maintained 99.5% systemic data accuracy across 500K+ digital SKUs via custom dashboards"
-        ]
-    },
-    {
-        role: "Inbound Supervisor",
-        company: "Jollychic",
-        highlights: [
-            "Directed staff training on custom ERPs ensuring 99%+ automated SLA compliance",
-            "Automated processing for 50K+ units daily during peak technical promotional periods"
-        ]
-    },
-    {
-        role: "Direct Sales Supervisor",
-        company: "Callem Middle East",
-        highlights: [
-            "Built and managed high-performance SaaS B2C acquisition teams",
-            "Exceeded quarterly software revenue targets by 25% consistently"
-        ]
-    }
-];
+import { timelineEvents } from "@/lib/data";
+import { sectionFadeIn } from "@/lib/constants";
 
 export default function CareerTimeline() {
     return (
@@ -72,10 +13,7 @@ export default function CareerTimeline() {
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 relative">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                    {...sectionFadeIn}
                     className="mb-14 sm:mb-20 text-center"
                 >
                     <div className="flex items-center justify-center gap-3 mb-6 text-[var(--color-muted-gold)]">
@@ -93,7 +31,7 @@ export default function CareerTimeline() {
 
                     {timelineEvents.map((event, i) => (
                         <motion.div
-                            key={i}
+                            key={`${event.company}-${event.role}`}
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
