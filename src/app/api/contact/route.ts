@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         //   const resend = new Resend(process.env.RESEND_API_KEY);
         //   await resend.emails.send({
         //     from: "portfolio@abdullahmirza.com",
-        //     to: "abdullahmirxa786@gmail.com",
+        //     to: "Abdullah@mirxaa.com",
         //     subject: `[Portfolio] ${sanitized.subject}`,
         //     text: `From: ${sanitized.name} (${sanitized.email})\n\n${sanitized.message}`,
         //   });

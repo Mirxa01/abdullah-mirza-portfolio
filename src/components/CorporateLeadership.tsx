@@ -1,73 +1,76 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, Building, ChevronRight, TrendingUp } from "lucide-react";
+import { Briefcase, Building2, ChevronRight } from "lucide-react";
 import { leadershipRoles } from "@/lib/data";
-import { sectionFadeIn } from "@/lib/constants";
 
-/** Icon mapping for leadership roles — JSX stays in component layer */
 const roleIcons = [
-    <Briefcase key="briefcase" className="w-5 h-5 text-white" />,
-    <Building key="building" className="w-5 h-5 text-white" />,
+    <Briefcase key="briefcase" className="w-4 h-4" />,
+    <Building2 key="building" className="w-4 h-4" />,
 ];
 
 export default function CorporateLeadership() {
     return (
-        <section id="leadership" className="py-24 sm:py-32 relative overflow-hidden">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
+        <section id="leadership" className="section-y relative overflow-hidden">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
                 <motion.div
-                    {...sectionFadeIn}
-                    className="mb-14 sm:mb-20"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-12 sm:mb-16 max-w-3xl"
                 >
-                    <div className="flex items-center gap-3 mb-6 text-[var(--color-electric-blue)]">
-                        <TrendingUp className="w-5 h-5" />
-                        <span className="text-xs font-bold tracking-[0.2em] uppercase">Executive Leadership</span>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                        Executive <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Leadership</span>
+                    <span className="kicker mb-5">
+                        <span className="kicker-dot" />
+                        Executive Leadership
+                    </span>
+                    <h2 className="heading-display">
+                        Leading at the{" "}
+                        <span className="heading-accent">enterprise frontier.</span>
                     </h2>
                 </motion.div>
 
-                <div className="space-y-8 sm:space-y-12">
+                <div className="space-y-6 sm:space-y-8">
                     {leadershipRoles.map((role, i) => (
-                        <motion.div
+                        <motion.article
                             key={role.company}
-                            initial={{ opacity: 0, y: 40 }}
+                            initial={{ opacity: 0, y: 24 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: i * 0.2 }}
-                            className="glass-card rounded-2xl sm:rounded-[2rem] p-5 sm:p-6 md:p-12 relative group transition-all duration-500 glow-border border-transparent"
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.6, delay: i * 0.1 }}
+                            className="surface surface-hover p-6 sm:p-8 lg:p-10 group"
                         >
-                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 sm:gap-8 mb-6 sm:mb-10 pb-6 sm:pb-8 border-b border-white/5 relative z-10">
-                                <div className="space-y-3 sm:space-y-4">
-                                    <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-xl bg-white/5 text-[var(--color-muted-gold)] text-xs sm:text-sm font-semibold border-none ring-1 ring-white/10 group-hover:ring-[var(--color-electric-blue)] transition-all">
+                            <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6 pb-6 border-b border-white/[0.06]">
+                                <div>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-muted-gold)]/10 text-[var(--color-muted-gold)] text-xs font-semibold border border-[var(--color-muted-gold)]/20 mb-3">
                                         {roleIcons[i]}
-                                        <span className="truncate max-w-[200px] sm:max-w-none">{role.company}</span>
+                                        <span>{role.company}</span>
                                     </div>
-                                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white group-hover:text-shimmer transition-colors">{role.role}</h3>
+                                    <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                                        {role.role}
+                                    </h3>
                                 </div>
-
-                                <div className="text-[10px] sm:text-sm font-bold tracking-widest uppercase text-[var(--color-text-muted)] bg-white/5 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/5 w-max group-hover:text-white transition-colors whitespace-nowrap">
+                                <span className="pill self-start whitespace-nowrap">
                                     {role.period}
-                                </div>
-                            </div>
+                                </span>
+                            </header>
 
-                            <ul className="grid md:grid-cols-1 gap-4 sm:gap-6 text-gray-400 relative z-10">
+                            <ul className="grid gap-3 sm:gap-4">
                                 {role.points.map((point, j) => (
                                     <motion.li
                                         key={j}
-                                        className="flex gap-3 sm:gap-4 items-start"
-                                        initial={{ opacity: 0, x: -10 }}
+                                        initial={{ opacity: 0, x: -8 }}
                                         whileInView={{ opacity: 1, x: 0 }}
                                         viewport={{ once: true }}
-                                        transition={{ delay: 0.4 + (j * 0.1) }}
+                                        transition={{ duration: 0.3, delay: 0.2 + j * 0.06 }}
+                                        className="flex items-start gap-3 text-sm sm:text-base text-white/75 leading-relaxed font-light"
                                     >
-                                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-electric-blue)] shrink-0 mt-0.5" />
-                                        <span className="text-sm sm:text-base md:text-lg font-light leading-relaxed group-hover:text-gray-200 transition-colors">{point}</span>
+                                        <ChevronRight className="w-4 h-4 mt-1 text-[var(--color-electric-blue)] shrink-0" />
+                                        <span>{point}</span>
                                     </motion.li>
                                 ))}
                             </ul>
-                        </motion.div>
+                        </motion.article>
                     ))}
                 </div>
             </div>

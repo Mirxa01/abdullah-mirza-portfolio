@@ -11,14 +11,15 @@ export default function CustomCursor() {
     const posRef = useRef({ x: 0, y: 0 });
 
     // Spring physics for smooth trailing effect
-    const springX = useSpring(0, { stiffness: 500, damping: 28 });
-    const springY = useSpring(0, { stiffness: 500, damping: 28 });
+    const springX = useSpring(0, { stiffness: 600, damping: 32 });
+    const springY = useSpring(0, { stiffness: 600, damping: 32 });
 
-    // Check for touch device in useEffect (SSR-safe)
+    // Disable on touch devices and when reduced-motion is preferred
     useEffect(() => {
-        if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
-            setIsTouchDevice(true);
-        }
+        if (typeof window === "undefined") return;
+        const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (isCoarse || prefersReduced) setIsTouchDevice(true);
     }, []);
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export default function CustomCursor() {
 
             {/* Trailing ring (grows when hovering over links) */}
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/5 rounded-full pointer-events-none z-[9998] shadow-[0_0_10px_rgba(0,102,255,0.3)] backdrop-invert transition-all flex items-center justify-center print:hidden"
+                className="fixed top-0 left-0 w-8 h-8 border border-[var(--color-electric-blue)]/40 bg-transparent rounded-full pointer-events-none z-[9998] transition-colors print:hidden"
                 style={{
                     x: springX,
                     y: springY,
@@ -84,20 +85,10 @@ export default function CustomCursor() {
                     translateY: "-50%",
                 }}
                 animate={{
-                    scale: isHovering ? 1.5 : 1,
-                    backgroundColor: isHovering ? "rgba(0,102,255,0.15)" : "rgba(0,102,255,0.05)",
-                    borderColor: isHovering ? "rgba(0,102,255,0.8)" : "rgba(0,102,255,0.5)",
-                }}
-            />
-
-            {/* Ambient glow following the mouse */}
-            <motion.div
-                className="fixed top-0 left-0 w-64 h-64 bg-[var(--color-electric-blue)]/10 blur-3xl rounded-full pointer-events-none z-[9997] print:hidden"
-                style={{
-                    x: springX,
-                    y: springY,
-                    translateX: "-50%",
-                    translateY: "-50%",
+                    scale: isHovering ? 1.6 : 1,
+                    borderColor: isHovering
+                        ? "rgba(0,102,255,0.85)"
+                        : "rgba(0,102,255,0.4)",
                 }}
             />
         </>

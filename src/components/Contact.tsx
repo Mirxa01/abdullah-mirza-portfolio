@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { useToast } from "./ToastProvider";
 import { contactInfo } from "@/lib/data";
 import { slideInLeft, slideInRight } from "@/lib/constants";
@@ -20,18 +20,22 @@ function getValidation(formState: ContactFormState) {
 }
 
 /** Maps contact info type to its corresponding icon */
-const contactIcons: Record<string, { icon: React.ReactNode; hoverColor: string }> = {
+const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
     email: {
-        icon: <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-electric-blue)]" />,
-        hoverColor: "group-hover:bg-[var(--color-electric-blue)]/10 group-hover:border-[var(--color-electric-blue)]/20",
+        icon: <Mail className="w-5 h-5 text-[var(--color-electric-blue)]" />,
+        tint: "bg-[var(--color-electric-blue)]/10 border-[var(--color-electric-blue)]/20",
+    },
+    whatsapp: {
+        icon: <MessageCircle className="w-5 h-5 text-emerald-400" />,
+        tint: "bg-emerald-500/10 border-emerald-500/25",
     },
     phone: {
-        icon: <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-muted-gold)]" />,
-        hoverColor: "group-hover:bg-[var(--color-muted-gold)]/10 group-hover:border-[var(--color-muted-gold)]/20",
+        icon: <Phone className="w-5 h-5 text-[var(--color-muted-gold)]" />,
+        tint: "bg-[var(--color-muted-gold)]/10 border-[var(--color-muted-gold)]/20",
     },
     location: {
-        icon: <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />,
-        hoverColor: "",
+        icon: <MapPin className="w-5 h-5 text-purple-400" />,
+        tint: "bg-purple-500/10 border-purple-500/20",
     },
 };
 
@@ -85,42 +89,69 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="py-24 sm:py-32 relative bg-[var(--color-charcoal-medium)] overflow-hidden cyber-grid">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-electric-blue)]/5 blur-[120px] rounded-full -z-10 animate-pulse-glow print:hidden"></div>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
-                <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-start">
+        <section
+            id="contact"
+            className="section-y relative bg-[var(--color-surface-2)] overflow-hidden"
+        >
+            <div
+                className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-electric-blue)]/8 blur-[120px] rounded-full -z-10 print:hidden"
+                aria-hidden="true"
+            />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
                     <motion.div {...slideInLeft}>
-                        <h2 className="text-[var(--color-electric-blue)] font-bold tracking-[0.3em] uppercase text-xs mb-6 sm:mb-8">
+                        <span className="kicker mb-5">
+                            <span className="kicker-dot" />
                             Get In Touch
-                        </h2>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-10 text-white leading-[1.1]">
-                            Let&apos;s Build Scalable Infrastructure <br className="hidden sm:block" />
-                            <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">What Comes Next.</span>
+                        </span>
+                        <h2 className="heading-display mt-4 mb-5 sm:mb-6">
+                            Let&apos;s build{" "}
+                            <span className="heading-accent">what comes next.</span>
                         </h2>
 
-                        <p className="text-[var(--color-text-muted)] text-base sm:text-lg md:text-xl font-light mb-10 sm:mb-16 leading-relaxed max-w-lg">
-                            Open for custom app & website development projects, technical co-founder roles, strategic AI integrations, and automated operational overhauls.
+                        <p className="text-base sm:text-lg text-[var(--color-text-muted)] font-light mb-10 leading-relaxed max-w-lg">
+                            Open for custom app &amp; website development projects, technical co-founder roles, strategic AI integrations, and automated operational overhauls.
                         </p>
 
-                        <div className="space-y-6 sm:space-y-10">
+                        <div className="space-y-3">
                             {contactInfo.map((info) => {
                                 const config = contactIcons[info.type];
+                                const isWhatsapp = info.type === "whatsapp";
                                 const isCopyable = info.type === "email" || info.type === "phone";
 
                                 const content = (
-                                    <div className={`${isCopyable ? "group" : ""} flex items-center gap-4 sm:gap-6 w-full text-left`}>
-                                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/5 ${config.hoverColor} transition-all shrink-0`}>
+                                    <div className="group flex items-center gap-4 w-full text-left p-3 -m-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+                                        <div
+                                            className={`w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 transition-all ${config.tint} group-hover:scale-105`}
+                                        >
                                             {config.icon}
                                         </div>
                                         <div className="min-w-0">
-                                            <div className="text-[10px] sm:text-xs font-bold tracking-widest text-white/40 uppercase mb-1">{info.label}</div>
-                                            <div className={`text-base sm:text-lg md:text-xl font-medium text-white ${isCopyable ? "group-hover:text-[var(--color-electric-blue)]" : ""} transition-colors truncate`}>
+                                            <div className="text-[10px] font-bold tracking-[0.18em] text-white/40 uppercase mb-1">
+                                                {info.label}
+                                            </div>
+                                            <div className="text-sm sm:text-base font-medium text-white truncate">
                                                 {info.displayValue}
                                             </div>
                                         </div>
                                     </div>
                                 );
+
+                                if (isWhatsapp && info.href) {
+                                    return (
+                                        <a
+                                            key={info.type}
+                                            href={info.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block w-full"
+                                            aria-label="Open WhatsApp chat with Abdullah"
+                                        >
+                                            {content}
+                                        </a>
+                                    );
+                                }
 
                                 if (isCopyable) {
                                     return (
@@ -142,7 +173,7 @@ export default function Contact() {
 
                     <motion.div
                         {...slideInRight}
-                        className="glass-card p-5 sm:p-8 md:p-12 lg:p-16 rounded-2xl sm:rounded-[2rem] md:rounded-[3rem] border-white/5 relative print:hidden"
+                        className="surface-elevated p-6 sm:p-8 lg:p-10 relative print:hidden"
                     >
                         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 relative">
                             {/* Honeypot field for bot detection — hidden from real users */}
@@ -288,16 +319,6 @@ export default function Contact() {
                         </form>
                     </motion.div>
 
-                </div>
-            </div>
-
-            {/* Minimal Footer */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mt-20 sm:mt-32 pt-8 sm:pt-12 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
-                <div className="text-[var(--color-text-muted)] text-xs sm:text-sm font-light text-center sm:text-left">
-                    © {new Date().getFullYear()} Abdullah Mirza. All rights reserved.
-                </div>
-                <div className="flex items-center gap-8">
-                    <a href="#" className="text-[var(--color-text-muted)] hover:text-white transition-colors text-xs sm:text-sm font-medium">LinkedIn</a>
                 </div>
             </div>
         </section>

@@ -1,68 +1,91 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { History } from "lucide-react";
 import { timelineEvents } from "@/lib/data";
-import { sectionFadeIn } from "@/lib/constants";
 
 export default function CareerTimeline() {
     return (
-        <section id="career-progression" className="py-24 sm:py-32 relative bg-[var(--color-charcoal-medium)] overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none print:hidden" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+        <section
+            id="career-progression"
+            className="section-y relative overflow-hidden bg-[var(--color-surface-2)]"
+        >
+            {/* Subtle dot pattern */}
+            <div
+                className="absolute inset-0 opacity-[0.025] pointer-events-none print:hidden"
+                style={{
+                    backgroundImage: "radial-gradient(#fff 1px, transparent 1px)",
+                    backgroundSize: "32px 32px",
+                }}
+                aria-hidden="true"
+            />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 relative">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
                 <motion.div
-                    {...sectionFadeIn}
-                    className="mb-14 sm:mb-20 text-center"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-12 sm:mb-16 text-center"
                 >
-                    <div className="flex items-center justify-center gap-3 mb-6 text-[var(--color-muted-gold)]">
-                        <History className="w-5 h-5" />
-                        <span className="text-xs font-bold tracking-[0.2em] uppercase">Chronology of Impact</span>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                        Career <span className="animated-gradient drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">Progression</span>
+                    <span className="kicker mx-auto mb-5">
+                        <span className="kicker-dot" />
+                        Chronology of Impact
+                    </span>
+                    <h2 className="heading-display">
+                        Career <span className="heading-accent">Progression</span>
                     </h2>
                 </motion.div>
 
-                <div className="relative ml-2 sm:ml-4 md:ml-12 space-y-10 sm:space-y-16 py-4 sm:py-8">
-                    {/* Glowing timeline track */}
-                    <div className="absolute left-[7px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[var(--color-electric-blue)] to-transparent opacity-50 shadow-[0_0_10px_rgba(0,102,255,0.8)] print:bg-gray-300 print:shadow-none"></div>
+                <div className="relative pl-6 sm:pl-8 md:pl-10">
+                    {/* Vertical track */}
+                    <div
+                        className="absolute left-[7px] sm:left-[9px] md:left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent print:bg-gray-300"
+                        aria-hidden="true"
+                    />
 
-                    {timelineEvents.map((event, i) => (
-                        <motion.div
-                            key={`${event.company}-${event.role}`}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.6, delay: i * 0.1 }}
-                            className="relative pl-8 sm:pl-10 md:pl-16 group"
-                        >
-                            {/* Timeline Dot */}
-                            <div className="absolute top-2 -left-0 w-4 h-4 rounded-full bg-[var(--color-charcoal-base)] border-2 border-white/10 group-hover:border-[var(--color-electric-blue)] group-hover:shadow-[0_0_15px_rgba(0,102,255,0.8)] transition-all duration-500 z-10 flex items-center justify-center print:border-gray-400">
-                                <div className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[var(--color-electric-blue)] transition-colors duration-500"></div>
-                            </div>
+                    <ol className="space-y-10 sm:space-y-12">
+                        {timelineEvents.map((event, i) => (
+                            <motion.li
+                                key={`${event.company}-${event.role}-${i}`}
+                                initial={{ opacity: 0, x: -16 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{ duration: 0.5, delay: i * 0.06 }}
+                                className="relative group"
+                            >
+                                {/* Dot */}
+                                <span
+                                    className="absolute -left-6 sm:-left-8 md:-left-10 top-[6px] w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full bg-[var(--bg-primary)] border-2 border-white/15 group-hover:border-[var(--color-electric-blue)] group-hover:shadow-[0_0_12px_rgba(0,102,255,0.6)] transition-all flex items-center justify-center"
+                                    aria-hidden="true"
+                                >
+                                    <span className="w-1 h-1 rounded-full bg-white/30 group-hover:bg-[var(--color-electric-blue)] transition-colors" />
+                                </span>
 
-                            {/* Hover Glow */}
-                            <div className="absolute top-0 -left-1 w-20 h-20 bg-[var(--color-electric-blue)]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 print:hidden"></div>
-
-                            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 md:gap-6 mb-3 sm:mb-4">
-                                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight group-hover:text-shimmer transition-colors">{event.role}</h3>
-                                <div className="text-[var(--color-muted-gold)] font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase py-1 px-2 sm:px-3 rounded-md bg-white/5 border border-white/5 w-max">{event.company}</div>
-                            </div>
-
-                            {event.highlights.length > 0 && (
-                                <div className="grid gap-2 sm:gap-3">
-                                    {event.highlights.map((highlight, j) => (
-                                        <div key={j} className="flex gap-3 sm:gap-4 items-start text-gray-400 font-light leading-relaxed max-w-2xl">
-                                            <div className="mt-2 sm:mt-2.5 w-1.5 h-1.5 rounded-full bg-white/10 group-hover:bg-[var(--color-electric-blue)]/40 transition-colors shrink-0"></div>
-                                            <span className="text-sm sm:text-base md:text-lg">{highlight}</span>
-                                        </div>
-                                    ))}
+                                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight">
+                                        {event.role}
+                                    </h3>
+                                    <span className="pill text-[var(--color-muted-gold)] border-[var(--color-muted-gold)]/20 bg-[var(--color-muted-gold)]/10">
+                                        {event.company}
+                                    </span>
                                 </div>
-                            )}
-                        </motion.div>
-                    ))}
+
+                                {event.highlights.length > 0 && (
+                                    <ul className="space-y-1.5 max-w-2xl">
+                                        {event.highlights.map((h, j) => (
+                                            <li
+                                                key={j}
+                                                className="flex gap-2.5 items-start text-sm sm:text-[15px] text-white/65 leading-relaxed font-light"
+                                            >
+                                                <span className="mt-2 w-1 h-1 rounded-full bg-white/25 shrink-0" />
+                                                <span>{h}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </motion.li>
+                        ))}
+                    </ol>
                 </div>
             </div>
         </section>

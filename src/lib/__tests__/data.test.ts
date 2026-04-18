@@ -41,8 +41,16 @@ describe("Ventures", () => {
         ventures.forEach((v) => {
             expect(v.title.length).toBeGreaterThan(0);
             expect(v.description.length).toBeGreaterThan(0);
-            expect(v.logo).toMatch(/^\//);
-            expect(v.image).toMatch(/^\//);
+            expect(v.color.length).toBeGreaterThan(0);
+            // URL is required and must be a fully-qualified URL
+            expect(v.url).toMatch(/^https?:\/\//);
+        });
+    });
+
+    it("should have valid optional asset paths when provided", () => {
+        ventures.forEach((v) => {
+            if (v.logo) expect(v.logo).toMatch(/^\//);
+            if (v.image) expect(v.image).toMatch(/^\//);
         });
     });
 

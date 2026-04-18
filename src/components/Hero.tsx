@@ -2,37 +2,52 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, MessageCircle, Sparkles } from "lucide-react";
 import Image from "next/image";
-import MagneticButton from "./MagneticButton";
-import InteractiveButton from "./InteractiveButton";
-import { typewriterText, heroExpertise, heroNumbers, heroTagline } from "@/lib/data";
-import { FLUID_EASE } from "@/lib/constants";
+import {
+    buildWhatsappLink,
+    typewriterText,
+    heroExpertise,
+    heroNumbers,
+    heroTagline,
+} from "@/lib/data";
 
 /**
- * Typewriter effect component — types out text character by character.
+ * Typewriter effect — types text character by character.
+ * Renders the full text immediately on the server and during the
+ * first paint, then "rewinds" client-side and re-types it. This way
+ * the hero copy is always readable even if JS is slow or fails.
  */
 const TypewriterText = () => {
-    const [displayedText, setDisplayedText] = useState("");
-    const [index, setIndex] = useState(0);
+    const [displayedText, setDisplayedText] = useState(typewriterText);
+    const [index, setIndex] = useState(typewriterText.length);
+    const [hasMounted, setHasMounted] = useState(false);
+
+    // On client mount, rewind and re-type the text for the animation effect.
+    useEffect(() => {
+        setHasMounted(true);
+        setDisplayedText("");
+        setIndex(0);
+    }, []);
 
     useEffect(() => {
+        if (!hasMounted) return;
         if (index < typewriterText.length) {
             const timeout = setTimeout(() => {
                 setDisplayedText((prev) => prev + typewriterText.charAt(index));
                 setIndex((prev) => prev + 1);
-            }, 15);
+            }, 14);
             return () => clearTimeout(timeout);
         }
-    }, [index]);
+    }, [index, hasMounted]);
 
     return (
-        <p className="text-base sm:text-lg md:text-xl text-[var(--color-text-muted)] mb-8 sm:mb-12 max-w-2xl leading-relaxed font-light min-h-[200px] xs:min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
+        <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-8 sm:mb-10 max-w-2xl leading-relaxed font-light min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
             {displayedText}
             <motion.span
                 animate={{ opacity: [1, 0] }}
                 transition={{ repeat: Infinity, duration: 0.8 }}
-                className="inline-block w-2 h-5 bg-[var(--color-electric-blue)] ml-1 align-middle"
+                className="inline-block w-[3px] h-5 bg-[var(--color-electric-blue)] ml-1 align-middle translate-y-0.5"
             />
         </p>
     );
@@ -40,130 +55,158 @@ const TypewriterText = () => {
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[96vh] print:min-h-0 print:h-auto flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 md:pt-24 md:pb-16 overflow-hidden print:overflow-visible cyber-grid" id="hero">
-            <div className="glow-effect opacity-30 top-[-10%] right-[-5%] -z-10 animate-pulse print:hidden" style={{ animationDuration: "8s" }}></div>
-            {/* Soft gradient to black at the bottom */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none z-0 print:hidden"></div>
+        <section
+            id="hero"
+            className="relative min-h-[92vh] flex items-center pt-28 sm:pt-32 pb-20 overflow-hidden cyber-grid print:min-h-0 print:pt-0 print:pb-0"
+        >
+            {/* Ambient background blurs */}
+            <div
+                className="absolute -top-20 -right-20 w-[520px] h-[520px] bg-[var(--color-electric-blue)]/15 blur-[140px] rounded-full -z-10 print:hidden"
+                aria-hidden="true"
+            />
+            <div
+                className="absolute -bottom-32 -left-20 w-[440px] h-[440px] bg-purple-500/10 blur-[140px] rounded-full -z-10 print:hidden"
+                aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/60 pointer-events-none -z-10 print:hidden" />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 w-full flex flex-col md:grid md:grid-cols-12 gap-8 md:gap-12 items-center z-10 mt-8 sm:mt-12 md:mt-0">
-                <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, ease: FLUID_EASE }}
-                    className="md:col-span-7 lg:col-span-8 order-2 md:order-1"
-                >
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[var(--color-muted-gold)] mb-6 sm:mb-8"
-                    >
-                        <span className="w-2 h-2 rounded-full bg-[var(--color-muted-gold)] animate-pulse"></span>
-                        {heroTagline}
-                    </motion.div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full relative z-10">
+                <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                    {/* Copy column — visible from first paint, no JS-gated opacity */}
+                    <div className="lg:col-span-7 order-2 lg:order-1 fade-in-up">
+                        {/* Eyebrow */}
+                        <div className="kicker mb-6">
+                            <span className="kicker-dot" />
+                            {heroTagline}
+                        </div>
 
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight mb-6 sm:mb-8">
-                        <span className="animated-gradient">Architecting</span> Intelligent Apps, Websites & Automated Solutions.
-                    </h1>
+                        {/* Headline */}
+                        <h1 className="heading-hero mb-6">
+                            <span className="heading-accent">Architecting</span>
+                            <br className="hidden sm:block" />
+                            Intelligent Apps,{" "}
+                            <em className="text-gradient-soft">Websites</em>{" "}
+                            &amp; Automated Solutions.
+                        </h1>
 
-                    <TypewriterText />
+                        <TypewriterText />
 
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-auto z-20 relative">
-                        <MagneticButton strength={40} className="w-full sm:w-auto">
-                            <InteractiveButton
-                                as="a"
-                                href="#ventures"
-                                className="group relative flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white text-black font-bold text-sm tracking-wide transition-all duration-300 w-full overflow-hidden shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_25px_rgba(255,255,255,0.4)]"
+                        {/* CTAs */}
+                        <div className="flex flex-wrap gap-3 mb-12">
+                            <a href="#services" className="btn btn-primary group">
+                                Get a quote
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                            </a>
+                            <a href="#ventures" className="btn btn-secondary">
+                                Explore Ventures
+                            </a>
+                            <a
+                                href={buildWhatsappLink()}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-whatsapp"
                             >
-                                <span className="relative z-10 flex items-center gap-2">Explore Ventures <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
-                                <div className="absolute inset-0 bg-white group-hover:bg-gray-100 transition-colors z-0"></div>
-                            </InteractiveButton>
-                        </MagneticButton>
-                        <MagneticButton strength={25} className="w-full sm:w-auto">
-                            <InteractiveButton
-                                as="a"
-                                href="#executive-profile"
-                                className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-white/20 glass-card hover:bg-white/10 hover:border-white/40 transition-all text-white font-semibold text-sm tracking-wide w-full"
-                            >
-                                Executive Profile
-                            </InteractiveButton>
-                        </MagneticButton>
-                        <MagneticButton strength={30} className="w-full sm:w-auto">
-                            <InteractiveButton
-                                as="a"
-                                href="#contact"
-                                className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-[var(--color-electric-blue)]/50 bg-[var(--color-electric-blue)]/10 hover:bg-[var(--color-electric-blue)]/30 hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all text-white font-semibold text-sm tracking-wide w-full group"
-                            >
-                                <span className="group-hover:text-white transition-colors">Contact</span>
-                            </InteractiveButton>
-                        </MagneticButton>
+                                <MessageCircle className="w-4 h-4" />
+                                WhatsApp
+                            </a>
+                        </div>
+
+                        {/* Quick stats / proof */}
+                        <div className="grid sm:grid-cols-2 gap-6 sm:gap-10 pt-8 border-t border-white/[0.06]">
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Sparkles className="w-3.5 h-3.5 text-[var(--color-muted-gold)]" />
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--color-muted-gold)]">
+                                        Expertise
+                                    </span>
+                                </div>
+                                <ul className="space-y-1.5">
+                                    {heroExpertise.map((item) => (
+                                        <li
+                                            key={item}
+                                            className="text-xs sm:text-sm text-white/70 leading-relaxed"
+                                        >
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-electric-blue)] shadow-[0_0_6px_rgba(0,102,255,0.6)]" />
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--color-electric-blue)]">
+                                        By the Numbers
+                                    </span>
+                                </div>
+                                <ul className="space-y-1.5">
+                                    {heroNumbers.map((item) => (
+                                        <li
+                                            key={item}
+                                            className="text-xs sm:text-sm text-white/70 leading-relaxed"
+                                        >
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="mt-10 sm:mt-12 md:mt-16 flex flex-col sm:grid sm:grid-cols-2 gap-6 sm:gap-8 text-xs text-gray-400 uppercase tracking-widest border-t border-white/10 pt-6 sm:pt-8 md:pt-10">
-                        <div>
-                            <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">Expertise</p>
-                            <p className="leading-relaxed">
-                                {heroExpertise.map((item, i) => (
-                                    <span key={item}>{item}{i < heroExpertise.length - 1 && <br />}</span>
-                                ))}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="font-bold text-white mb-2 sm:mb-3 text-[var(--color-muted-gold)]">By the Numbers</p>
-                            <p className="leading-relaxed">
-                                {heroNumbers.map((item, i) => (
-                                    <span key={item}>{item}{i < heroNumbers.length - 1 && <br />}</span>
-                                ))}
-                            </p>
-                        </div>
-                    </div>
-                </motion.div>
+                    {/* Portrait column */}
+                    <div className="lg:col-span-5 relative order-1 lg:order-2 mx-auto w-[240px] sm:w-[300px] lg:w-full max-w-[420px] fade-in-up [animation-delay:0.15s]">
+                        <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
+                            {/* gradient frame */}
+                            <div className="absolute inset-0 rounded-3xl pointer-events-none z-20 ring-1 ring-inset ring-white/10" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent z-10 pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/40 via-transparent to-transparent z-10 pointer-events-none" />
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9, x: 30 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    transition={{ duration: 1.2, ease: FLUID_EASE, delay: 0.3 }}
-                    className="md:col-span-5 lg:col-span-4 relative order-1 md:order-2 w-[240px] sm:w-[280px] md:w-full mx-auto mb-4 md:mb-0"
-                >
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card p-1">
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/20 via-transparent to-transparent z-10" />
-
-                        <motion.div
-                            className="relative w-full h-full"
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-                        >
                             <Image
                                 src="/images/profile-hero.png"
-                                alt="Abdullah Mirza executive portrait"
+                                alt="Abdullah Mirza — executive portrait"
                                 fill
                                 priority
-                                className="object-cover object-top grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+                                sizes="(max-width: 640px) 240px, (max-width: 1024px) 300px, 420px"
+                                className="object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
                             />
-                        </motion.div>
-                    </div>
 
-                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--color-electric-blue)]/10 blur-3xl -z-10 print:hidden"></div>
-                    <div className="absolute -top-10 -left-10 w-48 h-48 bg-[var(--color-muted-gold)]/5 blur-3xl -z-10 print:hidden"></div>
-                </motion.div>
+                            {/* Floating availability tag */}
+                            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between gap-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2.5 print:hidden">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <span className="relative flex w-2 h-2 shrink-0">
+                                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                                        <span className="relative w-2 h-2 rounded-full bg-emerald-400" />
+                                    </span>
+                                    <span className="text-[11px] font-semibold text-white truncate">
+                                        Available for new projects
+                                    </span>
+                                </div>
+                                <span className="text-[10px] text-white/50 font-mono shrink-0">
+                                    Riyadh · KSA
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Decorative blurs */}
+                        <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[var(--color-electric-blue)]/15 blur-3xl -z-10 print:hidden" />
+                        <div className="absolute -top-12 -left-12 w-44 h-44 bg-[var(--color-muted-gold)]/10 blur-3xl -z-10 print:hidden" />
+                    </div>
+                </div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2, duration: 1 }}
-                className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center text-gray-400 z-10 print:hidden"
+            {/* Scroll cue */}
+            <a
+                href="#executive-profile"
+                className="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 flex-col items-center text-white/40 hover:text-white transition-colors print:hidden"
+                aria-label="Scroll to next section"
             >
-                <div className="w-[1px] h-12 bg-gradient-to-b from-[var(--color-electric-blue)]/50 to-transparent mb-4"></div>
+                <div className="w-px h-10 bg-gradient-to-b from-[var(--color-electric-blue)]/60 to-transparent mb-2" />
                 <motion.div
-                    animate={{ y: [0, 8, 0] }}
+                    animate={{ y: [0, 6, 0] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                 >
-                    <ChevronDown className="w-5 h-5 text-[var(--color-electric-blue)]" />
+                    <ChevronDown className="w-4 h-4" />
                 </motion.div>
-            </motion.div>
+            </a>
         </section>
     );
 }

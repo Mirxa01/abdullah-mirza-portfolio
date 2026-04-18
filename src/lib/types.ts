@@ -13,9 +13,15 @@ export interface NavLink {
 export interface Venture {
     title: string;
     description: string;
-    logo: string;
+    /** Live website URL (used for clickable card / "Visit site" link) */
+    url: string;
+    /** Display label for the URL — defaults to hostname */
+    domain?: string;
     color: string;
-    image: string;
+    /** Optional brand logo path; falls back to text initial when omitted */
+    logo?: string;
+    /** Optional cover image path; falls back to gradient hero when omitted */
+    image?: string;
 }
 
 /** Career timeline entry */
@@ -50,10 +56,47 @@ export interface Stat {
 
 /** Contact information entry */
 export interface ContactInfo {
-    type: "email" | "phone" | "location";
+    type: "email" | "phone" | "location" | "whatsapp";
     label: string;
     value: string;
     displayValue: string;
+    href?: string;
+}
+
+/** Social profile link */
+export interface SocialLink {
+    name: string;
+    href: string;
+    handle?: string;
+}
+
+/** Pricing tier for a service offering */
+export interface ServiceTier {
+    name: "MVP" | "Standard" | "Enterprise";
+    description: string;
+    usdMin: number;
+    usdMax: number;
+    weeksMin: number;
+    weeksMax: number;
+    features: string[];
+}
+
+/** Service offered by Abdullah, used by both pricing engine and Services section */
+export interface Service {
+    id:
+        | "landing"
+        | "web_app"
+        | "mobile_app"
+        | "ai_integration"
+        | "automation"
+        | "ecommerce"
+        | "saas";
+    title: string;
+    tagline: string;
+    description: string;
+    icon: string; // lucide icon name
+    color: string;
+    tiers: ServiceTier[];
 }
 
 /** Contact form field state */

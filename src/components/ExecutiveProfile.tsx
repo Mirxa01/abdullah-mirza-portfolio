@@ -1,77 +1,117 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { stats } from "@/lib/data";
-import { sectionFadeIn } from "@/lib/constants";
 
 /**
- * Animated counter that counts up from 0 to the target value
- * when the element scrolls into view.
+ * Smoothly counts from 0 → target value when scrolled into view.
+ * Uses requestAnimationFrame for consistent timing regardless of value size.
  */
-const AnimatedCounter = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
+const AnimatedCounter = ({
+    value,
+    prefix = "",
+    suffix = "",
+    duration = 1600,
+}: {
+    value: number;
+    prefix?: string;
+    suffix?: string;
+    duration?: number;
+}) => {
     const [count, setCount] = useState(0);
-    const ref = useRef(null);
+    const ref = useRef<HTMLSpanElement>(null);
     const isInView = useInView(ref, { once: true, margin: "-50px" });
+    const prefersReduced = useReducedMotion();
 
     useEffect(() => {
-        if (isInView) {
-            let start = 0;
-            const end = value;
-            const duration = 2000;
-            const incrementTime = (duration / end) || 10;
-            const timer = setInterval(() => {
-                start += Math.ceil(end / 20) || 1;
-                if (start >= end) {
-                    setCount(end);
-                    clearInterval(timer);
-                } else {
-                    setCount(start);
-                }
-            }, incrementTime);
-            return () => clearInterval(timer);
+        if (!isInView) return;
+        if (prefersReduced) {
+            setCount(value);
+            return;
         }
-    }, [isInView, value]);
+        let raf = 0;
+        const start = performance.now();
+        const tick = (now: number) => {
+            const t = Math.min(1, (now - start) / duration);
+            // ease-out cubic
+            const eased = 1 - Math.pow(1 - t, 3);
+            setCount(Math.round(eased * value));
+            if (t < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+    }, [isInView, value, duration, prefersReduced]);
 
-    return <span ref={ref}>{prefix}{count}{suffix}</span>;
+    return (
+        <span ref={ref} className="tabular-nums">
+            {prefix}
+            {count}
+            {suffix}
+        </span>
+    );
 };
 
 export default function ExecutiveProfile() {
     return (
-        <section id="executive-profile" className="py-20 sm:py-28 relative overflow-hidden cyber-grid">
-            {/* Subtle background element */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-[var(--color-electric-blue)]/5 blur-[120px] rounded-full -z-10 animate-pulse-glow print:hidden"></div>
+        <section
+            id="executive-profile"
+            className="section-y relative overflow-hidden"
+        >
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[260px] bg-[var(--color-electric-blue)]/8 blur-[120px] rounded-full -z-10 print:hidden"
+                aria-hidden="true"
+            />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 text-center">
-                <motion.div
-                    {...sectionFadeIn}
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-12 text-center relative z-10">
+                <motion.span
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.6 }}
+                    className="kicker mx-auto mb-8"
                 >
-                    <h2 className="text-[var(--color-muted-gold)] font-bold tracking-[0.3em] uppercase text-xs mb-8 sm:mb-10">
-                        Executive Profile
-                    </h2>
+                    <span className="kicker-dot" />
+                    Executive Profile
+                </motion.span>
 
-                    <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light leading-[1.5] text-gray-300">
-                        A <span className="text-white font-bold">serial entrepreneur</span> and developer with <span className="text-white font-bold">11 years</span> of expertise. I specialize in <span className="text-white font-bold">App & Website Development</span>, crafting custom <span className="animated-gradient font-bold drop-shadow-[0_0_10px_rgba(0,102,255,0.3)]">AI-based solutions</span>, and building powerful automated workflows that transform business operations.
-                    </p>
+                <motion.p
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
+                    className="text-xl sm:text-2xl md:text-[1.75rem] lg:text-3xl font-light leading-[1.45] text-white/85 max-w-4xl mx-auto"
+                >
+                    A <span className="text-white font-semibold">serial entrepreneur</span> and developer with{" "}
+                    <span className="text-white font-semibold">11 years</span> of expertise. I specialize in{" "}
+                    <span className="text-white font-semibold">App &amp; Website Development</span>, crafting custom{" "}
+                    <span className="heading-accent font-semibold">AI-based solutions</span>, and building powerful
+                    automated workflows that transform business operations.
+                </motion.p>
 
-                    <div className="mt-10 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12 relative z-10">
-                        {stats.map((stat, i) => (
-                            <motion.div
-                                key={stat.label}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3 + i * 0.1 }}
-                                className="text-center group"
-                            >
-                                <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-1 sm:mb-2 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 group-hover:from-[var(--color-electric-blue)] group-hover:to-white transition-all duration-300">
-                                    <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
-                                </div>
-                                <div className="text-[10px] sm:text-xs font-bold tracking-widest uppercase text-white/50 group-hover:text-white/80 transition-colors">{stat.label}</div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
+                <div className="mt-14 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    {stats.map((stat, i) => (
+                        <motion.div
+                            key={stat.label}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
+                            className="surface surface-hover p-5 sm:p-6 text-center group"
+                        >
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent group-hover:from-[var(--color-electric-blue)] group-hover:to-white transition-all duration-300">
+                                <AnimatedCounter
+                                    value={stat.value}
+                                    prefix={stat.prefix}
+                                    suffix={stat.suffix}
+                                />
+                            </div>
+                            <div className="text-[10px] sm:text-xs font-bold tracking-[0.18em] uppercase text-white/50 group-hover:text-white/80 transition-colors">
+                                {stat.label}
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </section>
     );

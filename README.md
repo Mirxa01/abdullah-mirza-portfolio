@@ -12,6 +12,7 @@
 | Styling      | Tailwind CSS 4                          |
 | Animations   | Framer Motion 12                        |
 | Icons        | Lucide React                            |
+| AI           | OpenAI GPT-4o-mini (Aria assistant)     |
 | Deployment   | Vercel (via GitHub Actions)             |
 
 ## Getting Started
@@ -20,11 +21,38 @@
 # Install dependencies
 pnpm install
 
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local and add your OPENAI_API_KEY
+
 # Start dev server
 pnpm dev
 
 # Open http://localhost:3000
 ```
+
+## Environment Variables
+
+| Variable          | Required | Description                                                      |
+| ----------------- | -------- | ---------------------------------------------------------------- |
+| `OPENAI_API_KEY`  | Optional | Powers the Aria AI chat assistant. Falls back to rule-based mode if omitted. |
+
+## AI Chat Assistant — Aria
+
+The portfolio includes **Aria**, an embedded AI agent that talks to visitors,
+brainstorms project ideas, and generates a downloadable PRD with **USD + SAR
+price estimates**. Visitors can also skip the bot and connect with Abdullah
+directly on WhatsApp (+966 59 999 6575).
+
+Key features:
+
+- Floating chat button (mobile: full-screen sheet · desktop: side panel)
+- Context-aware quick-reply chips that drive the conversation forward
+- Deterministic pricing engine (USD + SAR, with feature/timeline multipliers)
+- One-click PRD generation, download (`.md`), copy, and WhatsApp share
+- Conversation persistence via `localStorage`
+- Per-IP rate limiting (30 messages / 10 min)
+- Graceful rule-based fallback when `OPENAI_API_KEY` is missing
 
 ## Available Scripts
 
@@ -44,24 +72,38 @@ pnpm dev
 ```
 src/
 ├── app/
-│   ├── api/contact/   # Contact form API route
-│   ├── error.tsx       # Global error boundary
-│   ├── globals.css     # Design tokens & animations
-│   ├── layout.tsx      # Root layout with SEO metadata
-│   ├── loading.tsx     # Route transition skeleton
-│   ├── not-found.tsx   # Custom 404 page
-│   ├── page.tsx        # Home page composition
-│   ├── robots.ts       # robots.txt generation
-│   └── sitemap.ts      # sitemap.xml generation
-├── components/         # UI components (16 total)
+│   ├── api/
+│   │   ├── chat/        # AI chat agent endpoint (OpenAI + fallback)
+│   │   └── contact/     # Contact form API route
+│   ├── error.tsx        # Global error boundary
+│   ├── globals.css      # Design tokens & animations
+│   ├── layout.tsx       # Root layout with SEO metadata + ChatWidget
+│   ├── loading.tsx      # Route transition skeleton
+│   ├── not-found.tsx    # Custom 404 page
+│   ├── page.tsx         # Home page composition
+│   ├── robots.ts        # robots.txt generation
+│   └── sitemap.ts       # sitemap.xml generation
+├── components/
+│   ├── chat/            # AI chat agent UI
+│   │   ├── ChatWidget.tsx
+│   │   ├── ChatMessage.tsx
+│   │   ├── QuickReplies.tsx
+│   │   ├── QuoteCard.tsx
+│   │   └── PRDPreview.tsx
+│   ├── Services.tsx     # Services & pricing section
 │   ├── Hero.tsx         # Landing section with typewriter
 │   ├── Navbar.tsx       # Responsive navigation
 │   ├── Contact.tsx      # Contact form with API integration
-│   └── ...             # Other section & utility components
+│   └── ...              # Other section & utility components
 └── lib/
-    ├── constants.ts    # Shared animation presets & validation rules
-    ├── data.ts         # Centralized content data
-    └── types.ts        # Shared TypeScript interfaces
+    ├── chat/            # AI chat engine
+    │   ├── pricing.ts   # Deterministic USD + SAR pricing engine
+    │   ├── prd.ts       # PRD markdown generator
+    │   ├── systemPrompt.ts
+    │   └── types.ts
+    ├── constants.ts     # Shared animation presets & validation rules
+    ├── data.ts          # Centralized content data + services pricing
+    └── types.ts         # Shared TypeScript interfaces
 ```
 
 ## Architecture

@@ -4,6 +4,7 @@ import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import { ScrollObserver } from "@/components/ScrollObserver";
 import { ToastProvider } from "@/components/ToastProvider";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -84,6 +85,7 @@ export default function RootLayout({
 
                 <ToastProvider>
                     {children}
+                    <ChatWidget />
                 </ToastProvider>
             </body>
         </html>
