@@ -24,10 +24,14 @@ const TypewriterText = () => {
     const [hasMounted, setHasMounted] = useState(false);
 
     // On client mount, rewind and re-type the text for the animation effect.
+    // SSR renders the full text (for SEO / no-JS); the rewind is intentionally
+    // client-only, so these one-shot resets belong in a mount effect.
     useEffect(() => {
+        /* eslint-disable react-hooks/set-state-in-effect -- client-only animation kickoff after SSR */
         setHasMounted(true);
         setDisplayedText("");
         setIndex(0);
+        /* eslint-enable react-hooks/set-state-in-effect */
     }, []);
 
     useEffect(() => {

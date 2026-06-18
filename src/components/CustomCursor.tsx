@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
@@ -19,6 +19,8 @@ export default function CustomCursor() {
         if (typeof window === "undefined") return;
         const isCoarse = window.matchMedia("(pointer: coarse)").matches;
         const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        // Client-only capability detection (matchMedia is unavailable during SSR).
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (isCoarse || prefersReduced) setIsTouchDevice(true);
     }, []);
 

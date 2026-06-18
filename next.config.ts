@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
     // Remove the "X-Powered-By" header to reduce information leakage
     poweredByHeader: false,
 
+    // Use the system trust store when fetching build-time resources (e.g. the
+    // Google Fonts CSS pulled by next/font). Makes `next build` succeed in
+    // restricted / self-hosted CI environments behind a TLS-inspecting proxy.
+    experimental: {
+        turbopackUseSystemTlsCerts: true,
+    },
+
     // Image optimization configuration
     images: {
         formats: ["image/avif", "image/webp"],

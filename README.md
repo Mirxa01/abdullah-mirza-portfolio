@@ -33,9 +33,12 @@ pnpm dev
 
 ## Environment Variables
 
-| Variable          | Required | Description                                                      |
-| ----------------- | -------- | ---------------------------------------------------------------- |
-| `OPENAI_API_KEY`  | Optional | Powers the Aria AI chat assistant. Falls back to rule-based mode if omitted. |
+| Variable             | Required | Description                                                                                          |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`     | Optional | Powers the Aria AI chat assistant. Falls back to a deterministic rule-based mode if omitted.         |
+| `RESEND_API_KEY`     | Optional | Delivers contact-form submissions via [Resend](https://resend.com). Without it the form returns an honest "temporarily unavailable" response. |
+| `CONTACT_TO_EMAIL`   | Optional | Recipient of contact-form notifications. Defaults to `Abdullah@mirxaa.com`.                          |
+| `CONTACT_FROM_EMAIL` | Optional | Sender address (must be a Resend-verified domain in production). Defaults to `onboarding@resend.dev`. |
 
 ## AI Chat Assistant — Aria
 

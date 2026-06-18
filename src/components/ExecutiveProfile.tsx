@@ -27,6 +27,8 @@ const AnimatedCounter = ({
     useEffect(() => {
         if (!isInView) return;
         if (prefersReduced) {
+            // Honor reduced-motion: jump straight to the final value, no animation.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCount(value);
             return;
         }

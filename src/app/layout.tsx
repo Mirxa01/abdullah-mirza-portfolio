@@ -25,20 +25,13 @@ export const metadata: Metadata = {
         siteName: "Abdullah Mirza Portfolio",
         locale: "en_US",
         type: "website",
-        images: [
-            {
-                url: "/images/executive-portrait.png",
-                width: 1200,
-                height: 630,
-                alt: "Abdullah Mirza - Executive Profile",
-            },
-        ],
+        // Social card is generated dynamically by app/opengraph-image.tsx
     },
     twitter: {
         card: "summary_large_image",
         title: "Abdullah Mirza | Founder & Platform Builder",
         description: "AI-driven platforms, logistics infrastructure, and scalable commerce ecosystems.",
-        images: ["/images/executive-portrait.png"],
+        // Card image is generated dynamically by app/twitter-image.tsx
     },
 };
 
@@ -55,7 +48,10 @@ const jsonLd = {
         addressLocality: "Riyadh",
         addressCountry: "SA",
     },
-    sameAs: [],
+    sameAs: [
+        "https://www.linkedin.com/in/abdullahmirxa/",
+        "https://mirxaa.com",
+    ],
     knowsAbout: ["AI Solutions", "Full-Stack Development", "Workflow Automation", "E-Commerce", "Logistics"],
 };
 
