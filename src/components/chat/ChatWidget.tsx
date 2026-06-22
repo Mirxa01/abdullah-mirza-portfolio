@@ -66,16 +66,20 @@ export default function ChatWidget() {
     }, []);
 
     // ----- Restore from localStorage
+    // Hydration must run in an effect: localStorage is unavailable during SSR,
+    // so lazy useState initializers would cause a server/client mismatch.
     useEffect(() => {
         if (typeof window === "undefined") return;
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (raw) {
                 const persisted = JSON.parse(raw) as PersistedState;
+                /* eslint-disable react-hooks/set-state-in-effect -- one-shot hydration from persisted client storage */
                 setMessages(persisted.messages || []);
                 setBrief(persisted.brief || {});
                 setPhase(persisted.phase || "greet");
                 setSuggestedReplies(persisted.suggestedReplies || []);
+                /* eslint-enable react-hooks/set-state-in-effect */
                 const lastPrdMsg = [...(persisted.messages || [])]
                     .reverse()
                     .find((m) => m.prd);
@@ -194,6 +198,9 @@ export default function ChatWidget() {
 
     useEffect(() => {
         if (open && hasInitialized && messages.length === 0 && !isSending) {
+            // Event-driven async fetch (panel opened) — sets state on completion;
+            // not a render-derived update, so the effect is the correct home.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             void fetchInitial();
         }
     }, [open, hasInitialized, messages.length, isSending, fetchInitial]);
