@@ -185,7 +185,7 @@ export default function ChatWidget() {
                 id: uid(),
                 role: "assistant",
                 content:
-                    "Hi! I'm Aria, Abdullah's AI assistant. How can I help — get a quote, brainstorm, or chat directly?",
+                    "Hi! I'm Aria, Abdullah's friendly assistant. Want a quote, a brainstorm, or a direct WhatsApp intro?",
                 createdAt: Date.now(),
             };
             setMessages([fallback]);
@@ -293,7 +293,7 @@ export default function ChatWidget() {
                         content:
                             data.error ||
                             data.message ||
-                            "Sorry — something went wrong. You can WhatsApp Abdullah directly while I recover.",
+                            "Hmm — something went wrong on my side. You can WhatsApp Abdullah while I recover.",
                         createdAt: Date.now(),
                     };
                     setMessages((m) => [...m, errMsg]);
@@ -327,7 +327,7 @@ export default function ChatWidget() {
                     id: uid(),
                     role: "assistant",
                     content:
-                        "Sorry — I couldn't reach the server. You can WhatsApp Abdullah directly while I'm offline.",
+                        "I couldn't reach the server just now. WhatsApp Abdullah anytime — he'll pick it up from there.",
                     createdAt: Date.now(),
                 };
                 setMessages((m) => [...m, errMsg]);
@@ -636,7 +636,7 @@ export default function ChatWidget() {
                                     <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                                     <div className="min-w-0">
                                         <div className="text-[11px] font-bold text-emerald-300 truncate">
-                                            Prefer to skip the bot?
+                                            Prefer a human chat?
                                         </div>
                                         <div className="text-[10px] text-white/50 truncate">
                                             WhatsApp Abdullah · {WHATSAPP_DISPLAY}

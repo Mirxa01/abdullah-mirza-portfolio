@@ -97,6 +97,7 @@ src/
 │   ├── Hero.tsx         # Landing section with typewriter
 │   ├── Navbar.tsx       # Responsive navigation
 │   ├── Contact.tsx      # Contact form with API integration
+│   ├── PrintableCV.tsx  # Print-only professional CV layout
 │   └── ...              # Other section & utility components
 └── lib/
     ├── chat/            # AI chat engine
@@ -119,6 +120,7 @@ src/
 - **Type Safety**: Shared interfaces in `src/lib/types.ts` ensure consistency across components
 - **Animation Presets**: Reusable animation configs in `src/lib/constants.ts` (DRY)
 - **API Routes**: Contact form hits `/api/contact` for server-side validation; chat hits `/api/chat` with role/length/brief validation
+- **Printable CV**: Screen portfolio is hidden during print; `PrintableCV` renders a dedicated A4 resume
 - **SEO**: JSON-LD structured data, Open Graph, Twitter cards, dynamic sitemap & robots.txt
 - **Security**: CSP + standard hardening headers; honeypot + rate limits on public APIs
 

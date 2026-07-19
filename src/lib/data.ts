@@ -18,7 +18,7 @@ import type {
 // ---------------------------------------------------------------------------
 
 export const navLinks: NavLink[] = [
-    { name: "Profile", href: "#executive-profile" },
+    { name: "About", href: "#executive-profile" },
     { name: "Ventures", href: "#ventures" },
     { name: "Services", href: "#services" },
     { name: "Leadership", href: "#leadership" },

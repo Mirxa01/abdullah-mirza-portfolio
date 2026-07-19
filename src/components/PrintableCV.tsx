@@ -20,6 +20,10 @@ import {
     ventures,
 } from "@/lib/data";
 
+/** Keep the printed CV compact — top highlights only. */
+const CAREER_HIGHLIGHT_LIMIT = 2;
+const LEADERSHIP_POINT_LIMIT = 4;
+
 export default function PrintableCV() {
     return (
         <article
@@ -77,7 +81,7 @@ export default function PrintableCV() {
                             <span className="cv-period">{role.period}</span>
                         </div>
                         <ul>
-                            {role.points.map((point) => (
+                            {role.points.slice(0, LEADERSHIP_POINT_LIMIT).map((point) => (
                                 <li key={point}>{point}</li>
                             ))}
                         </ul>
@@ -97,7 +101,7 @@ export default function PrintableCV() {
                         </div>
                         {event.highlights.length > 0 && (
                             <ul>
-                                {event.highlights.map((highlight) => (
+                                {event.highlights.slice(0, CAREER_HIGHLIGHT_LIMIT).map((highlight) => (
                                     <li key={highlight}>{highlight}</li>
                                 ))}
                             </ul>

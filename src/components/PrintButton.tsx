@@ -12,22 +12,17 @@ export default function PrintButton({ className = "" }: { className?: string }) 
     const [showTooltip, setShowTooltip] = useState(false);
 
     useEffect(() => {
-        const cleanup = () => {
-            document.documentElement.classList.remove("is-printing");
-        };
-        window.addEventListener("afterprint", cleanup);
-        return () => window.removeEventListener("afterprint", cleanup);
+        // Some browsers fire afterprint inconsistently; keep a no-op listener
+        // so future print-prep hooks have a stable place to live.
+        const onAfterPrint = () => undefined;
+        window.addEventListener("afterprint", onAfterPrint);
+        return () => window.removeEventListener("afterprint", onAfterPrint);
     }, []);
 
     const handlePrint = () => {
-        document.documentElement.classList.add("is-printing");
-        // Let the browser apply print styles before opening the dialog.
+        // Yield one frame so tooltip/hover state settles before the dialog opens.
         requestAnimationFrame(() => {
             window.print();
-            // Fallback cleanup for browsers that omit afterprint.
-            window.setTimeout(() => {
-                document.documentElement.classList.remove("is-printing");
-            }, 1000);
         });
     };
 

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, MessageCircle } from "lucide-react";
 import PrintButton from "./PrintButton";
 import { buildWhatsappLink, navLinks, WHATSAPP_DISPLAY, PROFESSIONAL_TITLE } from "@/lib/data";
 
 /** Lightweight scroll-spy: tracks which section is currently in viewport. */
-function useActiveSection(ids: string[]): string | null {
+function useActiveSection(ids: readonly string[]): string | null {
     const [active, setActive] = useState<string | null>(null);
+    // Stabilize dependency — callers often pass a freshly mapped array.
+    const idsKey = ids.join("|");
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -21,12 +23,13 @@ function useActiveSection(ids: string[]): string | null {
             },
             { rootMargin: "-40% 0px -55% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
         );
-        ids.forEach((id) => {
+        const idList = idsKey.split("|").filter(Boolean);
+        idList.forEach((id) => {
             const el = document.querySelector(id);
             if (el) observer.observe(el);
         });
         return () => observer.disconnect();
-    }, [ids]);
+    }, [idsKey]);
 
     return active;
 }
@@ -34,7 +37,8 @@ function useActiveSection(ids: string[]): string | null {
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const activeHref = useActiveSection(navLinks.map((l) => l.href));
+    const sectionIds = useMemo(() => navLinks.map((l) => l.href), []);
+    const activeHref = useActiveSection(sectionIds);
 
     useEffect(() => {
         const handleScroll = () => {

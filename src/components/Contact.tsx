@@ -68,7 +68,7 @@ export default function Contact() {
             }
 
             setIsSuccess(true);
-            addToast("Your message has been successfully sent.", "success");
+            addToast("Message sent — thanks for reaching out!", "success");
 
             setTimeout(() => {
                 setIsSuccess(false);
@@ -76,7 +76,7 @@ export default function Contact() {
                 setHoneypot("");
             }, 4000);
         } catch {
-            addToast("Network error. Please check your connection and try again.", "error");
+            addToast("Couldn't send right now. Please check your connection and try again.", "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -209,8 +209,8 @@ export default function Contact() {
                                         >
                                             <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-green-400" />
                                         </motion.div>
-                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Message Sent</h3>
-                                        <p className="text-[var(--color-text-muted)] text-center max-w-[250px] text-sm sm:text-base">Thank you for reaching out. I will respond to your inquiry shortly.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Got it — thanks!</h3>
+                                        <p className="text-[var(--color-text-muted)] text-center max-w-[250px] text-sm sm:text-base">I&apos;ll get back to you soon. Looking forward to chatting.</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>

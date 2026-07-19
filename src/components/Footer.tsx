@@ -19,7 +19,7 @@ const socialIcons: Record<string, React.ReactNode> = {
 };
 
 const navColumn = [
-    { name: "Executive Profile", href: "#executive-profile" },
+    { name: "About", href: "#executive-profile" },
     { name: "Selected Work", href: "#ventures" },
     { name: "Services & Pricing", href: "#services" },
     { name: "Leadership", href: "#leadership" },
