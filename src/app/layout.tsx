@@ -5,33 +5,43 @@ import CustomCursor from "@/components/CustomCursor";
 import { ScrollObserver } from "@/components/ScrollObserver";
 import { ToastProvider } from "@/components/ToastProvider";
 import ChatWidget from "@/components/chat/ChatWidget";
+import { SITE } from "@/lib/constants";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://abdullahmirza.com"),
-    title: "Abdullah Mirza | Entrepreneur | AI Platform Builder | Logistics & E-Commerce Executive",
-    description: "Founder-operator portfolio of Abdullah Mirza: AI-driven platform architect, logistics and supply chain executive, and Vision 2030-aligned entrepreneur in Riyadh, Saudi Arabia.",
-    keywords: ["Abdullah Mirza", "Riyadh", "Saudi Arabia", "AI Platform Builder", "Logistics Executive", "Supply Chain Strategy", "3PL", "Marketplace Scaling", "Vision 2030", "Entrepreneur"],
+    metadataBase: new URL(SITE.URL),
+    title: SITE.TITLE,
+    description: SITE.DESCRIPTION,
+    keywords: [
+        "Abdullah Mirza",
+        "Riyadh",
+        "Saudi Arabia",
+        "Founder",
+        "Full-stack builder",
+        "AI products",
+        "Workflow automation",
+        "E-commerce",
+        "Logistics",
+        "Vision 2030",
+    ],
     authors: [{ name: "Abdullah Mirza" }],
     robots: "index, follow",
     alternates: {
         canonical: "/",
     },
     openGraph: {
-        title: "Abdullah Mirza | Founder & Platform Builder",
-        description: "I Build AI-Driven Platforms and Scalable Commerce Infrastructure.",
+        title: "Abdullah Mirza | Founder · Builder · Operator",
+        description: "Friendly software, AI tools, and operations systems — built from Riyadh.",
         url: "/",
-        siteName: "Abdullah Mirza Portfolio",
+        siteName: SITE.NAME,
         locale: "en_US",
         type: "website",
-        // Social card is generated dynamically by app/opengraph-image.tsx
     },
     twitter: {
         card: "summary_large_image",
-        title: "Abdullah Mirza | Founder & Platform Builder",
-        description: "AI-driven platforms, logistics infrastructure, and scalable commerce ecosystems.",
-        // Card image is generated dynamically by app/twitter-image.tsx
+        title: "Abdullah Mirza | Founder · Builder · Operator",
+        description: "Apps, AI, logistics, and commerce — built with care from Riyadh.",
     },
 };
 
@@ -40,9 +50,10 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Abdullah Mirza",
-    jobTitle: "Entrepreneur & AI Platform Builder",
+    jobTitle: "Founder · Builder · Operator",
     url: "https://abdullahmirza.com",
-    description: "Serial entrepreneur and developer with 11 years of experience building custom apps, AI-powered solutions, and automated workflows.",
+    description:
+        "Founder, builder, and operator with 11 years of experience creating apps, AI tools, and automated workflows from Riyadh.",
     address: {
         "@type": "PostalAddress",
         addressLocality: "Riyadh",

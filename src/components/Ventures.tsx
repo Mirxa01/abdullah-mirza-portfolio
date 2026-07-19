@@ -171,13 +171,12 @@ export default function Ventures() {
                             Selected Work
                         </span>
                         <h2 className="heading-display mb-6">
-                            Sites &amp; products{" "}
-                            <span className="heading-accent">shipped to the world.</span>
+                            Products I&apos;ve{" "}
+                            <span className="heading-accent">built and shipped.</span>
                         </h2>
                         <p className="text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed font-light mb-8">
-                            A selection of live websites and platforms designed, engineered,
-                            and operated end-to-end — spanning marketplaces, AI studios,
-                            commerce, and consumer brands.
+                            A few live sites and platforms I designed, engineered, and helped
+                            operate — from marketplaces and AI studios to commerce and consumer brands.
                         </p>
 
                         <ul className="space-y-3">

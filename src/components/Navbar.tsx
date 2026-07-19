@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, MessageCircle } from "lucide-react";
 import PrintButton from "./PrintButton";
-import { buildWhatsappLink, navLinks, WHATSAPP_DISPLAY } from "@/lib/data";
+import { buildWhatsappLink, navLinks, WHATSAPP_DISPLAY, PROFESSIONAL_TITLE } from "@/lib/data";
 
 /** Lightweight scroll-spy: tracks which section is currently in viewport. */
 function useActiveSection(ids: string[]): string | null {
@@ -47,7 +47,7 @@ export default function Navbar() {
 
     return (
         <nav
-            className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 print:static print:bg-white ${
+            className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
                 scrolled ? "py-3" : "py-5"
             }`}
         >
@@ -57,7 +57,7 @@ export default function Navbar() {
                         scrolled
                             ? "bg-black/70 backdrop-blur-xl border border-white/[0.08] px-3 sm:px-4 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                             : "bg-transparent border border-transparent px-2 sm:px-4 py-2"
-                    } print:rounded-none print:border-0 print:bg-white print:px-0`}
+                    }`}
                 >
                     {/* Brand */}
                     <a
@@ -65,15 +65,15 @@ export default function Navbar() {
                         className="flex items-center gap-2.5 group"
                         aria-label="Abdullah Mirza — home"
                     >
-                        <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 flex items-center justify-center text-white font-black text-base italic group-hover:scale-105 transition-transform print:bg-black print:from-black print:to-black">
+                        <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 flex items-center justify-center text-white font-black text-base italic group-hover:scale-105 transition-transform">
                             A
                         </div>
                         <div className="flex flex-col leading-none">
-                            <span className="text-sm font-black tracking-tight text-white print:text-black">
+                            <span className="text-sm font-black tracking-tight text-white">
                                 Abdullah Mirza
                             </span>
-                            <span className="text-[9px] tracking-[0.2em] uppercase text-white/40 mt-0.5 print:text-gray-500">
-                                Founder · Engineer
+                            <span className="text-[9px] tracking-[0.14em] uppercase text-white/40 mt-0.5">
+                                {PROFESSIONAL_TITLE}
                             </span>
                         </div>
                     </a>

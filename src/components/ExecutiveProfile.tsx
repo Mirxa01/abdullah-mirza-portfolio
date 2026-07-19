@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { stats } from "@/lib/data";
+import { stats, executiveProfileLead } from "@/lib/data";
 
 /**
  * Smoothly counts from 0 → target value when scrolled into view.
@@ -74,7 +74,7 @@ export default function ExecutiveProfile() {
                     className="kicker mx-auto mb-8"
                 >
                     <span className="kicker-dot" />
-                    Executive Profile
+                    A little about me
                 </motion.span>
 
                 <motion.p
@@ -84,11 +84,7 @@ export default function ExecutiveProfile() {
                     transition={{ duration: 0.8, delay: 0.1 }}
                     className="text-xl sm:text-2xl md:text-[1.75rem] lg:text-3xl font-light leading-[1.45] text-white/85 max-w-4xl mx-auto"
                 >
-                    A <span className="text-white font-semibold">serial entrepreneur</span> and developer with{" "}
-                    <span className="text-white font-semibold">11 years</span> of expertise. I specialize in{" "}
-                    <span className="text-white font-semibold">App &amp; Website Development</span>, crafting custom{" "}
-                    <span className="heading-accent font-semibold">AI-based solutions</span>, and building powerful
-                    automated workflows that transform business operations.
+                    {executiveProfileLead}
                 </motion.p>
 
                 <div className="mt-14 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">

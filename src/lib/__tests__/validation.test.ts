@@ -63,7 +63,7 @@ describe("Contact Form Validation", () => {
     it("should accept a fully valid form", () => {
         const result = validateContactForm({
             name: "Abdullah Mirza",
-            email: "Abdullah@mirxaa.com",
+            email: "abdullah@mirxaa.com",
             subject: "Executive Opportunity",
             message: "I would like to discuss a potential partnership opportunity with your team.",
         });

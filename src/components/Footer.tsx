@@ -9,6 +9,7 @@ import {
     buildWhatsappLink,
     socialLinks,
     ventures,
+    PROFESSIONAL_TITLE,
 } from "@/lib/data";
 
 const socialIcons: Record<string, React.ReactNode> = {
@@ -70,9 +71,8 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-sm text-white/55 leading-relaxed font-light mb-6">
-                            Founder, engineer, and operator building AI-driven platforms,
-                            logistics infrastructure, and scalable commerce ecosystems from
-                            Riyadh, Saudi Arabia.
+                            {PROFESSIONAL_TITLE}. I build friendly AI-powered products,
+                            logistics systems, and commerce experiences from Riyadh, Saudi Arabia.
                         </p>
 
                         <div className="flex flex-wrap gap-2">

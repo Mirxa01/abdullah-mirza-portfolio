@@ -153,3 +153,21 @@ describe("Hero Content", () => {
         expect(heroNumbers.length).toBeGreaterThanOrEqual(2);
     });
 });
+
+describe("Education", () => {
+    it("should include degree and institution", async () => {
+        const { education } = await import("../data");
+        expect(education.degree.length).toBeGreaterThan(0);
+        expect(education.institution).toContain("Punjab");
+        expect(education.location.length).toBeGreaterThan(0);
+    });
+});
+
+describe("Printable CV content", () => {
+    it("exposes a concise CV summary and consistent title", async () => {
+        const { cvSummary, PROFESSIONAL_TITLE, ventures, stats } = await import("../data");
+        expect(cvSummary.length).toBeGreaterThan(40);
+        expect(PROFESSIONAL_TITLE).toMatch(/Founder/);
+        expect(ventures.length).toBe(stats.find((s) => s.label.includes("Products"))?.value);
+    });
+});

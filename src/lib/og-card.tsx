@@ -9,7 +9,7 @@ import { ImageResponse } from "next/og";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
-export const OG_ALT = "Abdullah Mirza — Founder, Operator & AI Platform Builder";
+export const OG_ALT = "Abdullah Mirza — Founder · Builder · Operator";
 
 export function renderOgCard(): ImageResponse {
     return new ImageResponse(
@@ -44,7 +44,7 @@ export function renderOgCard(): ImageResponse {
                         fontWeight: 600,
                     }}
                 >
-                    Founder · Operator · Architect
+                    Founder · Builder · Operator
                 </span>
             </div>
 
@@ -53,7 +53,7 @@ export function renderOgCard(): ImageResponse {
                     Abdullah Mirza
                 </span>
                 <span style={{ color: "#c8d2e0", fontSize: 40, fontWeight: 500, maxWidth: 980 }}>
-                    AI-driven platforms, logistics infrastructure &amp; scalable commerce
+                    Friendly software, AI tools &amp; ops systems from Riyadh
                 </span>
             </div>
 

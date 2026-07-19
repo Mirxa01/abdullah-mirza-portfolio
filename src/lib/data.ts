@@ -27,35 +27,57 @@ export const navLinks: NavLink[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Brand / positioning (kept consistent across navbar, hero, footer, print CV)
+// ---------------------------------------------------------------------------
+
+export const PROFESSIONAL_TITLE = "Founder · Builder · Operator";
+
+export const SITE_URL = "https://abdullahmirza.com";
+export const LINKEDIN_URL = "https://www.linkedin.com/in/abdullahmirxa/";
+
+// ---------------------------------------------------------------------------
 // Hero
 // ---------------------------------------------------------------------------
 
-export const heroTagline = "Founder · Operator · Architect";
+export const heroTagline = PROFESSIONAL_TITLE;
+
+export const heroHeadline = {
+    lead: "I build",
+    accent: "friendly software",
+    rest: "that helps businesses grow.",
+};
 
 export const typewriterText =
-    "Serial entrepreneur and developer with 11 years of experience building custom apps and websites, engineering AI-powered solutions, and creating automated workflows that scale businesses effortlessly.";
+    "Hi — I'm Abdullah. For 11+ years I've been building apps, websites, and AI-powered tools with founders and operators across Saudi Arabia. I care about clear products, calm automation, and shipping work people actually enjoy using.";
 
 export const heroExpertise = [
-    "Full-Stack App & Website Development",
-    "Custom AI Solutions & Integrations",
-    "Automated Workflows & Process Engineering",
+    "Apps, websites & SaaS products",
+    "Custom AI agents & integrations",
+    "Workflow automation that saves real hours",
 ];
 
 export const heroNumbers = [
-    "11+ Years of Entrepreneurial Experience",
-    "4 High-Growth Ventures Founded",
-    "Hundreds of Hours Saved via Automation",
+    "11+ years building & operating",
+    "7 products and brands shipped",
+    "50+ workflows automated for teams",
 ];
+
+/** Short executive summary used by the printable CV. */
+export const cvSummary =
+    "Founder-operator and full-stack builder based in Riyadh. I design and ship AI-enabled products, commerce platforms, and operational systems — pairing hands-on engineering with enterprise logistics experience.";
 
 // ---------------------------------------------------------------------------
 // Executive Profile
 // ---------------------------------------------------------------------------
 
+export const executiveProfileLead =
+    "I'm a hands-on founder and developer with 11 years of experience. I build apps and websites, craft practical AI solutions, and set up automations that remove busywork — so teams can focus on what matters.";
+
 export const stats: Stat[] = [
-    { value: 11, suffix: "+", prefix: "", label: "Years of Experience" },
-    { value: 4, prefix: "", label: "Ventures Founded" },
-    { value: 50, prefix: "", suffix: "+", label: "Automated Workflows" },
-    { value: 100, prefix: "", suffix: "%", label: "Custom Solutions" },
+    { value: 11, suffix: "+", prefix: "", label: "Years Building" },
+    { value: 7, prefix: "", label: "Products & Brands" },
+    { value: 50, prefix: "", suffix: "+", label: "Workflows Automated" },
+    { value: 100, prefix: "", suffix: "%", label: "Custom-Built Work" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -68,7 +90,7 @@ export const ventures: Venture[] = [
         domain: "mirxaa.com",
         url: "https://mirxaa.com",
         description:
-            "Personal brand and creative studio of Abdullah Mirza — a hub for products, writing, and experiments at the intersection of AI and product engineering.",
+            "My studio home base — a friendly hub for products, writing, and experiments where AI meets thoughtful product design.",
         color: "#0066ff",
     },
     {
@@ -76,7 +98,7 @@ export const ventures: Venture[] = [
         domain: "sourcekom.com",
         url: "https://sourcekom.com",
         description:
-            "Enterprise-grade asset booking & exchange platform connecting industrial suppliers with procurement teams across Saudi Arabia.",
+            "Asset booking and exchange platform that helps industrial suppliers and procurement teams work together across Saudi Arabia.",
         logo: "/logos/sourcekom.png",
         color: "var(--color-electric-blue)",
         image: "/generated_images/venture-sourcekom.png",
@@ -86,7 +108,7 @@ export const ventures: Venture[] = [
         domain: "habibistay.com",
         url: "https://habibistay.com",
         description:
-            "AI-enhanced hospitality marketplace transforming short-term rentals in KSA. Powered by SARA — an intelligent booking concierge.",
+            "Hospitality marketplace for short-term stays in KSA, with SARA — a warm AI concierge that helps guests book with confidence.",
         logo: "/logos/habibistay.webp",
         color: "var(--color-muted-gold)",
         image: "/generated_images/venture-habibistay.png",
@@ -96,7 +118,7 @@ export const ventures: Venture[] = [
         domain: "newomen.com",
         url: "https://newomen.com",
         description:
-            "Modern lifestyle and commerce destination crafted for the new-generation woman — curated products, content, and community in one experience.",
+            "Lifestyle and commerce destination for modern women — curated products, stories, and community in one calm experience.",
         color: "#f472b6",
     },
     {
@@ -104,7 +126,7 @@ export const ventures: Venture[] = [
         domain: "daddyscart.com",
         url: "https://daddyscart.com",
         description:
-            "Full-stack e-commerce venture engineering next-generation digital retail experiences for the Saudi consumer.",
+            "E-commerce brand built for Saudi shoppers — clear product discovery, smooth checkout, and a retail feel that feels local.",
         logo: "/logos/daddyscart.png",
         color: "#34d399",
         image: "/generated_images/venture-daddyscart.png",
@@ -114,7 +136,7 @@ export const ventures: Venture[] = [
         domain: "arabclue.com",
         url: "https://arabclue.com",
         description:
-            "AI-powered digital intelligence engine turning regional market data into actionable business insights.",
+            "Market intelligence product that turns regional data into plain-language insights teams can act on.",
         logo: "/logos/arabclue.png",
         color: "#a855f7",
         image: "/generated_images/venture-arabclue.png",
@@ -124,16 +146,16 @@ export const ventures: Venture[] = [
         domain: "msanai.com",
         url: "https://msanai.com",
         description:
-            "Applied AI studio building bespoke agents, RAG pipelines, and intelligent automations for ambitious businesses across the region.",
+            "Applied AI studio creating custom agents, RAG systems, and helpful automations for ambitious teams in the region.",
         color: "#22d3ee",
     },
 ];
 
 export const ventureBulletPoints = [
-    "Engineering scalable Apps, Websites & SaaS platforms",
-    "Integrating AI to unlock operational efficiency",
-    "Automating workflows to reduce manual overhead",
-    "Full product lifecycle — from ideation to deployment",
+    "Design and ship apps, websites, and SaaS that feel clear to use",
+    "Add AI where it genuinely saves time — not where it adds noise",
+    "Automate repetitive ops so people can focus on higher-value work",
+    "Stay with you from first idea through launch and iteration",
 ];
 
 // ---------------------------------------------------------------------------
@@ -146,11 +168,11 @@ export const leadershipRoles = [
         role: "Head of Business Development",
         period: "Sep 2022 – 2025",
         points: [
-            "Architecting AI-first digital platforms for enterprise clients across KSA",
+            "Built AI-first digital platforms for enterprise clients across KSA",
             "Closed $10M+ in strategic B2B software and automation partnerships",
-            "Generated $1M+ incremental annual revenue through new SaaS verticals",
-            "Leading cross-functional engineering teams for government & enterprise RFPs",
-            "Deployed automated workflows resulting in 40% systemic optimization",
+            "Added $1M+ in annual revenue through new SaaS service lines",
+            "Led cross-functional engineering teams on government and enterprise RFPs",
+            "Rolled out automations that cut manual processing time by ~40%",
         ],
     },
     {
@@ -158,11 +180,11 @@ export const leadershipRoles = [
         role: "Chief Operating Officer",
         period: "Feb 2021 – Sep 2022",
         points: [
-            "Directed technology infrastructure across 9 macro-facilities spanning ~1M sqft",
-            "Orchestrated software systems handling 30K–45K daily e-commerce transactions",
-            "Built and led cross-functional technical and operations teams",
-            "Implemented end-to-end cloud infrastructure for nationwide 3PL operations",
-            "Achieved 99.2% system uptime and SLA compliance under global peak surges",
+            "Owned technology across 9 large-scale fulfillment facilities (~1M sqft)",
+            "Ran software systems supporting 30K–45K daily e-commerce orders",
+            "Built and mentored cross-functional tech and operations teams",
+            "Stood up cloud infrastructure for nationwide 3PL operations",
+            "Held 99.2% uptime and SLA compliance through seasonal peak volumes",
         ],
     },
 ];
@@ -176,58 +198,58 @@ export const timelineEvents: TimelineEvent[] = [
         role: "General Manager",
         company: "SafeBox",
         highlights: [
-            "Spearheading regional technical operations, SaaS P&L ownership, and digital growth initiatives",
-            "Establishing software go-to-market frameworks for new service verticals",
+            "Led regional technical operations, SaaS P&L, and digital growth programs",
+            "Built go-to-market playbooks for new software-enabled service lines",
         ],
     },
     {
         role: "Regional Operations Manager",
         company: "Safe Arrival",
         highlights: [
-            "Launched a 32,000 m² automated fulfillment center powered by custom software systems",
-            "Scaled digital transaction volume by 200% within the first quarter",
-            "Delivered 30% YoY revenue growth through software-driven excellence",
-            "Eliminated 75% of process backlogs via technical re-engineering and automation",
+            "Launched a 32,000 m² automated fulfillment center with custom software",
+            "Grew digital transaction volume by 200% in the first quarter",
+            "Delivered 30% YoY revenue growth through better systems and process design",
+            "Cleared 75% of process backlogs with re-engineering and automation",
         ],
     },
     {
         role: "Operations Manager",
         company: "SLS Express",
         highlights: [
-            "Managed high-volume digital delivery networks spanning multiple cities",
-            "Architected real-time fleet tracking apps and AI-driven route optimization algorithms",
+            "Ran multi-city digital delivery networks at high daily volume",
+            "Built real-time fleet tracking apps and AI-assisted route optimization",
         ],
     },
     {
         role: "Operations Supervisor",
         company: "SLS Express",
         highlights: [
-            "Supervised API integrations for cross-dock operations with 300+ daily systemic movements",
-            "Reduced average data processing time by 18% through workflow automation scripts",
+            "Oversaw API integrations for cross-dock ops with 300+ daily movements",
+            "Cut average data processing time by 18% with automation scripts",
         ],
     },
     {
         role: "Inventory Supervisor",
         company: "Jollychic",
         highlights: [
-            "Led tech implementation for staff across large-scale e-commerce warehouse operations",
-            "Maintained 99.5% systemic data accuracy across 500K+ digital SKUs via custom dashboards",
+            "Rolled out warehouse tech tooling and training for large e-commerce ops",
+            "Kept 99.5% data accuracy across 500K+ SKUs with custom dashboards",
         ],
     },
     {
         role: "Inbound Supervisor",
         company: "Jollychic",
         highlights: [
-            "Directed staff training on custom ERPs ensuring 99%+ automated SLA compliance",
-            "Automated processing for 50K+ units daily during peak technical promotional periods",
+            "Trained teams on ERP workflows and held 99%+ automated SLA compliance",
+            "Automated inbound processing for 50K+ units daily during peak promotions",
         ],
     },
     {
         role: "Direct Sales Supervisor",
         company: "Callem Middle East",
         highlights: [
-            "Built and managed high-performance SaaS B2C acquisition teams",
-            "Exceeded quarterly software revenue targets by 25% consistently",
+            "Built and coached high-performing B2C acquisition teams",
+            "Consistently beat quarterly revenue targets by 25%",
         ],
     },
 ];
@@ -237,26 +259,32 @@ export const timelineEvents: TimelineEvent[] = [
 // ---------------------------------------------------------------------------
 
 export const competencyNames = [
-    "Full-Stack App & Website Development",
-    "AI Solutions & GPT Integrations",
-    "Automated Workflows (Make, Zapier, n8n)",
-    "SaaS Architecture & Infrastructure",
-    "E-Commerce Scaling & Platforms",
-    "Operational Process Engineering",
-    "Business Intelligence & Analytics",
+    "Full-stack apps & websites",
+    "AI solutions & GPT integrations",
+    "Workflow automation (Make, Zapier, n8n)",
+    "SaaS architecture & infrastructure",
+    "E-commerce platforms & scaling",
+    "Operations & process design",
+    "Business intelligence & analytics",
 ];
 
 export const professionalStrengths = [
-    "Builds elegant, high-performing websites and mobile apps",
-    "Automates repetitive tasks to save hundreds of hours",
-    "Integrates cutting-edge AI to solve complex business problems",
-    "Architects scalable infrastructure from zero-to-one",
-    "Pairs technical execution with deep entrepreneurial strategy",
+    "Ships clear, high-performing websites and mobile apps",
+    "Automates the busywork so teams get hours back every week",
+    "Uses AI to solve real problems — not to add complexity",
+    "Builds sturdy infrastructure from the first prototype onward",
+    "Pairs technical craft with practical founder experience",
 ];
 
 // ---------------------------------------------------------------------------
 // Education & Certifications
 // ---------------------------------------------------------------------------
+
+export const education = {
+    degree: "Bachelor of Business Administration (BBA)",
+    institution: "University of the Punjab",
+    location: "Lahore, Pakistan",
+};
 
 export const certifications = [
     "CPSM",
@@ -280,10 +308,10 @@ export const certifications = [
 export const WHATSAPP_NUMBER = "+966599996575";
 export const WHATSAPP_NUMBER_RAW = "966599996575"; // wa.me format
 export const WHATSAPP_DISPLAY = "+966 59 999 6575";
-export const EMAIL_ADDRESS = "Abdullah@mirxaa.com";
+export const EMAIL_ADDRESS = "abdullah@mirxaa.com";
 
 export const whatsappCtaMessage =
-    "Hi Abdullah, I'd like to discuss a project with you.";
+    "Hi Abdullah — I'd love to chat about a project.";
 
 /** Builds a wa.me deep link with a prefilled message */
 export const buildWhatsappLink = (message: string = whatsappCtaMessage): string =>
@@ -306,14 +334,14 @@ export const contactInfo: ContactInfo[] = [
     },
     {
         type: "phone",
-        label: "Direct Line",
+        label: "Phone",
         value: WHATSAPP_NUMBER,
         displayValue: WHATSAPP_DISPLAY,
         href: `tel:${WHATSAPP_NUMBER}`,
     },
     {
         type: "location",
-        label: "Location",
+        label: "Based in",
         value: "Riyadh, Saudi Arabia",
         displayValue: "Riyadh, Saudi Arabia",
     },
@@ -326,7 +354,7 @@ export const contactInfo: ContactInfo[] = [
 export const socialLinks: SocialLink[] = [
     {
         name: "LinkedIn",
-        href: "https://www.linkedin.com/in/abdullahmirxa/",
+        href: LINKEDIN_URL,
         handle: "abdullahmirxa",
     },
     {
@@ -354,7 +382,7 @@ export const services: Service[] = [
         title: "Landing & Marketing Sites",
         tagline: "Conversion-focused web presence",
         description:
-            "Pixel-perfect, blazing-fast marketing sites engineered for conversion, SEO, and brand storytelling.",
+            "Fast, conversion-minded marketing sites — clear storytelling, strong SEO foundations, and a polished brand feel.",
         icon: "Globe",
         color: "var(--color-electric-blue)",
         tiers: [
@@ -392,7 +420,7 @@ export const services: Service[] = [
         title: "Web Applications",
         tagline: "SaaS, dashboards & internal tools",
         description:
-            "Full-stack web platforms with authentication, dashboards, integrations, and production-grade infrastructure.",
+            "Full-stack web platforms with auth, dashboards, integrations, and infrastructure you can trust in production.",
         icon: "Layers",
         color: "var(--color-electric-blue)",
         tiers: [
@@ -442,7 +470,7 @@ export const services: Service[] = [
         title: "Mobile Apps (iOS & Android)",
         tagline: "Cross-platform native experiences",
         description:
-            "React Native and native iOS/Android apps with offline support, push notifications, and store-ready polish.",
+            "Cross-platform iOS and Android apps with offline support, push notifications, and store-ready polish.",
         icon: "Smartphone",
         color: "var(--color-muted-gold)",
         tiers: [
@@ -486,7 +514,7 @@ export const services: Service[] = [
         title: "AI Integrations & Custom Agents",
         tagline: "GPT, RAG, agents & copilots",
         description:
-            "Custom AI agents, RAG pipelines, GPT integrations, and intelligent copilots embedded into your product.",
+            "Custom AI agents, RAG pipelines, GPT features, and copilots woven gently into the products your team already uses.",
         icon: "Sparkles",
         color: "#a855f7",
         tiers: [
@@ -530,7 +558,7 @@ export const services: Service[] = [
         title: "Workflow Automation",
         tagline: "n8n, Make, Zapier & custom",
         description:
-            "Automate operations end-to-end. Save hundreds of hours with custom workflows across every tool you use.",
+            "End-to-end ops automation that quietly removes busywork — across Make, Zapier, n8n, and custom scripts.",
         icon: "Zap",
         color: "#34d399",
         tiers: [
@@ -573,7 +601,7 @@ export const services: Service[] = [
         title: "E-Commerce Platforms",
         tagline: "Shopify, custom & headless",
         description:
-            "Conversion-tuned online stores, headless commerce, and custom marketplaces engineered to scale.",
+            "Online stores and marketplaces tuned for conversion — Shopify, headless, or fully custom when you need it.",
         icon: "ShoppingCart",
         color: "#f59e0b",
         tiers: [
@@ -621,7 +649,7 @@ export const services: Service[] = [
         title: "Custom SaaS Platforms",
         tagline: "Zero-to-one product engineering",
         description:
-            "End-to-end product engineering — from validation to scaled architecture, billing, and enterprise readiness.",
+            "Zero-to-one product engineering — from validation and MVP through billing, scale, and enterprise readiness.",
         icon: "Rocket",
         color: "var(--color-electric-blue)",
         tiers: [

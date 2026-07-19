@@ -22,11 +22,11 @@ export default function CorporateLeadership() {
                 >
                     <span className="kicker mb-5">
                         <span className="kicker-dot" />
-                        Executive Leadership
+                        Leadership
                     </span>
                     <h2 className="heading-display">
-                        Leading at the{" "}
-                        <span className="heading-accent">enterprise frontier.</span>
+                        Leading teams that{" "}
+                        <span className="heading-accent">ship and scale.</span>
                     </h2>
                 </motion.div>
 
