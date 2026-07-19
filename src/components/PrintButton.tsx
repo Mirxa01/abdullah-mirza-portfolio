@@ -1,33 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileDown } from "lucide-react";
 
 /**
- * Opens the browser print dialog for the dedicated printable CV.
- * Prefers "Print / Save as PDF" language — we do not generate a binary PDF file.
+ * Opens the dedicated `/cv` page and triggers Print / Save as PDF.
+ * Avoids printing the animated marketing homepage (blank/washed pages).
  */
 export default function PrintButton({ className = "" }: { className?: string }) {
+    const router = useRouter();
     const [showTooltip, setShowTooltip] = useState(false);
 
-    useEffect(() => {
-        // Some browsers fire afterprint inconsistently; keep a no-op listener
-        // so future print-prep hooks have a stable place to live.
-        const onAfterPrint = () => undefined;
-        window.addEventListener("afterprint", onAfterPrint);
-        return () => window.removeEventListener("afterprint", onAfterPrint);
-    }, []);
-
     const handlePrint = () => {
-        // Yield one frame so tooltip/hover state settles before the dialog opens.
-        requestAnimationFrame(() => {
-            window.print();
-        });
+        router.push("/cv?print=1");
     };
 
     return (
-        <div className={`relative print:hidden ${className}`}>
+        <div className={`relative screen-only ${className}`}>
             <motion.button
                 type="button"
                 onClick={handlePrint}

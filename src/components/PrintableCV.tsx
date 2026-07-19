@@ -1,9 +1,5 @@
 /**
- * Dedicated printable CV — rendered only for print / Save as PDF.
- *
- * The marketing homepage is hidden during print; this layout is a calm,
- * professional one- to two-page resume that does not depend on Framer
- * animations, typewriters, or absolute-positioned cards.
+ * Dedicated printable CV — used on `/cv` and as the homepage print stylesheet target.
  */
 import {
     PROFESSIONAL_TITLE,
@@ -24,12 +20,25 @@ import {
 const CAREER_HIGHLIGHT_LIMIT = 2;
 const LEADERSHIP_POINT_LIMIT = 4;
 
-export default function PrintableCV() {
+interface PrintableCVProps {
+    /**
+     * `embedded` — hidden on screen, shown only when printing the homepage.
+     * `page` — always visible on the dedicated `/cv` route.
+     */
+    variant?: "embedded" | "page";
+}
+
+export default function PrintableCV({ variant = "embedded" }: PrintableCVProps) {
+    const rootClass =
+        variant === "page"
+            ? "printable-cv"
+            : "printable-cv print-only";
+
     return (
         <article
             id="printable-cv"
-            className="hidden print:block"
-            aria-label="Printable curriculum vitae"
+            className={rootClass}
+            aria-label="Curriculum vitae"
         >
             <header className="cv-header">
                 <div>

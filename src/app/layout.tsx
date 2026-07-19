@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
-import { ScrollObserver } from "@/components/ScrollObserver";
-import { ToastProvider } from "@/components/ToastProvider";
-import ChatWidget from "@/components/chat/ChatWidget";
+import SiteChrome from "@/components/SiteChrome";
 import { SITE } from "@/lib/constants";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -81,19 +78,8 @@ export default function RootLayout({
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
             </head>
-            {/* The background color is now controlled via global CSS var updated by ScrollObserver */}
-            <body className="antialiased min-h-screen relative text-white overflow-x-hidden print:overflow-visible">
-                <ScrollObserver />
-                <CustomCursor />
-                {/* Ambient background glows */}
-                <div className="glow-effect print:hidden" style={{ top: '-10%', left: '-5%' }}></div>
-                <div className="glow-effect print:hidden" style={{ top: '40%', right: '-10%' }}></div>
-                <div className="glow-effect print:hidden" style={{ bottom: '-5%', left: '20%' }}></div>
-
-                <ToastProvider>
-                    {children}
-                    <ChatWidget />
-                </ToastProvider>
+            <body className="antialiased min-h-screen relative text-white overflow-x-hidden print:overflow-visible print:bg-white print:text-black">
+                <SiteChrome>{children}</SiteChrome>
             </body>
         </html>
     );

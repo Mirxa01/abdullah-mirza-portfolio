@@ -14,8 +14,8 @@ import PrintableCV from "@/components/PrintableCV";
 export default function Home() {
     return (
         <>
-            {/* Screen portfolio — fully hidden when printing so the CV stays clean. */}
-            <div className="print:hidden">
+            {/* Screen portfolio — hidden when printing. */}
+            <div className="screen-only">
                 <main className="min-h-screen">
                     <Navbar />
                     <Hero />
@@ -39,8 +39,8 @@ export default function Home() {
                 </main>
             </div>
 
-            {/* Print-only professional CV */}
-            <PrintableCV />
+            {/* Fallback if someone prints the homepage directly */}
+            <PrintableCV variant="embedded" />
         </>
     );
 }

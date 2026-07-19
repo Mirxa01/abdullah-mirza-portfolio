@@ -68,7 +68,7 @@ pnpm verify:deploy
 | `GET /opengraph-image` | Social card PNG |
 | `GET /api/chat` | Greeting JSON (`fallback: true` if no OpenAI key) |
 | `POST /api/contact` with valid JSON | `200` if Resend configured, else honest `503` |
-| Nav **Print / Save as PDF** | Clean A4 CV (not the dark marketing page) |
+| Nav **Print / Save as PDF** | Opens `/cv` and print dialog — clean A4 CV (turn off browser headers/footers) |
 
 ## Build notes
 

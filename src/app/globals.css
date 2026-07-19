@@ -574,9 +574,44 @@
 
 /* ============================
    PRINT / PDF — dedicated CV
-   Marketing UI is hidden via .print:hidden on the screen tree.
-   Only #printable-cv is rendered for print / Save as PDF.
+   Prefer /cv for Print / Save as PDF.
+   Homepage print hides .screen-only and shows .print-only CV.
    ============================ */
+
+/* Visibility helpers — more reliable than Tailwind print: variants alone */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  .screen-only,
+  .print\:hidden,
+  .glow-effect {
+    display: none !important;
+  }
+
+  .print-only,
+  #printable-cv {
+    display: block !important;
+  }
+}
+
+/* Dedicated /cv page — always light, print-friendly on screen */
+.cv-shell,
+.cv-page {
+  background: #ffffff !important;
+  color: #111111 !important;
+  min-height: 100vh;
+}
+
+body:has(.cv-page) {
+  background: #ffffff !important;
+  color: #111111 !important;
+  overflow: auto !important;
+}
+
 @media print {
   :root {
     --bg-primary: #ffffff !important;
@@ -606,13 +641,18 @@
     position: static !important;
   }
 
-  /* Hide anything still marked as screen-only */
-  .print\:hidden,
-  .glow-effect {
-    display: none !important;
+  .cv-page {
+    min-height: 0 !important;
   }
 
-  #printable-cv {
+  .cv-page .mx-auto {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #printable-cv,
+  .printable-cv {
     display: block !important;
     color: #111 !important;
     max-width: 100% !important;
@@ -620,13 +660,16 @@
     padding: 0 !important;
   }
 
-  #printable-cv a {
+  #printable-cv a,
+  .printable-cv a {
     color: #111 !important;
     text-decoration: none !important;
   }
 
-  /* Do not append raw URLs — contact block already shows clean links */
-  #printable-cv a[href]::after {
+  /* Never append raw URLs after links in the CV */
+  #printable-cv a[href]::after,
+  .printable-cv a[href]::after,
+  .cv-page a[href]::after {
     content: none !important;
   }
 
@@ -820,5 +863,179 @@
   @page {
     margin: 1.4cm 1.5cm;
     size: A4;
+  }
+}
+
+/* Screen styles for /cv so the resume looks correct before printing */
+@media screen {
+  .cv-page .printable-cv {
+    color: #111;
+  }
+
+  .cv-page .cv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid #111;
+  }
+
+  .cv-page .cv-name {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.25rem;
+    color: #000;
+  }
+
+  .cv-page .cv-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #333;
+    margin: 0 0 0.25rem;
+  }
+
+  .cv-page .cv-location {
+    margin: 0;
+    color: #555;
+    font-size: 0.9rem;
+  }
+
+  .cv-page .cv-contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #333;
+  }
+
+  .cv-page .cv-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .cv-page .cv-section h2 {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0 0 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .cv-page .cv-summary {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #222;
+  }
+
+  .cv-page .cv-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cv-page .cv-skills li {
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.8rem;
+    color: #222;
+  }
+
+  .cv-page .cv-role {
+    margin-bottom: 0.9rem;
+  }
+
+  .cv-page .cv-role-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .cv-page .cv-role h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .cv-page .cv-org {
+    margin: 0.1rem 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .cv-page .cv-period {
+    font-size: 0.85rem;
+    color: #555;
+    white-space: nowrap;
+  }
+
+  .cv-page .cv-role ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.15rem;
+  }
+
+  .cv-page .cv-role li {
+    font-size: 0.9rem;
+    color: #222;
+    margin: 0.15rem 0;
+  }
+
+  .cv-page .cv-ventures {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cv-page .cv-ventures li {
+    margin: 0 0 0.55rem;
+    font-size: 0.9rem;
+    color: #222;
+  }
+
+  .cv-page .cv-domain {
+    color: #555;
+  }
+
+  .cv-page .cv-section-split {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 1.5rem;
+  }
+
+  .cv-page .cv-edu-degree {
+    margin: 0 0 0.2rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .cv-page .cv-certs {
+    columns: 2;
+    column-gap: 1.25rem;
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .cv-page .cv-certs li {
+    font-size: 0.85rem;
+    color: #222;
+    margin: 0.15rem 0;
   }
 }
