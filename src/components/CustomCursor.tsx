@@ -1,96 +1,90 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion, useSpring } from "framer-motion";
+import { useEffect, useState } from "react";
+import {
+    motion,
+    useMotionValue,
+    useSpring,
+    useTransform,
+} from "framer-motion";
 
+/**
+ * Custom cursor driven by motion values — no React setState on mousemove.
+ * Pointer tracking must stay off the React render path so clicks (chat FAB,
+ * nav, CTAs) stay within a healthy INP budget.
+ */
 export default function CustomCursor() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [isHovering, setIsHovering] = useState(false);
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
-    const rafRef = useRef<number | null>(null);
-    const posRef = useRef({ x: 0, y: 0 });
+    const [enabled, setEnabled] = useState(false);
+    const rawX = useMotionValue(0);
+    const rawY = useMotionValue(0);
+    const isHovering = useMotionValue(0);
+    const springX = useSpring(rawX, { stiffness: 600, damping: 32 });
+    const springY = useSpring(rawY, { stiffness: 600, damping: 32 });
 
-    // Spring physics for smooth trailing effect
-    const springX = useSpring(0, { stiffness: 600, damping: 32 });
-    const springY = useSpring(0, { stiffness: 600, damping: 32 });
+    const dotScale = useTransform(isHovering, (v) => (v ? 0 : 1));
+    const dotOpacity = useTransform(isHovering, (v) => (v ? 0 : 1));
+    const ringScale = useTransform(isHovering, (v) => (v ? 1.6 : 1));
+    const ringBorder = useTransform(isHovering, (v) =>
+        v ? "rgba(0,102,255,0.85)" : "rgba(0,102,255,0.4)",
+    );
 
-    // Disable on touch devices and when reduced-motion is preferred
     useEffect(() => {
         if (typeof window === "undefined") return;
         const isCoarse = window.matchMedia("(pointer: coarse)").matches;
         const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        // Client-only capability detection (matchMedia is unavailable during SSR).
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (isCoarse || prefersReduced) setIsTouchDevice(true);
-    }, []);
+        if (isCoarse || prefersReduced) return;
 
-    useEffect(() => {
-        if (isTouchDevice) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot capability gate
+        setEnabled(true);
 
-        const updateMousePosition = (e: MouseEvent) => {
-            posRef.current = { x: e.clientX, y: e.clientY };
-            springX.set(e.clientX);
-            springY.set(e.clientY);
-
-            // Use rAF to batch state updates and avoid layout thrashing
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            rafRef.current = requestAnimationFrame(() => {
-                setMousePosition({ x: posRef.current.x, y: posRef.current.y });
-            });
+        const onMove = (e: MouseEvent) => {
+            rawX.set(e.clientX);
+            rawY.set(e.clientY);
         };
 
-        const handleMouseOver = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            const isClickable = !!(
-                target.tagName === "A" ||
-                target.tagName === "BUTTON" ||
+        const onOver = (e: MouseEvent) => {
+            const target = e.target as HTMLElement | null;
+            if (!target) return;
+            const clickable = !!(
                 target.closest("a") ||
-                target.closest("button")
+                target.closest("button") ||
+                target.closest("[role='button']")
             );
-            setIsHovering(isClickable);
+            isHovering.set(clickable ? 1 : 0);
         };
 
-        window.addEventListener("mousemove", updateMousePosition, { passive: true });
-        window.addEventListener("mouseover", handleMouseOver, { passive: true });
-
+        window.addEventListener("mousemove", onMove, { passive: true });
+        window.addEventListener("mouseover", onOver, { passive: true });
         return () => {
-            window.removeEventListener("mousemove", updateMousePosition);
-            window.removeEventListener("mouseover", handleMouseOver);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("mouseover", onOver);
         };
-    }, [springX, springY, isTouchDevice]);
+    }, [rawX, rawY, isHovering]);
 
-    // Don't render on touch devices
-    if (isTouchDevice) return null;
+    if (!enabled) return null;
 
     return (
         <>
-            {/* Core exact cursor dot */}
             <motion.div
                 className="fixed top-0 left-0 w-2 h-2 bg-[var(--color-electric-blue)] rounded-full pointer-events-none z-[9999] mix-blend-screen print:hidden"
-                animate={{
-                    x: mousePosition.x - 4,
-                    y: mousePosition.y - 4,
-                    scale: isHovering ? 0 : 1,
-                    opacity: isHovering ? 0 : 1,
+                style={{
+                    x: rawX,
+                    y: rawY,
+                    translateX: "-50%",
+                    translateY: "-50%",
+                    scale: dotScale,
+                    opacity: dotOpacity,
                 }}
-                transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
             />
-
-            {/* Trailing ring (grows when hovering over links) */}
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 border border-[var(--color-electric-blue)]/40 bg-transparent rounded-full pointer-events-none z-[9998] transition-colors print:hidden"
+                className="fixed top-0 left-0 w-8 h-8 border border-[var(--color-electric-blue)]/40 bg-transparent rounded-full pointer-events-none z-[9998] print:hidden"
                 style={{
                     x: springX,
                     y: springY,
                     translateX: "-50%",
                     translateY: "-50%",
-                }}
-                animate={{
-                    scale: isHovering ? 1.6 : 1,
-                    borderColor: isHovering
-                        ? "rgba(0,102,255,0.85)"
-                        : "rgba(0,102,255,0.4)",
+                    scale: ringScale,
+                    borderColor: ringBorder,
                 }}
             />
         </>

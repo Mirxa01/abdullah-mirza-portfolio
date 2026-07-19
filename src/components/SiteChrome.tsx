@@ -1,10 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import CustomCursor from "@/components/CustomCursor";
 import { ScrollObserver } from "@/components/ScrollObserver";
 import { ToastProvider } from "@/components/ToastProvider";
-import ChatWidget from "@/components/chat/ChatWidget";
+
+/** Defer chat bundle until after first paint — FAB mounts without blocking hero INP. */
+const ChatWidget = dynamic(() => import("@/components/chat/ChatWidget"), {
+    ssr: false,
+    loading: () => null,
+});
 
 /**
  * Marketing chrome (cursor, chat, toasts, ambient glows) — skipped on `/cv`

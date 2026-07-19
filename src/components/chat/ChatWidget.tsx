@@ -6,8 +6,9 @@ import {
     useMemo,
     useRef,
     useState,
+    startTransition,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
     MessageCircle,
@@ -26,14 +27,33 @@ import type {
     ProjectBrief,
     QuickReply,
 } from "@/lib/chat/types";
-import ChatMessage from "./ChatMessage";
 import QuickReplies from "./QuickReplies";
 import { useToast } from "../ToastProvider";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
 import { GREETING_MESSAGE } from "@/lib/chat/systemPrompt";
 
+/** Lazy — react-markdown + remark-gfm are heavy; keep them off the FAB click path. */
+const ChatMessage = dynamic(() => import("./ChatMessage"), {
+    ssr: false,
+    loading: () => (
+        <div className="flex justify-start px-1 py-2">
+            <div className="h-16 w-[70%] rounded-2xl bg-white/5 animate-pulse" />
+        </div>
+    ),
+});
+
 const STORAGE_KEY = "abdullah_chat_v1";
 const MAX_INPUT = CHAT_LIMITS.MAX_CONTENT_LENGTH;
+
+const DEFAULT_QUICK_REPLIES: QuickReply[] = [
+    { label: "Get a price estimate", value: "I'd like a price estimate" },
+    { label: "Brainstorm my idea", value: "Help me brainstorm" },
+    {
+        label: "Skip — WhatsApp Abdullah",
+        value: "open_whatsapp",
+        action: "whatsapp",
+    },
+];
 
 interface PersistedState {
     messages: ChatMessageType[];
@@ -43,6 +63,15 @@ interface PersistedState {
 }
 
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
+function seedGreeting(): ChatMessageType {
+    return {
+        id: uid(),
+        role: "assistant",
+        content: GREETING_MESSAGE,
+        createdAt: Date.now(),
+    };
+}
 
 export default function ChatWidget() {
     const { addToast } = useToast();
@@ -166,57 +195,78 @@ export default function ChatWidget() {
         return () => obs.disconnect();
     }, []);
 
-    // ----- Initial greeting fetch (only when first opened with empty state)
+    // ----- Initial greeting — local seed first (INP), API only refreshes fallback flag
     const fetchInitial = useCallback(async () => {
         try {
             const res = await fetch("/api/chat", { method: "GET" });
             const data: ChatResponse = await res.json();
-            const greeting: ChatMessageType = {
-                id: uid(),
-                role: "assistant",
-                content: data.message,
-                createdAt: Date.now(),
-            };
-            setMessages([greeting]);
-            setPhase(data.phase);
-            setSuggestedReplies(data.suggestedReplies);
-            setIsFallbackMode(Boolean(data.fallback));
+            startTransition(() => {
+                setIsFallbackMode(Boolean(data.fallback));
+                // Only replace local seed if the server greeting differs meaningfully
+                // and we still only have the single greeting turn.
+                setMessages((prev) => {
+                    if (prev.length !== 1 || prev[0]?.role !== "assistant") return prev;
+                    if (prev[0].content === data.message) return prev;
+                    return [
+                        {
+                            id: prev[0].id,
+                            role: "assistant",
+                            content: data.message,
+                            createdAt: prev[0].createdAt,
+                        },
+                    ];
+                });
+                if (data.suggestedReplies?.length) {
+                    setSuggestedReplies(data.suggestedReplies);
+                }
+                if (data.phase) setPhase(data.phase);
+            });
         } catch {
-            const fallback: ChatMessageType = {
-                id: uid(),
-                role: "assistant",
-                content: GREETING_MESSAGE,
-                createdAt: Date.now(),
-            };
-            setMessages([fallback]);
-            setPhase("greet");
-            setIsFallbackMode(true);
-            setSuggestedReplies([
-                { label: "Get a price estimate", value: "I'd like a price estimate" },
-                { label: "Brainstorm my idea", value: "Help me brainstorm" },
-                {
-                    label: "Skip — WhatsApp Abdullah",
-                    value: "open_whatsapp",
-                    action: "whatsapp",
-                },
-            ]);
+            startTransition(() => setIsFallbackMode(true));
         }
     }, []);
 
     useEffect(() => {
-        if (open && hasInitialized && messages.length === 0 && !isSending) {
-            // Event-driven async fetch (panel opened) — sets state on completion;
-            // not a render-derived update, so the effect is the correct home.
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (!open || !hasInitialized) return;
+        // Soft refresh after panel is open — never blocks the open click.
+        const t = window.setTimeout(() => {
             void fetchInitial();
-        }
-    }, [open, hasInitialized, messages.length, isSending, fetchInitial]);
+        }, 0);
+        return () => window.clearTimeout(t);
+    }, [open, hasInitialized, fetchInitial]);
 
-    // ----- Open handler
-    const handleOpen = () => {
-        setOpen(true);
+    // ----- Defer heavy message list until after the panel shell paints (INP)
+    const [messagesReady, setMessagesReady] = useState(false);
+    useEffect(() => {
+        if (!open) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- reset when closed
+            setMessagesReady(false);
+            return;
+        }
+        let cancelled = false;
+        const id = requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                if (!cancelled) setMessagesReady(true);
+            });
+        });
+        return () => {
+            cancelled = true;
+            cancelAnimationFrame(id);
+        };
+    }, [open]);
+
+    // ----- Open handler — keep the click path cheap: no Framer, no await, seed locally
+    const handleOpen = useCallback(() => {
         setUnreadHint(false);
-    };
+        setMessages((prev) => {
+            if (prev.length > 0) return prev;
+            return [seedGreeting()];
+        });
+        setSuggestedReplies((prev) =>
+            prev.length > 0 ? prev : DEFAULT_QUICK_REPLIES,
+        );
+        setOpen(true);
+    }, []);
 
     // ----- Send message
     const sendMessage = useCallback(
@@ -348,10 +398,11 @@ export default function ChatWidget() {
 
     // ----- Reset
     const handleReset = () => {
-        setMessages([]);
+        const greeting = seedGreeting();
+        setMessages([greeting]);
         setBrief({});
         setPhase("greet");
-        setSuggestedReplies([]);
+        setSuggestedReplies(DEFAULT_QUICK_REPLIES);
         lastPRDRef.current = null;
         try {
             localStorage.removeItem(STORAGE_KEY);
@@ -430,266 +481,230 @@ export default function ChatWidget() {
 
     return (
         <>
-            {/* Floating Action Button */}
-            <AnimatePresence>
-                {!open && (
-                    <motion.button
-                        key="fab"
-                        type="button"
-                        onClick={handleOpen}
-                        initial={{ opacity: 0, scale: 0.6, y: 20 }}
-                        animate={{
-                            opacity: hideFab ? 0 : 1,
-                            scale: hideFab ? 0.6 : 1,
-                            y: 0,
-                            pointerEvents: hideFab ? "none" : "auto",
-                        }}
-                        exit={{ opacity: 0, scale: 0.6, y: 20 }}
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
-                        className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[60] print:hidden group"
-                        style={{ marginBottom: "env(safe-area-inset-bottom)" }}
-                        aria-label="Open chat with Aria, Abdullah's AI assistant"
-                    >
-                        <span className="absolute inset-0 rounded-full bg-[var(--color-electric-blue)] blur-2xl opacity-40 group-hover:opacity-70 transition-opacity" />
-                        <span className="relative flex items-center gap-2.5 pl-4 pr-5 py-3.5 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white shadow-[0_10px_30px_rgba(0,102,255,0.45)] border border-white/15">
-                            <span className="relative flex w-5 h-5 items-center justify-center">
-                                <MessageCircle className="w-5 h-5" />
-                                {unreadHint && (
-                                    <span className="absolute -top-1 -right-1 flex w-2.5 h-2.5">
-                                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
-                                        <span className="relative w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0066ff]" />
-                                    </span>
-                                )}
+            {/* FAB — native button (no Framer whileTap/AnimatePresence on the click path) */}
+            <button
+                type="button"
+                onClick={handleOpen}
+                className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[60] print:hidden group transition-[opacity,transform] duration-200 ease-out will-change-transform ${
+                    open || hideFab
+                        ? "opacity-0 scale-90 pointer-events-none"
+                        : "opacity-100 scale-100"
+                }`}
+                style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+                aria-label="Open chat with Aria, Abdullah's AI assistant"
+                aria-hidden={open || hideFab}
+                tabIndex={open || hideFab ? -1 : 0}
+            >
+                <span
+                    className="absolute inset-0 rounded-full bg-[var(--color-electric-blue)] blur-2xl opacity-40 group-hover:opacity-70 transition-opacity"
+                    aria-hidden="true"
+                />
+                <span className="relative flex items-center gap-2.5 pl-4 pr-5 py-3.5 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white shadow-[0_10px_30px_rgba(0,102,255,0.45)] border border-white/15 transition-transform duration-150 group-hover:scale-[1.03] group-active:scale-[0.97]">
+                    <span className="relative flex w-5 h-5 items-center justify-center">
+                        <MessageCircle className="w-5 h-5" />
+                        {unreadHint && (
+                            <span className="absolute -top-1 -right-1 flex w-2.5 h-2.5">
+                                <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                                <span className="relative w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0066ff]" />
                             </span>
-                            <span className="hidden sm:inline text-sm font-bold tracking-tight">
-                                Chat with Aria
-                            </span>
-                        </span>
-                    </motion.button>
-                )}
-            </AnimatePresence>
-
-            {/* Panel / Full-screen sheet */}
-            <AnimatePresence>
-                {open && (
-                    <>
-                        {/* Mobile backdrop */}
-                        {isMobile && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="fixed inset-0 z-[59] bg-black/60 backdrop-blur-sm print:hidden"
-                                onClick={() => setOpen(false)}
-                            />
                         )}
+                    </span>
+                    <span className="hidden sm:inline text-sm font-bold tracking-tight">
+                        Chat with Aria
+                    </span>
+                </span>
+            </button>
 
-                        <motion.div
-                            key="panel"
-                            initial={
-                                isMobile
-                                    ? { opacity: 0, y: "100%" }
-                                    : { opacity: 0, y: 20, scale: 0.96 }
-                            }
-                            animate={
-                                isMobile
-                                    ? { opacity: 1, y: 0 }
-                                    : { opacity: 1, y: 0, scale: 1 }
-                            }
-                            exit={
-                                isMobile
-                                    ? { opacity: 0, y: "100%" }
-                                    : { opacity: 0, y: 20, scale: 0.96 }
-                            }
-                            transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
-                            style={panelStyle}
-                            className={
-                                isMobile
-                                    ? "z-[60] bg-[#070707] flex flex-col print:hidden"
-                                    : "fixed bottom-6 right-6 z-[60] w-[400px] max-w-[calc(100vw-3rem)] h-[640px] max-h-[calc(100vh-7rem)] rounded-3xl overflow-hidden border border-white/[0.08] bg-gradient-to-b from-[#0e0e0e] to-[#070707] shadow-[0_30px_80px_rgba(0,0,0,0.65)] flex flex-col print:hidden"
-                            }
-                            role="dialog"
-                            aria-modal="true"
-                            aria-label="Chat with Aria"
+            {/* Panel — CSS enter animation; heavy message tree deferred via messagesReady */}
+            {open && (
+                <>
+                    {isMobile && (
+                        <div
+                            className="fixed inset-0 z-[59] bg-black/60 backdrop-blur-sm print:hidden chat-backdrop-in"
+                            onClick={() => setOpen(false)}
+                            aria-hidden="true"
+                        />
+                    )}
+
+                    <div
+                        style={panelStyle}
+                        className={
+                            isMobile
+                                ? "z-[60] bg-[#070707] flex flex-col print:hidden chat-panel-in-mobile"
+                                : "fixed bottom-6 right-6 z-[60] w-[400px] max-w-[calc(100vw-3rem)] h-[640px] max-h-[calc(100vh-7rem)] rounded-3xl overflow-hidden border border-white/[0.08] bg-gradient-to-b from-[#0e0e0e] to-[#070707] shadow-[0_30px_80px_rgba(0,0,0,0.65)] flex flex-col print:hidden chat-panel-in"
+                        }
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Chat with Aria"
+                    >
+                        {/* Header */}
+                        <div className="relative shrink-0 px-4 py-3 border-b border-white/[0.06] bg-gradient-to-b from-white/[0.025] to-transparent flex items-center gap-3">
+                            <div className="relative shrink-0">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 p-[1.5px]">
+                                    <div className="w-full h-full rounded-full overflow-hidden bg-black">
+                                        <Image
+                                            src="/images/profile-hero.png"
+                                            alt=""
+                                            width={36}
+                                            height={36}
+                                            sizes="36px"
+                                            priority={false}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
+                                </div>
+                                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#070707]" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-sm font-semibold text-white truncate">
+                                        Aria
+                                    </span>
+                                    <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-[0.12em] uppercase px-1.5 py-0.5 rounded-full bg-[var(--color-electric-blue)]/12 text-[var(--color-electric-blue)] border border-[var(--color-electric-blue)]/25">
+                                        <Sparkles className="w-2.5 h-2.5" />
+                                        AI
+                                    </span>
+                                    {isFallbackMode && (
+                                        <span
+                                            className="inline-flex items-center text-[9px] font-bold tracking-[0.08em] uppercase px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                                            title="Running in basic mode without the full AI model"
+                                        >
+                                            Basic
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="text-[11px] text-white/45 truncate">
+                                    {isFallbackMode
+                                        ? "Basic mode · WhatsApp always available"
+                                        : "Abdullah's assistant · replies instantly"}
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleReset}
+                                className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+                                aria-label="Reset conversation"
+                                title="Reset conversation"
+                            >
+                                <RotateCcw className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setOpen(false)}
+                                className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                                aria-label="Close chat"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        {/* Messages */}
+                        <div
+                            ref={scrollRef}
+                            className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.1)_transparent]"
                         >
-                            {/* Header */}
-                            <div className="relative shrink-0 px-4 py-3 border-b border-white/[0.06] bg-gradient-to-b from-white/[0.025] to-transparent backdrop-blur-md flex items-center gap-3">
-                                <div className="relative shrink-0">
-                                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 p-[1.5px]">
-                                        <div className="w-full h-full rounded-full overflow-hidden bg-black">
-                                            <Image
-                                                src="/images/profile-hero.png"
-                                                alt="Abdullah Mirza"
-                                                width={40}
-                                                height={40}
-                                                className="object-cover w-full h-full"
-                                            />
-                                        </div>
-                                    </div>
-                                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#070707]" />
+                            {!messagesReady ? (
+                                <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-4">
+                                    <Loader2 className="w-5 h-5 text-white/40 animate-spin" />
+                                    <p className="text-xs text-white/40">Opening…</p>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="text-sm font-semibold text-white truncate">
-                                            Aria
-                                        </span>
-                                        <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-[0.12em] uppercase px-1.5 py-0.5 rounded-full bg-[var(--color-electric-blue)]/12 text-[var(--color-electric-blue)] border border-[var(--color-electric-blue)]/25">
-                                            <Sparkles className="w-2.5 h-2.5" />
-                                            AI
-                                        </span>
-                                        {isFallbackMode && (
-                                            <span
-                                                className="inline-flex items-center text-[9px] font-bold tracking-[0.08em] uppercase px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30"
-                                                title="Running in basic mode without the full AI model"
-                                            >
-                                                Basic
+                            ) : (
+                                <>
+                                    {messages.map((m) => (
+                                        <ChatMessage key={m.id} message={m} />
+                                    ))}
+
+                                    {isSending && (
+                                        <div className="flex items-center gap-2 px-3 py-2">
+                                            <div className="flex gap-1">
+                                                {[0, 1, 2].map((i) => (
+                                                    <span
+                                                        key={i}
+                                                        className="w-2 h-2 rounded-full bg-white/40 chat-dot-bounce"
+                                                        style={{ animationDelay: `${i * 0.15}s` }}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <span className="text-[11px] text-white/40">
+                                                Aria is thinking...
                                             </span>
-                                        )}
+                                        </div>
+                                    )}
+
+                                    {!isSending && suggestedReplies.length > 0 && (
+                                        <QuickReplies
+                                            replies={suggestedReplies}
+                                            onPick={handleQuickReply}
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </div>
+
+                        {/* WhatsApp CTA strip */}
+                        <a
+                            href={buildWhatsappLink()}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mx-3 sm:mx-4 mb-2 flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 transition-colors"
+                        >
+                            <div className="flex items-center gap-2 min-w-0">
+                                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <div className="min-w-0">
+                                    <div className="text-[11px] font-bold text-emerald-300 truncate">
+                                        Prefer a human chat?
                                     </div>
-                                    <div className="text-[11px] text-white/45 truncate">
-                                        {isFallbackMode
-                                            ? "Basic mode · WhatsApp always available"
-                                            : "Abdullah's assistant · replies instantly"}
+                                    <div className="text-[10px] text-white/50 truncate">
+                                        WhatsApp Abdullah · {WHATSAPP_DISPLAY}
                                     </div>
                                 </div>
+                            </div>
+                            <span className="text-[11px] font-bold text-emerald-400 shrink-0">
+                                Chat now →
+                            </span>
+                        </a>
+
+                        {/* Composer */}
+                        <div className="shrink-0 border-t border-white/10 p-3 bg-black/40">
+                            <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 focus-within:border-[var(--color-electric-blue)]/60 focus-within:shadow-[0_0_0_3px_rgba(0,102,255,0.15)] transition-all">
+                                <textarea
+                                    ref={textareaRef}
+                                    value={input}
+                                    onChange={(e) =>
+                                        setInput(e.target.value.slice(0, MAX_INPUT))
+                                    }
+                                    onKeyDown={handleKeyDown}
+                                    placeholder="Tell me about your project..."
+                                    rows={1}
+                                    disabled={isSending}
+                                    className="flex-1 bg-transparent resize-none outline-none text-sm text-white placeholder:text-white/30 max-h-[140px] py-1.5 leading-snug disabled:opacity-50"
+                                />
                                 <button
                                     type="button"
-                                    onClick={handleReset}
-                                    className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-colors"
-                                    aria-label="Reset conversation"
-                                    title="Reset conversation"
+                                    onClick={() => void sendMessage(input)}
+                                    disabled={!input.trim() || isSending}
+                                    className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,102,255,0.5)] transition-shadow"
+                                    aria-label="Send message"
                                 >
-                                    <RotateCcw className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setOpen(false)}
-                                    className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-                                    aria-label="Close chat"
-                                >
-                                    <X className="w-4 h-4" />
+                                    {isSending ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <Send className="w-4 h-4" />
+                                    )}
                                 </button>
                             </div>
-
-                            {/* Messages */}
-                            <div
-                                ref={scrollRef}
-                                className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.1)_transparent]"
-                            >
-                                {messages.length === 0 && !isSending && (
-                                    <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-4">
-                                        <Loader2 className="w-5 h-5 text-white/40 animate-spin" />
-                                        <p className="text-xs text-white/40">
-                                            Loading conversation...
-                                        </p>
-                                    </div>
-                                )}
-
-                                {messages.map((m) => (
-                                    <ChatMessage key={m.id} message={m} />
-                                ))}
-
-                                {isSending && (
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        className="flex items-center gap-2 px-3 py-2"
-                                    >
-                                        <div className="flex gap-1">
-                                            {[0, 1, 2].map((i) => (
-                                                <motion.span
-                                                    key={i}
-                                                    className="w-2 h-2 rounded-full bg-white/40"
-                                                    animate={{ y: [0, -4, 0] }}
-                                                    transition={{
-                                                        duration: 0.8,
-                                                        repeat: Infinity,
-                                                        delay: i * 0.15,
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                        <span className="text-[11px] text-white/40">
-                                            Aria is thinking...
-                                        </span>
-                                    </motion.div>
-                                )}
-
-                                {!isSending && suggestedReplies.length > 0 && (
-                                    <QuickReplies
-                                        replies={suggestedReplies}
-                                        onPick={handleQuickReply}
-                                    />
-                                )}
-                            </div>
-
-                            {/* WhatsApp CTA strip */}
-                            <a
-                                href={buildWhatsappLink()}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mx-3 sm:mx-4 mb-2 flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 transition-colors"
-                            >
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                    <div className="min-w-0">
-                                        <div className="text-[11px] font-bold text-emerald-300 truncate">
-                                            Prefer a human chat?
-                                        </div>
-                                        <div className="text-[10px] text-white/50 truncate">
-                                            WhatsApp Abdullah · {WHATSAPP_DISPLAY}
-                                        </div>
-                                    </div>
-                                </div>
-                                <span className="text-[11px] font-bold text-emerald-400 shrink-0">
-                                    Chat now →
+                            <div className="flex items-center justify-between mt-1.5 px-1">
+                                <span className="text-[10px] text-white/30">
+                                    Enter to send · Shift+Enter for newline
                                 </span>
-                            </a>
-
-                            {/* Composer */}
-                            <div className="shrink-0 border-t border-white/10 p-3 bg-black/40 backdrop-blur-md">
-                                <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 focus-within:border-[var(--color-electric-blue)]/60 focus-within:shadow-[0_0_0_3px_rgba(0,102,255,0.15)] transition-all">
-                                    <textarea
-                                        ref={textareaRef}
-                                        value={input}
-                                        onChange={(e) =>
-                                            setInput(e.target.value.slice(0, MAX_INPUT))
-                                        }
-                                        onKeyDown={handleKeyDown}
-                                        placeholder="Tell me about your project..."
-                                        rows={1}
-                                        disabled={isSending}
-                                        className="flex-1 bg-transparent resize-none outline-none text-sm text-white placeholder:text-white/30 max-h-[140px] py-1.5 leading-snug disabled:opacity-50"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => sendMessage(input)}
-                                        disabled={!input.trim() || isSending}
-                                        className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,102,255,0.5)] transition-shadow"
-                                        aria-label="Send message"
-                                    >
-                                        {isSending ? (
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                        ) : (
-                                            <Send className="w-4 h-4" />
-                                        )}
-                                    </button>
-                                </div>
-                                <div className="flex items-center justify-between mt-1.5 px-1">
-                                    <span className="text-[10px] text-white/30">
-                                        Enter to send · Shift+Enter for newline
-                                    </span>
-                                    <span className="text-[10px] text-white/30 tabular-nums">
-                                        {input.length}/{MAX_INPUT}
-                                    </span>
-                                </div>
+                                <span className="text-[10px] text-white/30 tabular-nums">
+                                    {input.length}/{MAX_INPUT}
+                                </span>
                             </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     );
 }

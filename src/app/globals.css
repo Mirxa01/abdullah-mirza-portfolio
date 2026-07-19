@@ -572,6 +572,89 @@
   list-style: decimal;
 }
 
+/* Chat widget — CSS enter animations (keeps open-click off Framer's main-thread path) */
+@keyframes chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes chat-panel-in-mobile {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chat-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes chat-msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chat-dot-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.chat-panel-in {
+  animation: chat-panel-in 0.22s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.chat-panel-in-mobile {
+  animation: chat-panel-in-mobile 0.25s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.chat-backdrop-in {
+  animation: chat-backdrop-in 0.18s ease-out both;
+}
+
+.chat-msg-in {
+  animation: chat-msg-in 0.2s ease-out both;
+}
+
+.chat-dot-bounce {
+  animation: chat-dot-bounce 0.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-panel-in,
+  .chat-panel-in-mobile,
+  .chat-backdrop-in,
+  .chat-msg-in,
+  .chat-dot-bounce {
+    animation: none !important;
+  }
+}
+
 /* ============================
    PRINT / PDF — dedicated CV
    Prefer /cv for Print / Save as PDF.
