@@ -4,20 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { useToast } from "./ToastProvider";
+import { getContactFieldValidity } from "@/lib/contact";
 import { contactInfo } from "@/lib/data";
 import { slideInLeft, slideInRight } from "@/lib/constants";
-import { VALIDATION } from "@/lib/constants";
 import type { ContactFormState, ContactApiResponse } from "@/lib/types";
-
-/** Validates form fields against shared validation rules */
-function getValidation(formState: ContactFormState) {
-    return {
-        name: formState.name.length >= VALIDATION.NAME_MIN_LENGTH,
-        email: VALIDATION.EMAIL_REGEX.test(formState.email),
-        subject: formState.subject.length >= VALIDATION.SUBJECT_MIN_LENGTH,
-        message: formState.message.length >= VALIDATION.MESSAGE_MIN_LENGTH,
-    };
-}
 
 /** Maps contact info type to its corresponding icon */
 const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
@@ -42,11 +32,13 @@ const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
 export default function Contact() {
     const { addToast } = useToast();
     const [formState, setFormState] = useState<ContactFormState>({ name: "", email: "", subject: "", message: "" });
+    /** Honeypot — real users leave this empty; bots that fill every field get rejected server-side. */
+    const [honeypot, setHoneypot] = useState("");
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const validState = getValidation(formState);
+    const validState = getContactFieldValidity(formState);
     const isReadyToSubmit = Object.values(validState).every(Boolean);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -59,10 +51,16 @@ export default function Contact() {
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formState),
+                body: JSON.stringify({ ...formState, honeypot }),
             });
 
-            const data: ContactApiResponse = await response.json();
+            let data: ContactApiResponse;
+            try {
+                data = (await response.json()) as ContactApiResponse;
+            } catch {
+                addToast("Something went wrong. Please try again.", "error");
+                return;
+            }
 
             if (!response.ok || !data.success) {
                 addToast(data.message || "Something went wrong. Please try again.", "error");
@@ -75,6 +73,7 @@ export default function Contact() {
             setTimeout(() => {
                 setIsSuccess(false);
                 setFormState({ name: "", email: "", subject: "", message: "" });
+                setHoneypot("");
             }, 4000);
         } catch {
             addToast("Network error. Please check your connection and try again.", "error");
@@ -83,9 +82,13 @@ export default function Contact() {
         }
     };
 
-    const handleCopy = (value: string, label: string) => {
-        navigator.clipboard.writeText(value);
-        addToast(`${label} copied to clipboard`, "info");
+    const handleCopy = async (value: string, label: string) => {
+        try {
+            await navigator.clipboard.writeText(value);
+            addToast(`${label} copied to clipboard`, "info");
+        } catch {
+            addToast(`Could not copy ${label}. Please copy it manually.`, "error");
+        }
     };
 
     return (
@@ -180,6 +183,8 @@ export default function Contact() {
                             <input
                                 type="text"
                                 name="honeypot"
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
                                 tabIndex={-1}
                                 autoComplete="off"
                                 className="absolute opacity-0 w-0 h-0 pointer-events-none"

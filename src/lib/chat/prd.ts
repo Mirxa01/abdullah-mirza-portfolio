@@ -15,6 +15,19 @@ const slug = (s: string) =>
         .replace(/^-+|-+$/g, "")
         .slice(0, 60);
 
+/** Neutralize user-controlled text so it cannot break Markdown structure. */
+export function escapeMarkdownInline(input: string): string {
+    return input
+        .replace(/[\r\n]+/g, " ")
+        .replace(/[\\`*_{}[\]()#+\-.!|>]/g, "\\$&")
+        .trim();
+}
+
+/** Heading-safe title — strips control characters that would nest headings. */
+export function sanitizeHeading(input: string): string {
+    return input.replace(/[\r\n#]+/g, " ").replace(/\s+/g, " ").trim();
+}
+
 /** Recommend a tech stack heuristically based on project type. */
 function recommendStack(projectType: ProjectBrief["projectType"]): string[] {
     switch (projectType) {
@@ -72,33 +85,77 @@ function recommendStack(projectType: ProjectBrief["projectType"]): string[] {
     }
 }
 
+export interface Milestone {
+    name: string;
+    week: number;
+}
+
+/**
+ * Build milestone weeks that fit inside `totalWeeks`, stay monotonic, and
+ * never exceed the quoted maximum duration.
+ */
+export function buildMilestones(totalWeeks: number): Milestone[] {
+    const total = Math.max(1, Math.round(totalWeeks));
+
+    if (total <= 2) {
+        return [
+            { name: "Discovery & Design", week: 1 },
+            { name: "Build, QA & Launch", week: total },
+        ];
+    }
+
+    if (total <= 4) {
+        const mid = Math.max(2, Math.min(total - 1, Math.round(total * 0.6)));
+        return [
+            { name: "Discovery & Design", week: 1 },
+            { name: "Build — Core", week: mid },
+            { name: "QA, Launch & Handover", week: total },
+        ];
+    }
+
+    const discovery = Math.max(1, Math.round(total * 0.2));
+    let phase1 = Math.max(discovery + 1, Math.round(total * 0.5));
+    let phase2 = Math.max(phase1 + 1, Math.round(total * 0.8));
+    if (phase2 >= total) phase2 = total - 1;
+    if (phase1 >= phase2) phase1 = Math.max(discovery + 1, phase2 - 1);
+
+    return [
+        { name: "Discovery & Design", week: discovery },
+        { name: "Build — Phase 1 (Core)", week: phase1 },
+        { name: "Build — Phase 2 (Integrations)", week: phase2 },
+        { name: "QA, Launch & Handover", week: total },
+    ];
+}
+
 /** Generate a PRD markdown + short summary suitable for WhatsApp. */
 export function generatePRD(brief: ProjectBrief, quote: Quote): PRDPayload {
     const service =
         services.find((s) => s.id === (brief.projectType ?? "web_app")) ?? services[1];
-    const title = brief.title?.trim() || `${service.title} Project`;
+    const rawTitle = brief.title?.trim() || `${service.title} Project`;
+    const title = sanitizeHeading(rawTitle) || `${service.title} Project`;
     const today = new Date().toISOString().split("T")[0];
     const filename = `PRD-${slug(title)}-${today}.md`;
 
     const features =
         brief.features && brief.features.length > 0
-            ? brief.features
+            ? brief.features.map(escapeMarkdownInline)
             : ["Core flows defined during discovery"];
     const integrations =
         brief.integrations && brief.integrations.length > 0
-            ? brief.integrations
+            ? brief.integrations.map(escapeMarkdownInline)
             : ["TBD during discovery"];
     const stack = recommendStack(brief.projectType);
-
-    const milestoneWeeks = Math.max(2, Math.round(quote.weeks.max / 4));
-    const milestones = [
-        { name: "Discovery & Design", week: Math.max(1, Math.round(milestoneWeeks * 0.5)) },
-        { name: "Build — Phase 1 (Core)", week: milestoneWeeks * 2 },
-        { name: "Build — Phase 2 (Integrations)", week: milestoneWeeks * 3 },
-        { name: "QA, Launch & Handover", week: quote.weeks.max },
-    ];
+    const milestones = buildMilestones(quote.weeks.max);
 
     const investmentLine = `${formatUsd(quote.usd.min)} – ${formatUsd(quote.usd.max)} (${formatSar(quote.sar.min)} – ${formatSar(quote.sar.max)})`;
+    const summaryText = brief.summary?.trim()
+        ? escapeMarkdownInline(brief.summary)
+        : `A ${service.title.toLowerCase()} project (${quote.complexity} tier) engineered for measurable impact. This PRD outlines the goals, scope, and investment required to ship a production-grade solution.`;
+    const targetUsers = brief.targetUsers?.trim()
+        ? escapeMarkdownInline(brief.targetUsers)
+        : "Primary persona to be confirmed during discovery — typically end-users, internal operators, and admin stakeholders.";
+    const notesLine = brief.notes ? `- ${escapeMarkdownInline(brief.notes)}` : "";
+    const languages = brief.languages?.map(escapeMarkdownInline).join(", ") || "English (additional languages on request)";
 
     const markdown = `# ${title}
 
@@ -109,7 +166,7 @@ export function generatePRD(brief: ProjectBrief, quote: Quote): PRDPayload {
 
 ## 1. Executive Summary
 
-${brief.summary?.trim() || `A ${service.title.toLowerCase()} project (${quote.complexity} tier) engineered for measurable impact. This PRD outlines the goals, scope, and investment required to ship a production-grade solution.`}
+${summaryText}
 
 **Project type:** ${service.title}
 **Complexity tier:** ${quote.complexity}
@@ -123,13 +180,13 @@ ${brief.summary?.trim() || `A ${service.title.toLowerCase()} project (${quote.co
 - Deliver a production-ready ${service.title.toLowerCase()} aligned with business objectives
 - Optimize for measurable outcomes (conversion, efficiency, revenue, retention)
 - Establish a foundation that scales with the business
-${brief.notes ? `- ${brief.notes}` : ""}
+${notesLine}
 
 ---
 
 ## 3. Target Users
 
-${brief.targetUsers?.trim() || "Primary persona to be confirmed during discovery — typically end-users, internal operators, and admin stakeholders."}
+${targetUsers}
 
 ---
 
@@ -151,7 +208,7 @@ ${integrations.map((i) => `- ${i}`).join("\n")}
 - **Security:** OWASP top-10 hardening, secure secrets management, encrypted at rest
 - **Accessibility:** WCAG 2.1 AA target
 - **Observability:** Logging, error tracking (Sentry), uptime monitoring
-- **Localization:** ${brief.languages?.join(", ") || "English (additional languages on request)"}
+- **Localization:** ${languages}
 
 ---
 
@@ -179,10 +236,10 @@ Total duration: **${quote.weeks.min}–${quote.weeks.max} weeks**.
 | SAR | ${formatSar(quote.sar.min)} – ${formatSar(quote.sar.max)} |
 
 ### Pricing breakdown
-${quote.breakdown.map((b) => `- **${b.label}** — ${b.impact}`).join("\n")}
+${quote.breakdown.map((b) => `- **${escapeMarkdownInline(b.label)}** — ${escapeMarkdownInline(b.impact)}`).join("\n")}
 
 ### Assumptions
-${quote.assumptions.map((a) => `- ${a}`).join("\n")}
+${quote.assumptions.map((a) => `- ${escapeMarkdownInline(a)}`).join("\n")}
 
 ---
 

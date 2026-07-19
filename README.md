@@ -13,7 +13,7 @@
 | Animations   | Framer Motion 12                        |
 | Icons        | Lucide React                            |
 | AI           | OpenAI GPT-4o-mini (Aria assistant)     |
-| Deployment   | Vercel (via GitHub Actions)             |
+| Deployment   | Vercel (Git integration) + GitHub Actions quality gate |
 
 ## Getting Started
 
@@ -103,7 +103,11 @@ src/
     │   ├── pricing.ts   # Deterministic USD + SAR pricing engine
     │   ├── prd.ts       # PRD markdown generator
     │   ├── systemPrompt.ts
-    │   └── types.ts
+    │   ├── types.ts
+    │   └── validate.ts  # Runtime request validation
+    ├── contact.ts       # Shared contact validation + email templates
+    ├── email.ts         # Resend delivery
+    ├── rate-limit.ts    # Sliding-window IP rate limiter
     ├── constants.ts     # Shared animation presets & validation rules
     ├── data.ts          # Centralized content data + services pricing
     └── types.ts         # Shared TypeScript interfaces
@@ -114,12 +118,13 @@ src/
 - **Data Layer**: All content data is centralized in `src/lib/data.ts` — components import data rather than defining it inline
 - **Type Safety**: Shared interfaces in `src/lib/types.ts` ensure consistency across components
 - **Animation Presets**: Reusable animation configs in `src/lib/constants.ts` (DRY)
-- **API Routes**: Contact form hits `/api/contact` for server-side validation
+- **API Routes**: Contact form hits `/api/contact` for server-side validation; chat hits `/api/chat` with role/length/brief validation
 - **SEO**: JSON-LD structured data, Open Graph, Twitter cards, dynamic sitemap & robots.txt
+- **Security**: CSP + standard hardening headers; honeypot + rate limits on public APIs
 
 ## Deployment
 
-Automatic via GitHub Actions on push to `main`:
+- **Quality Gate** — GitHub Actions runs type-check → lint → test → build on every push and pull request (`.github/workflows/quality-gate.yml`).
+- **Deploy** — Vercel deploys from the connected Git repository. Production deploys from `main`; preview deployments are created for pull requests.
 
-1. **Quality Gate** — type-check → lint → test
-2. **Deploy** — build & deploy to Vercel (only if quality gate passes)
+Set `OPENAI_API_KEY` and `RESEND_API_KEY` in the Vercel project environment for full chat and contact-form delivery. Both features degrade honestly when unset.

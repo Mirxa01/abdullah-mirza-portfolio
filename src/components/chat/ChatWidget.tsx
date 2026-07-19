@@ -28,9 +28,11 @@ import type {
 } from "@/lib/chat/types";
 import ChatMessage from "./ChatMessage";
 import QuickReplies from "./QuickReplies";
+import { useToast } from "../ToastProvider";
+import { CHAT_LIMITS } from "@/lib/chat/validate";
 
 const STORAGE_KEY = "abdullah_chat_v1";
-const MAX_INPUT = 800;
+const MAX_INPUT = CHAT_LIMITS.MAX_CONTENT_LENGTH;
 
 interface PersistedState {
     messages: ChatMessageType[];
@@ -42,6 +44,7 @@ interface PersistedState {
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
 export default function ChatWidget() {
+    const { addToast } = useToast();
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessageType[]>([]);
     const [brief, setBrief] = useState<ProjectBrief>({});
@@ -52,6 +55,8 @@ export default function ChatWidget() {
     const [unreadHint, setUnreadHint] = useState(true);
     const [hasInitialized, setHasInitialized] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    /** True when the API is running in rule-based mode (no OpenAI key / provider error). */
+    const [isFallbackMode, setIsFallbackMode] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -174,6 +179,7 @@ export default function ChatWidget() {
             setMessages([greeting]);
             setPhase(data.phase);
             setSuggestedReplies(data.suggestedReplies);
+            setIsFallbackMode(Boolean(data.fallback));
         } catch {
             const fallback: ChatMessageType = {
                 id: uid(),
@@ -184,6 +190,7 @@ export default function ChatWidget() {
             };
             setMessages([fallback]);
             setPhase("greet");
+            setIsFallbackMode(true);
             setSuggestedReplies([
                 { label: "Get a price estimate", value: "I'd like a price estimate" },
                 { label: "Brainstorm my idea", value: "Help me brainstorm" },
@@ -214,7 +221,7 @@ export default function ChatWidget() {
     // ----- Send message
     const sendMessage = useCallback(
         async (content: string) => {
-            const trimmed = content.trim();
+            const trimmed = content.trim().slice(0, MAX_INPUT);
             if (!trimmed || isSending) return;
 
             const userMsg: ChatMessageType = {
@@ -230,11 +237,15 @@ export default function ChatWidget() {
             setIsSending(true);
 
             try {
+                // Only forward user/assistant turns — system prompts are server-owned.
                 const payload: ChatRequest = {
-                    messages: newMessages.map((m) => ({
-                        role: m.role,
-                        content: m.content,
-                    })),
+                    messages: newMessages
+                        .filter((m) => m.role === "user" || m.role === "assistant")
+                        .slice(-CHAT_LIMITS.MAX_MESSAGES)
+                        .map((m) => ({
+                            role: m.role as "user" | "assistant",
+                            content: m.content,
+                        })),
                     brief,
                 };
                 const res = await fetch("/api/chat", {
@@ -242,7 +253,59 @@ export default function ChatWidget() {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                 });
-                const data: ChatResponse = await res.json();
+
+                let data: ChatResponse & { error?: string };
+                try {
+                    data = (await res.json()) as ChatResponse & { error?: string };
+                } catch {
+                    throw new Error("Invalid response");
+                }
+
+                if (res.status === 429) {
+                    const rateMsg: ChatMessageType = {
+                        id: uid(),
+                        role: "assistant",
+                        content:
+                            data.message ||
+                            "Too many requests. Please slow down — or message Abdullah directly on WhatsApp.",
+                        createdAt: Date.now(),
+                    };
+                    setMessages((m) => [...m, rateMsg]);
+                    setSuggestedReplies(
+                        data.suggestedReplies?.length
+                            ? data.suggestedReplies
+                            : [
+                                  {
+                                      label: "WhatsApp Abdullah",
+                                      value: "open_whatsapp",
+                                      action: "whatsapp",
+                                  },
+                              ],
+                    );
+                    setIsFallbackMode(true);
+                    return;
+                }
+
+                if (!res.ok) {
+                    const errMsg: ChatMessageType = {
+                        id: uid(),
+                        role: "assistant",
+                        content:
+                            data.error ||
+                            data.message ||
+                            "Sorry — something went wrong. You can WhatsApp Abdullah directly while I recover.",
+                        createdAt: Date.now(),
+                    };
+                    setMessages((m) => [...m, errMsg]);
+                    setSuggestedReplies([
+                        {
+                            label: "WhatsApp Abdullah",
+                            value: "open_whatsapp",
+                            action: "whatsapp",
+                        },
+                    ]);
+                    return;
+                }
 
                 const assistant: ChatMessageType = {
                     id: uid(),
@@ -258,6 +321,7 @@ export default function ChatWidget() {
                 setBrief(data.brief);
                 setPhase(data.phase);
                 setSuggestedReplies(data.suggestedReplies);
+                setIsFallbackMode(Boolean(data.fallback));
             } catch {
                 const errMsg: ChatMessageType = {
                     id: uid(),
@@ -267,6 +331,7 @@ export default function ChatWidget() {
                     createdAt: Date.now(),
                 };
                 setMessages((m) => [...m, errMsg]);
+                setIsFallbackMode(true);
                 setSuggestedReplies([
                     {
                         label: "WhatsApp Abdullah",
@@ -278,7 +343,7 @@ export default function ChatWidget() {
                 setIsSending(false);
             }
         },
-        [messages, brief, isSending]
+        [messages, brief, isSending],
     );
 
     // ----- Reset
@@ -323,7 +388,14 @@ export default function ChatWidget() {
         }
         if (reply.action === "copy_prd") {
             const prd = lastPRDRef.current;
-            if (prd) void navigator.clipboard.writeText(prd.markdown);
+            if (!prd) {
+                addToast("No PRD available to copy yet.", "info");
+                return;
+            }
+            void navigator.clipboard.writeText(prd.markdown).then(
+                () => addToast("PRD copied to clipboard.", "success"),
+                () => addToast("Could not copy PRD. Please try Download instead.", "error"),
+            );
             return;
         }
         void sendMessage(reply.value);
@@ -467,9 +539,19 @@ export default function ChatWidget() {
                                             <Sparkles className="w-2.5 h-2.5" />
                                             AI
                                         </span>
+                                        {isFallbackMode && (
+                                            <span
+                                                className="inline-flex items-center text-[9px] font-bold tracking-[0.08em] uppercase px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                                                title="Running in basic mode without the full AI model"
+                                            >
+                                                Basic
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="text-[11px] text-white/45 truncate">
-                                        Abdullah&apos;s assistant · replies instantly
+                                        {isFallbackMode
+                                            ? "Basic mode · WhatsApp always available"
+                                            : "Abdullah's assistant · replies instantly"}
                                     </div>
                                 </div>
                                 <button

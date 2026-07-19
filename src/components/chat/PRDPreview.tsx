@@ -32,7 +32,7 @@ export default function PRDPreview({ prd }: Props) {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            // ignore
+            setCopied(false);
         }
     };
 

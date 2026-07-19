@@ -13,9 +13,10 @@ import OpenAI from "openai";
 import { computeQuote } from "@/lib/chat/pricing";
 import { generatePRD } from "@/lib/chat/prd";
 import { GREETING_MESSAGE, RESPONSE_JSON_SCHEMA, SYSTEM_PROMPT } from "@/lib/chat/systemPrompt";
+import { validateChatRequest } from "@/lib/chat/validate";
+import { createRateLimiter, getClientIp } from "@/lib/rate-limit";
 import type {
     ChatPhase,
-    ChatRequest,
     ChatResponse,
     ProjectBrief,
     ProjectType,
@@ -31,25 +32,7 @@ export const dynamic = "force-dynamic";
 // ---------------------------------------------------------------------------
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 30;
-const ipBuckets = new Map<string, number[]>();
-
-function rateLimit(ip: string): boolean {
-    const now = Date.now();
-    const arr = (ipBuckets.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-    if (arr.length >= RATE_MAX) {
-        ipBuckets.set(ip, arr);
-        return false;
-    }
-    arr.push(now);
-    ipBuckets.set(ip, arr);
-    return true;
-}
-
-function getClientIp(req: NextRequest): string {
-    const fwd = req.headers.get("x-forwarded-for");
-    if (fwd) return fwd.split(",")[0]?.trim() || "unknown";
-    return req.headers.get("x-real-ip") ?? "unknown";
-}
+export const chatRateLimiter = createRateLimiter(RATE_WINDOW_MS, RATE_MAX);
 
 // ---------------------------------------------------------------------------
 // Brief merge helper — deep-merges new updates onto the existing brief,
@@ -163,7 +146,10 @@ interface ModelTurn {
     callTool: "compute_quote" | "generate_prd" | null;
 }
 
-function ruleBasedTurn(messages: ChatRequest["messages"], brief: ProjectBrief): ModelTurn {
+type ConversationMessage = { role: "user" | "assistant"; content: string };
+
+/** Exported for unit tests — deterministic fallback when OpenAI is unavailable. */
+export function ruleBasedTurn(messages: ConversationMessage[], brief: ProjectBrief): ModelTurn {
     const lastUser = [...messages].reverse().find((m) => m.role === "user");
     const text = lastUser?.content ?? "";
     const lowered = text.toLowerCase();
@@ -261,9 +247,9 @@ function ruleBasedTurn(messages: ChatRequest["messages"], brief: ProjectBrief): 
 // OpenAI invocation
 // ---------------------------------------------------------------------------
 async function modelTurn(
-    messages: ChatRequest["messages"],
+    messages: ConversationMessage[],
     brief: ProjectBrief,
-    apiKey: string
+    apiKey: string,
 ): Promise<ModelTurn> {
     const client = new OpenAI({ apiKey });
 
@@ -279,7 +265,7 @@ ${JSON.stringify(brief, null, 2)}`;
         messages: [
             { role: "system", content: sys },
             ...messages.map((m) => ({
-                role: m.role as "user" | "assistant",
+                role: m.role,
                 content: m.content,
             })),
         ],
@@ -287,13 +273,19 @@ ${JSON.stringify(brief, null, 2)}`;
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
-    const parsed = JSON.parse(raw) as {
+    let parsed: {
         message: string;
         phase: ChatPhase;
         briefUpdates: Partial<ProjectBrief>;
         suggestedReplies: QuickReply[];
         callTool: "compute_quote" | "generate_prd" | null;
     };
+    try {
+        parsed = JSON.parse(raw) as typeof parsed;
+    } catch {
+        // Malformed model output — fall through to rule-based turn via caller.
+        throw new Error("Model returned non-JSON content");
+    }
 
     // Sanitize null values out of briefUpdates
     const cleanUpdates: Partial<ProjectBrief> = {};
@@ -310,7 +302,7 @@ ${JSON.stringify(brief, null, 2)}`;
     }));
 
     return {
-        message: parsed.message,
+        message: typeof parsed.message === "string" ? parsed.message : "How can I help with your project?",
         phase: parsed.phase,
         briefUpdates: cleanUpdates,
         suggestedReplies: replies,
@@ -322,8 +314,8 @@ ${JSON.stringify(brief, null, 2)}`;
 // Main handler
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-    const ip = getClientIp(req);
-    if (!rateLimit(ip)) {
+    const ip = getClientIp(req.headers);
+    if (!chatRateLimiter.check(ip)) {
         return NextResponse.json(
             {
                 message:
@@ -333,21 +325,24 @@ export async function POST(req: NextRequest) {
                 brief: {},
                 fallback: true,
             } satisfies ChatResponse,
-            { status: 429 }
+            { status: 429 },
         );
     }
 
-    let body: ChatRequest;
+    let rawBody: unknown;
     try {
-        body = (await req.json()) as ChatRequest;
+        rawBody = await req.json();
     } catch {
         return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    const messages = Array.isArray(body.messages) ? body.messages.slice(-20) : [];
-    const brief = body.brief ?? {};
+    const validated = validateChatRequest(rawBody);
+    if (!validated.ok) {
+        return NextResponse.json({ error: validated.error }, { status: 400 });
+    }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const { messages, brief } = validated.value;
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
 
     let turn: ModelTurn;
     let fallback = false;
@@ -397,6 +392,6 @@ export async function GET() {
         phase: "greet" as ChatPhase,
         suggestedReplies: quickRepliesForPhase("greet"),
         brief: {} as ProjectBrief,
-        fallback: !process.env.OPENAI_API_KEY,
+        fallback: !process.env.OPENAI_API_KEY?.trim(),
     } satisfies ChatResponse);
 }
