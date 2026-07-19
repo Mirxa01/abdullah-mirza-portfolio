@@ -105,16 +105,15 @@ export default function Contact() {
                             Get in touch
                         </span>
                         <h2 className="heading-display mt-4 mb-5 sm:mb-6">
-                            Let&apos;s make something{" "}
-                            <span className="heading-accent">great together.</span>
+                            Ready when{" "}
+                            <span className="heading-accent">you are.</span>
                         </h2>
 
                         <p className="text-base sm:text-lg text-[var(--color-text-muted)] font-light mb-10 leading-relaxed max-w-lg">
-                            Happy to chat about apps and websites, AI integrations, technical
-                            co-founder collaborations, or automating the parts of your business
-                            that still feel too manual. Reach me at{" "}
+                            Tell me about the app, AI integration, or ops automation on your
+                            mind — or just say hello. Reach me at{" "}
                             <span className="text-white/80">{EMAIL_ADDRESS}</span>{" "}
-                            (Mirxaa studio) or WhatsApp below.
+                            (Mirxaa studio) or WhatsApp below. Usually reply the same day.
                         </p>
 
                         <div className="space-y-3">

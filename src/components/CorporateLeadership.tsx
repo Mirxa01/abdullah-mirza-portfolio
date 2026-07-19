@@ -25,8 +25,8 @@ export default function CorporateLeadership() {
                         Leadership
                     </span>
                     <h2 className="heading-display">
-                        Leading teams that{" "}
-                        <span className="heading-accent">ship and scale.</span>
+                        Teams that{" "}
+                        <span className="heading-accent">ship under pressure.</span>
                     </h2>
                     <p className="mt-5 text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed font-light">
                         {leadershipIntro}

@@ -42,10 +42,10 @@ export default function CompetenciesGrid() {
                 >
                     <span className="kicker mx-auto mb-5">
                         <span className="kicker-dot" />
-                        What I&apos;m good at
+                        Craft &amp; capability
                     </span>
                     <h2 className="heading-display">
-                        Skills that <span className="heading-accent">feel useful</span>
+                        Skills that <span className="heading-accent">move the needle</span>
                     </h2>
                 </motion.div>
 

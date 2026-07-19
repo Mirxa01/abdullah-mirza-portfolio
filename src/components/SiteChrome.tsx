@@ -27,7 +27,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
             <div className="glow-effect screen-only" style={{ bottom: "-5%", left: "20%" }} />
             <ToastProvider>
                 {children}
-                <ChatWidget />
+                <div className="screen-only">
+                    <ChatWidget />
+                </div>
             </ToastProvider>
         </>
     );

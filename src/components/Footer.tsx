@@ -72,8 +72,8 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-sm text-white/55 leading-relaxed font-light mb-6">
-                            {PROFESSIONAL_TITLE}. I build friendly AI-powered products,
-                            logistics systems, and commerce experiences from Riyadh, Saudi Arabia.
+                            {PROFESSIONAL_TITLE}. I ship software people enjoy using —
+                            apps, AI tools, and ops systems from Riyadh, Saudi Arabia.
                         </p>
 
                         <div className="flex flex-wrap gap-2">

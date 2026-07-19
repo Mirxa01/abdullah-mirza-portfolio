@@ -164,12 +164,12 @@ export const RESPONSE_JSON_SCHEMA = {
 };
 
 /** Greeting message used as the very first assistant turn. */
-export const GREETING_MESSAGE = `Hi! I'm **Aria**, Abdullah's friendly AI assistant.
+export const GREETING_MESSAGE = `Hi! I'm **Aria** — Abdullah's AI assistant.
 
-I can help you in three ways:
+I can help you right now:
 
 - **Get a price estimate** for your project (USD + SAR)
-- **Brainstorm your idea** and shape it into a clear PRD
-- **Connect you directly** with Abdullah on WhatsApp
+- **Brainstorm your idea** into a clear PRD you can download
+- **WhatsApp Abdullah** directly for a human conversation
 
-What would you like to do?`;
+What sounds useful?`;

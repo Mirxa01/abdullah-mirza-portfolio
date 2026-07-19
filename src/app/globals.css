@@ -576,6 +576,7 @@
    PRINT / PDF — dedicated CV
    Prefer /cv for Print / Save as PDF.
    Homepage print hides .screen-only and shows .print-only CV.
+   Shared .printable-cv rules keep screen preview and PDF identical.
    ============================ */
 
 /* Visibility helpers — more reliable than Tailwind print: variants alone */
@@ -588,7 +589,9 @@
 @media print {
   .screen-only,
   .print\:hidden,
-  .glow-effect {
+  .glow-effect,
+  #chat-widget-root,
+  [data-chat-widget] {
     display: none !important;
   }
 
@@ -601,15 +604,317 @@
 /* Dedicated /cv page — always light, print-friendly on screen */
 .cv-shell,
 .cv-page {
-  background: #ffffff !important;
+  background: #f7f8fa !important;
   color: #111111 !important;
   min-height: 100vh;
 }
 
 body:has(.cv-page) {
-  background: #ffffff !important;
+  background: #f7f8fa !important;
   color: #111111 !important;
   overflow: auto !important;
+}
+
+/* ---- Shared CV document styles (screen + print) ---- */
+.printable-cv {
+  --cv-ink: #0b0d10;
+  --cv-muted: #4a5563;
+  --cv-subtle: #6b7280;
+  --cv-line: #d8dde6;
+  --cv-chip: #eef3fb;
+  --cv-accent: #0066ff;
+  --cv-accent-soft: rgba(0, 102, 255, 0.12);
+  color: var(--cv-ink);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.45;
+}
+
+.printable-cv .cv-accent-bar {
+  height: 4px;
+  width: 100%;
+  margin: 0 0 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0066ff 0%, #4d9eff 55%, #c5a059 100%);
+}
+
+.printable-cv .cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding-bottom: 0.95rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1.5px solid var(--cv-line);
+}
+
+.printable-cv .cv-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.printable-cv .cv-monogram {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.55rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0066ff 0%, #9810fa 100%);
+  color: #fff;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.printable-cv .cv-name {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.2rem;
+  color: var(--cv-ink);
+  line-height: 1.1;
+}
+
+.printable-cv .cv-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cv-accent);
+  margin: 0 0 0.3rem;
+}
+
+.printable-cv .cv-location {
+  margin: 0;
+  color: var(--cv-subtle);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.printable-cv .cv-contact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--cv-muted);
+}
+
+.printable-cv .cv-contact a {
+  color: var(--cv-ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.printable-cv .cv-contact a:hover {
+  color: var(--cv-accent);
+}
+
+.printable-cv .cv-section {
+  margin-bottom: 1.05rem;
+}
+
+.printable-cv .cv-section h2 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cv-ink);
+  margin: 0 0 0.45rem;
+  padding: 0 0 0.28rem 0.55rem;
+  border-bottom: 1px solid var(--cv-line);
+  border-left: 3px solid var(--cv-accent);
+  line-height: 1.2;
+}
+
+.printable-cv .cv-summary {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #1f2937;
+}
+
+.printable-cv .cv-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.printable-cv .cv-skills li {
+  background: var(--cv-chip);
+  border: 1px solid rgba(0, 102, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.18rem 0.62rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #1e3a5f;
+}
+
+.printable-cv .cv-role {
+  margin-bottom: 0.8rem;
+}
+
+.printable-cv .cv-role-compact {
+  margin-bottom: 0.55rem;
+}
+
+.printable-cv .cv-career-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 1.1rem;
+}
+
+.printable-cv .cv-role-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.printable-cv .cv-role h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--cv-ink);
+  letter-spacing: -0.01em;
+}
+
+.printable-cv .cv-org {
+  margin: 0.08rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--cv-muted);
+}
+
+.printable-cv .cv-period {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cv-accent);
+  white-space: nowrap;
+}
+
+.printable-cv .cv-role ul {
+  margin: 0.2rem 0 0;
+  padding-left: 1.05rem;
+}
+
+.printable-cv .cv-role li {
+  font-size: 0.84rem;
+  color: #1f2937;
+  margin: 0.12rem 0;
+}
+
+.printable-cv .cv-ventures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 1rem;
+}
+
+.printable-cv .cv-ventures li {
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--cv-line);
+  border-radius: 0.55rem;
+  background: #fff;
+  font-size: 0.8rem;
+  color: #1f2937;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.printable-cv .cv-venture-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin-bottom: 0.15rem;
+}
+
+.printable-cv .cv-venture-head strong {
+  font-size: 0.86rem;
+  color: var(--cv-ink);
+}
+
+.printable-cv .cv-domain {
+  color: var(--cv-accent);
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+
+.printable-cv .cv-venture-desc {
+  color: var(--cv-muted);
+  display: block;
+  line-height: 1.4;
+}
+
+.printable-cv .cv-section-split {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 1.25rem;
+}
+
+.printable-cv .cv-edu-degree {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cv-ink);
+}
+
+.printable-cv .cv-certs {
+  columns: 2;
+  column-gap: 1rem;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.printable-cv .cv-certs li {
+  font-size: 0.78rem;
+  color: #1f2937;
+  margin: 0.12rem 0;
+  break-inside: avoid;
+}
+
+.printable-cv .cv-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.15rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--cv-line);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cv-subtle);
+}
+
+/* Screen preview card on /cv */
+@media screen {
+  .cv-page .mx-auto {
+    max-width: 52rem;
+  }
+
+  .cv-page .printable-cv {
+    background: #ffffff;
+    border: 1px solid #e5e9f0;
+    border-radius: 1rem;
+    padding: 1.75rem 1.85rem 1.35rem;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 18px 50px rgba(15, 23, 42, 0.08);
+  }
 }
 
 @media print {
@@ -632,8 +937,8 @@ body:has(.cv-page) {
   body {
     background: #ffffff !important;
     color: #111111 !important;
-    font-size: 10.5pt !important;
-    line-height: 1.45 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
     overflow: visible !important;
     height: auto !important;
     min-height: 0 !important;
@@ -641,7 +946,9 @@ body:has(.cv-page) {
     position: static !important;
   }
 
-  .cv-page {
+  .cv-page,
+  .cv-shell {
+    background: #ffffff !important;
     min-height: 0 !important;
   }
 
@@ -654,15 +961,17 @@ body:has(.cv-page) {
   #printable-cv,
   .printable-cv {
     display: block !important;
-    color: #111 !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 0 !important;
   }
 
   #printable-cv a,
   .printable-cv a {
-    color: #111 !important;
+    color: #0b0d10 !important;
     text-decoration: none !important;
   }
 
@@ -673,369 +982,103 @@ body:has(.cv-page) {
     content: none !important;
   }
 
-  .cv-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1.5rem;
-    padding-bottom: 0.85rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #111;
+  .printable-cv .cv-accent-bar {
+    height: 3.5pt;
+    margin-bottom: 0.7rem;
   }
 
-  .cv-name {
-    font-size: 22pt !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.02em !important;
-    color: #000 !important;
-    margin: 0 0 0.15rem !important;
-    line-height: 1.15 !important;
+  .printable-cv .cv-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.65rem;
   }
 
-  .cv-title {
-    font-size: 10pt !important;
-    font-weight: 600 !important;
-    color: #333 !important;
-    margin: 0 0 0.2rem !important;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+  .printable-cv .cv-monogram {
+    width: 22pt;
+    height: 22pt;
+    font-size: 12pt;
+    border-radius: 4pt;
   }
 
-  .cv-location {
-    font-size: 9.5pt !important;
-    color: #555 !important;
-    margin: 0 !important;
+  .printable-cv .cv-name {
+    font-size: 18pt !important;
+    margin-bottom: 0.1rem !important;
   }
 
-  .cv-contact {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    text-align: right;
-    font-size: 9pt !important;
-    line-height: 1.55 !important;
-    color: #333 !important;
+  .printable-cv .cv-title {
+    font-size: 8pt !important;
   }
 
-  .cv-contact li {
-    margin: 0 !important;
-  }
-
-  .cv-section {
-    margin: 0 0 0.95rem !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  .cv-section h2 {
-    font-size: 11pt !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.08em !important;
-    text-transform: uppercase !important;
-    color: #000 !important;
-    margin: 0 0 0.4rem !important;
-    padding-bottom: 0.2rem !important;
-    border-bottom: 1px solid #ccc !important;
-  }
-
-  .cv-summary {
-    margin: 0 !important;
-    font-size: 10pt !important;
-    color: #222 !important;
-  }
-
-  .cv-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .cv-skills li {
-    border: 1px solid #ccc;
-    border-radius: 999px;
-    padding: 0.15rem 0.55rem;
+  .printable-cv .cv-location {
     font-size: 8.5pt !important;
-    color: #222 !important;
   }
 
-  .cv-role {
-    margin: 0 0 0.7rem !important;
+  .printable-cv .cv-contact {
+    font-size: 8pt !important;
+  }
+
+  .printable-cv .cv-section {
+    margin-bottom: 0.7rem !important;
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
-  .cv-role-compact {
+  .printable-cv .cv-section h2 {
+    font-size: 8.5pt !important;
+    margin-bottom: 0.3rem !important;
+  }
+
+  .printable-cv .cv-summary {
+    font-size: 9pt !important;
+  }
+
+  .printable-cv .cv-skills li {
+    font-size: 7.5pt !important;
+    padding: 0.08rem 0.42rem;
+  }
+
+  .printable-cv .cv-role {
+    page-break-inside: avoid;
+    break-inside: avoid;
     margin-bottom: 0.55rem !important;
   }
 
-  .cv-role-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 0.2rem;
-  }
-
-  .cv-role h3 {
-    font-size: 10.5pt !important;
-    font-weight: 700 !important;
-    color: #000 !important;
-    margin: 0 !important;
-  }
-
-  .cv-org {
+  .printable-cv .cv-role h3 {
     font-size: 9.5pt !important;
-    color: #333 !important;
-    margin: 0.05rem 0 0 !important;
-    font-weight: 600 !important;
   }
 
-  .cv-period {
-    font-size: 9pt !important;
-    color: #555 !important;
-    white-space: nowrap;
+  .printable-cv .cv-org,
+  .printable-cv .cv-role li {
+    font-size: 8.5pt !important;
   }
 
-  .cv-role ul {
-    margin: 0.2rem 0 0 !important;
-    padding-left: 1.1rem !important;
+  .printable-cv .cv-period {
+    font-size: 8pt !important;
   }
 
-  .cv-role li {
+  .printable-cv .cv-ventures li {
+    font-size: 8pt !important;
+    padding: 0.28rem 0.4rem;
+  }
+
+  .printable-cv .cv-venture-head strong {
+    font-size: 8.5pt !important;
+  }
+
+  .printable-cv .cv-edu-degree {
     font-size: 9.5pt !important;
-    color: #222 !important;
-    margin: 0.12rem 0 !important;
   }
 
-  .cv-ventures {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
+  .printable-cv .cv-certs li {
+    font-size: 8pt !important;
   }
 
-  .cv-ventures li {
-    margin: 0 0 0.4rem !important;
-    font-size: 9.5pt !important;
-    color: #222 !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  .cv-domain {
-    color: #555 !important;
-    font-weight: 500;
-  }
-
-  .cv-venture-desc {
-    color: #333 !important;
-  }
-
-  .cv-section-split {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 1.25rem;
-  }
-
-  .cv-edu-degree {
-    font-size: 10.5pt !important;
-    font-weight: 700 !important;
-    color: #000 !important;
-    margin: 0 0 0.15rem !important;
-  }
-
-  .cv-certs {
-    columns: 2;
-    column-gap: 1rem;
-    margin: 0 !important;
-    padding-left: 1rem !important;
-  }
-
-  .cv-certs li {
-    font-size: 9pt !important;
-    color: #222 !important;
-    break-inside: avoid;
-    margin: 0.1rem 0 !important;
+  .printable-cv .cv-footer {
+    font-size: 7pt !important;
+    margin-top: 0.7rem;
   }
 
   @page {
-    margin: 1.4cm 1.5cm;
+    margin: 1.15cm 1.25cm;
     size: A4;
-  }
-}
-
-/* Screen styles for /cv so the resume looks correct before printing */
-@media screen {
-  .cv-page .printable-cv {
-    color: #111;
-  }
-
-  .cv-page .cv-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1.5rem;
-    padding-bottom: 1rem;
-    margin-bottom: 1.25rem;
-    border-bottom: 2px solid #111;
-  }
-
-  .cv-page .cv-name {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.25rem;
-    color: #000;
-  }
-
-  .cv-page .cv-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #333;
-    margin: 0 0 0.25rem;
-  }
-
-  .cv-page .cv-location {
-    margin: 0;
-    color: #555;
-    font-size: 0.9rem;
-  }
-
-  .cv-page .cv-contact {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-    font-size: 0.85rem;
-    line-height: 1.55;
-    color: #333;
-  }
-
-  .cv-page .cv-section {
-    margin-bottom: 1.25rem;
-  }
-
-  .cv-page .cv-section h2 {
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #000;
-    margin: 0 0 0.5rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid #ccc;
-  }
-
-  .cv-page .cv-summary {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.55;
-    color: #222;
-  }
-
-  .cv-page .cv-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .cv-page .cv-skills li {
-    border: 1px solid #ccc;
-    border-radius: 999px;
-    padding: 0.2rem 0.65rem;
-    font-size: 0.8rem;
-    color: #222;
-  }
-
-  .cv-page .cv-role {
-    margin-bottom: 0.9rem;
-  }
-
-  .cv-page .cv-role-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .cv-page .cv-role h3 {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #000;
-  }
-
-  .cv-page .cv-org {
-    margin: 0.1rem 0 0;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #333;
-  }
-
-  .cv-page .cv-period {
-    font-size: 0.85rem;
-    color: #555;
-    white-space: nowrap;
-  }
-
-  .cv-page .cv-role ul {
-    margin: 0.25rem 0 0;
-    padding-left: 1.15rem;
-  }
-
-  .cv-page .cv-role li {
-    font-size: 0.9rem;
-    color: #222;
-    margin: 0.15rem 0;
-  }
-
-  .cv-page .cv-ventures {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .cv-page .cv-ventures li {
-    margin: 0 0 0.55rem;
-    font-size: 0.9rem;
-    color: #222;
-  }
-
-  .cv-page .cv-domain {
-    color: #555;
-  }
-
-  .cv-page .cv-section-split {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 1.5rem;
-  }
-
-  .cv-page .cv-edu-degree {
-    margin: 0 0 0.2rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #000;
-  }
-
-  .cv-page .cv-certs {
-    columns: 2;
-    column-gap: 1.25rem;
-    margin: 0;
-    padding-left: 1.1rem;
-  }
-
-  .cv-page .cv-certs li {
-    font-size: 0.85rem;
-    color: #222;
-    margin: 0.15rem 0;
   }
 }

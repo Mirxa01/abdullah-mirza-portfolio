@@ -1,5 +1,6 @@
 /**
  * Dedicated printable CV — used on `/cv` and as the homepage print stylesheet target.
+ * Designed for clean A4 PDF: brand accent, dense hierarchy, no marketing chrome.
  */
 import {
     PROFESSIONAL_TITLE,
@@ -40,11 +41,18 @@ export default function PrintableCV({ variant = "embedded" }: PrintableCVProps) 
             className={rootClass}
             aria-label="Curriculum vitae"
         >
+            <div className="cv-accent-bar" aria-hidden="true" />
+
             <header className="cv-header">
-                <div>
-                    <h1 className="cv-name">Abdullah Mirza</h1>
-                    <p className="cv-title">{PROFESSIONAL_TITLE}</p>
-                    <p className="cv-location">Riyadh, Saudi Arabia</p>
+                <div className="cv-brand">
+                    <div className="cv-monogram" aria-hidden="true">
+                        A
+                    </div>
+                    <div>
+                        <h1 className="cv-name">Abdullah Mirza</h1>
+                        <p className="cv-title">{PROFESSIONAL_TITLE}</p>
+                        <p className="cv-location">Riyadh, Saudi Arabia · Available for collaborations</p>
+                    </div>
                 </div>
                 <ul className="cv-contact">
                     <li>
@@ -100,23 +108,25 @@ export default function PrintableCV({ variant = "embedded" }: PrintableCVProps) 
 
             <section className="cv-section">
                 <h2>Career history</h2>
-                {timelineEvents.map((event) => (
-                    <div key={`${event.company}-${event.role}`} className="cv-role cv-role-compact">
-                        <div className="cv-role-head">
-                            <div>
-                                <h3>{event.role}</h3>
-                                <p className="cv-org">{event.company}</p>
+                <div className="cv-career-grid">
+                    {timelineEvents.map((event) => (
+                        <div key={`${event.company}-${event.role}`} className="cv-role cv-role-compact">
+                            <div className="cv-role-head">
+                                <div>
+                                    <h3>{event.role}</h3>
+                                    <p className="cv-org">{event.company}</p>
+                                </div>
                             </div>
+                            {event.highlights.length > 0 && (
+                                <ul>
+                                    {event.highlights.slice(0, CAREER_HIGHLIGHT_LIMIT).map((highlight) => (
+                                        <li key={highlight}>{highlight}</li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
-                        {event.highlights.length > 0 && (
-                            <ul>
-                                {event.highlights.slice(0, CAREER_HIGHLIGHT_LIMIT).map((highlight) => (
-                                    <li key={highlight}>{highlight}</li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                ))}
+                    ))}
+                </div>
             </section>
 
             <section className="cv-section">
@@ -124,11 +134,13 @@ export default function PrintableCV({ variant = "embedded" }: PrintableCVProps) 
                 <ul className="cv-ventures">
                     {ventures.map((venture) => (
                         <li key={venture.title}>
-                            <strong>{venture.title}</strong>
-                            {venture.domain ? (
-                                <span className="cv-domain"> — {venture.domain}</span>
-                            ) : null}
-                            <span className="cv-venture-desc"> {venture.description}</span>
+                            <div className="cv-venture-head">
+                                <strong>{venture.title}</strong>
+                                {venture.domain ? (
+                                    <span className="cv-domain">{venture.domain}</span>
+                                ) : null}
+                            </div>
+                            <span className="cv-venture-desc">{venture.description}</span>
                         </li>
                     ))}
                 </ul>
@@ -150,6 +162,11 @@ export default function PrintableCV({ variant = "embedded" }: PrintableCVProps) 
                     </ul>
                 </div>
             </section>
+
+            <footer className="cv-footer">
+                <span>References available on request</span>
+                <span>Printed from abdullahmirza.com/cv</span>
+            </footer>
         </article>
     );
 }

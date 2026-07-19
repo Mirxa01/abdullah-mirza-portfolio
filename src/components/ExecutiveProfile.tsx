@@ -74,7 +74,7 @@ export default function ExecutiveProfile() {
                     className="kicker mx-auto mb-8"
                 >
                     <span className="kicker-dot" />
-                    A little about me
+                    Why founders call
                 </motion.span>
 
                 <motion.p

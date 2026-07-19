@@ -29,10 +29,10 @@ export default function CareerTimeline() {
                 >
                     <span className="kicker mx-auto mb-5">
                         <span className="kicker-dot" />
-                        The path so far
+                        From ops floors to founder desks
                     </span>
                     <h2 className="heading-display">
-                        Career <span className="heading-accent">journey</span>
+                        Career <span className="heading-accent">throughline</span>
                     </h2>
                 </motion.div>
 

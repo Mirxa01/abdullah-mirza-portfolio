@@ -43,12 +43,12 @@ export const heroTagline = PROFESSIONAL_TITLE;
 
 export const heroHeadline = {
     lead: "I build",
-    accent: "friendly software",
-    rest: "that helps businesses grow.",
+    accent: "software people enjoy",
+    rest: "— and businesses rely on.",
 };
 
 export const typewriterText =
-    "Hi — I'm Abdullah. For 11+ years I've been building apps, websites, and AI-powered tools with founders and operators across Saudi Arabia. I care about clear products, calm automation, and shipping work people actually enjoy using.";
+    "Hi — I'm Abdullah. Founders and operators across Saudi Arabia bring me in to ship apps, AI tools, and automations that cut busywork and feel calm to use. 11+ years hands-on. 7 live products. From first sketch to launch day.";
 
 export const heroExpertise = [
     "Apps, websites & SaaS products",
@@ -62,6 +62,9 @@ export const heroNumbers = [
     "50+ workflows automated for teams",
 ];
 
+/** Hero portrait availability chip. */
+export const heroAvailability = "Available for new collaborations";
+
 /** Short executive summary used by the printable CV. */
 export const cvSummary =
     "Founder-operator and full-stack builder based in Riyadh with 11+ years of experience. I design and ship AI-enabled products, commerce platforms, and operational systems — pairing hands-on engineering with enterprise logistics experience.";
@@ -71,7 +74,7 @@ export const cvSummary =
 // ---------------------------------------------------------------------------
 
 export const executiveProfileLead =
-    "I'm a hands-on founder and developer with 11+ years across logistics, commerce, and SaaS — building apps, practical AI, and automations that give teams their time back.";
+    "I turn messy operations and half-formed product ideas into clear software — apps, practical AI, and automations that give teams their time back. 11+ years across logistics, commerce, and SaaS, still shipping hands-on.";
 
 /** Intro under the Corporate Leadership section heading. */
 export const leadershipIntro =
@@ -94,7 +97,7 @@ export const ventures: Venture[] = [
         domain: "mirxaa.com",
         url: "https://mirxaa.com",
         description:
-            "My studio home base — a friendly hub for products, writing, and experiments where AI meets thoughtful product design.",
+            "Studio hub for AI-product experiments, writing, and shipping — where thoughtful design meets useful automation.",
         color: "#0066ff",
     },
     {
@@ -102,7 +105,7 @@ export const ventures: Venture[] = [
         domain: "sourcekom.com",
         url: "https://sourcekom.com",
         description:
-            "Asset booking and exchange platform that helps industrial suppliers and procurement teams work together across Saudi Arabia.",
+            "Industrial asset booking & exchange — helping suppliers and procurement teams collaborate across Saudi Arabia.",
         logo: "/logos/sourcekom.png",
         color: "var(--color-electric-blue)",
         image: "/generated_images/venture-sourcekom.png",
@@ -112,7 +115,7 @@ export const ventures: Venture[] = [
         domain: "habibistay.com",
         url: "https://habibistay.com",
         description:
-            "Hospitality marketplace for short-term stays in KSA, with SARA — a warm AI concierge that helps guests book with confidence.",
+            "Short-stay marketplace for KSA, powered by SARA — a warm AI concierge that helps guests book with confidence.",
         logo: "/logos/habibistay.webp",
         color: "var(--color-muted-gold)",
         image: "/generated_images/venture-habibistay.png",
@@ -122,7 +125,7 @@ export const ventures: Venture[] = [
         domain: "newomen.com",
         url: "https://newomen.com",
         description:
-            "Lifestyle and commerce destination for modern women — curated products, stories, and community in one calm experience.",
+            "Lifestyle commerce for modern women — curated products, stories, and community in one calm experience.",
         color: "#f472b6",
     },
     {
@@ -130,7 +133,7 @@ export const ventures: Venture[] = [
         domain: "daddyscart.com",
         url: "https://daddyscart.com",
         description:
-            "E-commerce brand built for Saudi shoppers — clear product discovery, smooth checkout, and a retail feel that feels local.",
+            "Saudi-first e-commerce — clear discovery, smooth checkout, and a retail feel that feels local.",
         logo: "/logos/daddyscart.png",
         color: "#34d399",
         image: "/generated_images/venture-daddyscart.png",
@@ -140,7 +143,7 @@ export const ventures: Venture[] = [
         domain: "arabclue.com",
         url: "https://arabclue.com",
         description:
-            "Market intelligence product that turns regional data into plain-language insights teams can act on.",
+            "Regional market intelligence — turning complex data into plain-language insights teams can act on.",
         logo: "/logos/arabclue.png",
         color: "#a855f7",
         image: "/generated_images/venture-arabclue.png",
@@ -150,7 +153,7 @@ export const ventures: Venture[] = [
         domain: "msanai.com",
         url: "https://msanai.com",
         description:
-            "Applied AI studio creating custom agents, RAG systems, and helpful automations for ambitious teams in the region.",
+            "Applied AI studio — custom agents, RAG systems, and automations for ambitious teams in the region.",
         color: "#22d3ee",
     },
 ];
