@@ -106,15 +106,17 @@ export default function Contact() {
                     <motion.div {...slideInLeft}>
                         <span className="kicker mb-5">
                             <span className="kicker-dot" />
-                            Get In Touch
+                            Get in touch
                         </span>
                         <h2 className="heading-display mt-4 mb-5 sm:mb-6">
-                            Let&apos;s build{" "}
-                            <span className="heading-accent">what comes next.</span>
+                            Let&apos;s make something{" "}
+                            <span className="heading-accent">great together.</span>
                         </h2>
 
                         <p className="text-base sm:text-lg text-[var(--color-text-muted)] font-light mb-10 leading-relaxed max-w-lg">
-                            Open for custom app &amp; website development projects, technical co-founder roles, strategic AI integrations, and automated operational overhauls.
+                            Happy to chat about apps and websites, AI integrations, technical
+                            co-founder collaborations, or automating the parts of your business
+                            that still feel too manual.
                         </p>
 
                         <div className="space-y-3">
@@ -231,7 +233,7 @@ export default function Contact() {
                                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                                         onFocus={() => setFocusedField("name")}
                                         onBlur={() => setFocusedField(null)}
-                                        placeholder="John Doe"
+                                        placeholder="Your name"
                                         className={`w-full bg-white/5 border ${validState.name ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
@@ -252,7 +254,7 @@ export default function Contact() {
                                         onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                                         onFocus={() => setFocusedField("email")}
                                         onBlur={() => setFocusedField(null)}
-                                        placeholder="john@example.com"
+                                        placeholder="you@company.com"
                                         className={`w-full bg-white/5 border ${validState.email ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
@@ -274,7 +276,7 @@ export default function Contact() {
                                     onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
                                     onFocus={() => setFocusedField("subject")}
                                     onBlur={() => setFocusedField(null)}
-                                    placeholder="Executive Opportunity"
+                                    placeholder="What should we talk about?"
                                     className={`w-full bg-white/5 border ${validState.subject ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                 />
                             </div>
@@ -295,7 +297,7 @@ export default function Contact() {
                                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                                     onFocus={() => setFocusedField("message")}
                                     onBlur={() => setFocusedField(null)}
-                                    placeholder="Enter your message..."
+                                    placeholder="Share a bit about your project or idea..."
                                     className={`w-full bg-white/5 border ${validState.message ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all resize-none`}
                                 />
                             </div>
@@ -316,7 +318,7 @@ export default function Contact() {
                                     <>
                                         <Send className={`w-4 h-4 sm:w-5 sm:h-5 ${isReadyToSubmit ? 'group-hover:text-white transition-colors' : 'text-white/30'}`} />
                                         <span className={isReadyToSubmit ? 'group-hover:text-shimmer transition-colors' : ''}>
-                                            {isReadyToSubmit ? 'Send Message' : 'Complete All Fields'}
+                                            {isReadyToSubmit ? 'Send message' : 'Complete all fields'}
                                         </span>
                                     </>
                                 )}

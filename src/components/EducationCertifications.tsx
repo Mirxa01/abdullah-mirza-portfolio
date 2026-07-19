@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GraduationCap, Award, BookOpen, CheckCircle2 } from "lucide-react";
-import { certifications } from "@/lib/data";
+import { certifications, education } from "@/lib/data";
 import {
     slideInLeft,
     slideInRight,
@@ -42,11 +42,12 @@ export default function EducationCertifications() {
                                 </span>
                             </div>
                             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
-                                Bachelor of Business Administration (BBA)
+                                {education.degree}
                             </h3>
                             <p className="text-[var(--color-electric-blue)] font-semibold text-sm sm:text-base">
-                                University of Punjab
+                                {education.institution}
                             </p>
+                            <p className="text-white/50 text-sm mt-1">{education.location}</p>
                         </div>
                     </motion.div>
 
