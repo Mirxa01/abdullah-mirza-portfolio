@@ -33,7 +33,7 @@ export default function CvPage() {
     return (
         <div className="cv-page min-h-screen bg-white text-black">
             <CvToolbar />
-            <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+            <div className="mx-auto max-w-4xl px-3 py-6 sm:px-6 sm:py-10">
                 <PrintableCV variant="page" />
             </div>
             <Suspense fallback={null}>

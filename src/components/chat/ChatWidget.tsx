@@ -186,10 +186,10 @@ export default function ChatWidget() {
                 for (const entry of entries) {
                     visibility.set(entry.target, entry.intersectionRatio);
                 }
-                const anyVisible = Array.from(visibility.values()).some((r) => r > 0.25);
+                const anyVisible = Array.from(visibility.values()).some((r) => r > 0.08);
                 setHideFab(anyVisible);
             },
-            { threshold: [0, 0.25, 0.5, 0.75] }
+            { threshold: [0, 0.08, 0.25, 0.5], rootMargin: "0px 0px -18% 0px" }
         );
         targets.forEach((t) => obs.observe(t));
         return () => obs.disconnect();
@@ -490,7 +490,10 @@ export default function ChatWidget() {
                         ? "opacity-0 scale-90 pointer-events-none"
                         : "opacity-100 scale-100"
                 }`}
-                style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+                style={{
+                    marginBottom: "env(safe-area-inset-bottom)",
+                    marginRight: "env(safe-area-inset-right)",
+                }}
                 aria-label="Open chat with Aria, Abdullah's AI assistant"
                 aria-hidden={open || hideFab}
                 tabIndex={open || hideFab ? -1 : 0}
@@ -499,7 +502,7 @@ export default function ChatWidget() {
                     className="absolute inset-0 rounded-full bg-[var(--color-electric-blue)] blur-2xl opacity-40 group-hover:opacity-70 transition-opacity"
                     aria-hidden="true"
                 />
-                <span className="relative flex items-center gap-2.5 pl-4 pr-5 py-3.5 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white shadow-[0_10px_30px_rgba(0,102,255,0.45)] border border-white/15 transition-transform duration-150 group-hover:scale-[1.03] group-active:scale-[0.97]">
+                <span className="relative flex items-center gap-2.5 min-h-11 pl-4 pr-5 py-3 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white shadow-[0_10px_30px_rgba(0,102,255,0.45)] border border-white/15 transition-transform duration-150 group-hover:scale-[1.03] group-active:scale-[0.97]">
                     <span className="relative flex w-5 h-5 items-center justify-center">
                         <MessageCircle className="w-5 h-5" />
                         {unreadHint && (
@@ -582,7 +585,7 @@ export default function ChatWidget() {
                             <button
                                 type="button"
                                 onClick={handleReset}
-                                className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+                                className="inline-flex items-center justify-center min-w-11 min-h-11 p-2.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-colors"
                                 aria-label="Reset conversation"
                                 title="Reset conversation"
                             >
@@ -591,7 +594,7 @@ export default function ChatWidget() {
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                                className="inline-flex items-center justify-center min-w-11 min-h-11 p-2.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
                                 aria-label="Close chat"
                             >
                                 <X className="w-4 h-4" />
@@ -683,7 +686,7 @@ export default function ChatWidget() {
                                     type="button"
                                     onClick={() => void sendMessage(input)}
                                     disabled={!input.trim() || isSending}
-                                    className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,102,255,0.5)] transition-shadow"
+                                    className="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,102,255,0.5)] transition-shadow"
                                     aria-label="Send message"
                                 >
                                     {isSending ? (

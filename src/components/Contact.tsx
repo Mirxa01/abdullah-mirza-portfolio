@@ -90,7 +90,7 @@ export default function Contact() {
     return (
         <section
             id="contact"
-            className="section-y relative bg-[var(--color-surface-2)] overflow-hidden"
+            className="section-y relative bg-[var(--color-surface-2)] overflow-hidden pb-28 sm:pb-[var(--space-section-y)]"
         >
             <div
                 className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-electric-blue)]/8 blur-[120px] rounded-full -z-10 print:hidden"

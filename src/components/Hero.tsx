@@ -52,7 +52,7 @@ const TypewriterText = () => {
     }, [index, hasMounted]);
 
     return (
-        <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-8 sm:mb-10 max-w-2xl leading-relaxed font-light min-h-[200px] sm:min-h-[150px] md:min-h-[130px]">
+        <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-6 sm:mb-10 max-w-2xl leading-relaxed font-light min-h-[7.5rem] sm:min-h-[9.5rem] md:min-h-[8rem]">
             {displayedText}
             {hasMounted && index < typewriterText.length && (
                 <motion.span
@@ -69,7 +69,7 @@ export default function Hero() {
     return (
         <section
             id="hero"
-            className="relative min-h-[92vh] flex items-center pt-28 sm:pt-32 pb-20 overflow-hidden cyber-grid print:min-h-0 print:pt-0 print:pb-0"
+            className="relative min-h-[85dvh] sm:min-h-[92vh] flex items-center pt-[calc(6.5rem+env(safe-area-inset-top))] sm:pt-[calc(8rem+env(safe-area-inset-top))] pb-16 sm:pb-20 overflow-hidden cyber-grid print:min-h-0 print:pt-0 print:pb-0"
         >
             {/* Ambient background blurs */}
             <div
@@ -101,20 +101,20 @@ export default function Hero() {
 
                         <TypewriterText />
 
-                        {/* CTAs */}
-                        <div className="flex flex-wrap gap-3 mb-12">
-                            <a href="#services" className="btn btn-primary group">
+                        {/* CTAs — full-width stack on mobile so pills don't fight for space */}
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mb-10 sm:mb-12">
+                            <a href="#services" className="btn btn-primary group w-full sm:w-auto justify-center">
                                 Start a project
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                             </a>
-                            <a href="#ventures" className="btn btn-secondary">
+                            <a href="#ventures" className="btn btn-secondary w-full sm:w-auto justify-center">
                                 See live products
                             </a>
                             <a
                                 href={buildWhatsappLink()}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="btn btn-whatsapp"
+                                className="btn btn-whatsapp w-full sm:w-auto justify-center"
                             >
                                 <MessageCircle className="w-4 h-4" />
                                 WhatsApp me
@@ -163,7 +163,7 @@ export default function Hero() {
                     </div>
 
                     {/* Portrait column */}
-                    <div className="lg:col-span-5 relative order-1 lg:order-2 mx-auto w-[240px] sm:w-[300px] lg:w-full max-w-[420px] fade-in-up [animation-delay:0.15s]">
+                    <div className="lg:col-span-5 relative order-1 lg:order-2 mx-auto w-[min(220px,70vw)] sm:w-[300px] lg:w-full max-w-[420px] fade-in-up [animation-delay:0.15s]">
                         <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
                             {/* gradient frame */}
                             <div className="absolute inset-0 rounded-3xl pointer-events-none z-20 ring-1 ring-inset ring-white/10" />
@@ -180,17 +180,17 @@ export default function Hero() {
                             />
 
                             {/* Floating availability tag */}
-                            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between gap-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2.5 print:hidden">
+                            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-20 flex items-center justify-between gap-2 sm:gap-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 px-3 py-2 sm:px-4 sm:py-2.5 print:hidden">
                                 <div className="flex items-center gap-2 min-w-0">
                                     <span className="relative flex w-2 h-2 shrink-0">
                                         <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
                                         <span className="relative w-2 h-2 rounded-full bg-emerald-400" />
                                     </span>
-                                    <span className="text-[11px] font-semibold text-white truncate">
+                                    <span className="text-[10px] sm:text-[11px] font-semibold text-white truncate">
                                         {heroAvailability}
                                     </span>
                                 </div>
-                                <span className="text-[10px] text-white/50 font-mono shrink-0">
+                                <span className="text-[9px] sm:text-[10px] text-white/50 font-mono shrink-0">
                                     Riyadh · KSA
                                 </span>
                             </div>

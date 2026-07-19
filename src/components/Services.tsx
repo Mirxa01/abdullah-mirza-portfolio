@@ -79,7 +79,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             {/* Pricing summary */}
             <div className="grid grid-cols-2 gap-2 mb-5 relative z-10">
                 <div className="rounded-xl border border-white/[0.06] bg-black/30 p-3">
-                    <div className="text-[9px] font-bold tracking-widest text-white/40 uppercase mb-1">
+                    <div className="text-[10px] sm:text-[9px] font-bold tracking-widest text-white/40 uppercase mb-1">
                         USD
                     </div>
                     <div className="text-sm font-bold text-white tabular-nums">
@@ -89,7 +89,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     </div>
                 </div>
                 <div className="rounded-xl border border-white/[0.06] bg-black/30 p-3">
-                    <div className="text-[9px] font-bold tracking-widest text-white/40 uppercase mb-1">
+                    <div className="text-[10px] sm:text-[9px] font-bold tracking-widest text-white/40 uppercase mb-1">
                         SAR
                     </div>
                     <div className="text-sm font-bold text-white tabular-nums">
@@ -105,7 +105,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                 {service.tiers.map((tier) => (
                     <div
                         key={tier.name}
-                        className="flex items-center justify-between gap-2 text-[12px]"
+                        className="flex items-center justify-between gap-2 text-[13px] sm:text-[12px]"
                     >
                         <div className="flex items-center gap-2 min-w-0">
                             <Check className="w-3 h-3 text-emerald-400 shrink-0" />
@@ -128,9 +128,9 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                 </span>
                 <a
                     href="#contact"
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--color-electric-blue)] hover:gap-1.5 transition-all"
+                    className="inline-flex items-center gap-1.5 min-h-11 px-3 py-2 rounded-full text-[12px] font-semibold text-[var(--color-electric-blue)] bg-[var(--color-electric-blue)]/10 border border-[var(--color-electric-blue)]/25 hover:bg-[var(--color-electric-blue)]/15 transition-colors"
                 >
-                    Get a quote <ArrowRight className="w-3 h-3" />
+                    Get a quote <ArrowRight className="w-3.5 h-3.5" />
                 </a>
             </div>
         </motion.article>

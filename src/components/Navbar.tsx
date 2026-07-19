@@ -49,11 +49,26 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Lock background scroll while the mobile menu is open
+    useEffect(() => {
+        if (!mobileMenuOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [mobileMenuOpen]);
+
     return (
         <nav
             className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
                 scrolled ? "py-3" : "py-5"
             }`}
+            style={{
+                paddingTop: "max(0px, env(safe-area-inset-top))",
+                paddingLeft: "env(safe-area-inset-left)",
+                paddingRight: "env(safe-area-inset-right)",
+            }}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
@@ -76,7 +91,7 @@ export default function Navbar() {
                             <span className="text-sm font-black tracking-tight text-white">
                                 Abdullah Mirza
                             </span>
-                            <span className="text-[9px] tracking-[0.14em] uppercase text-white/40 mt-0.5">
+                            <span className="text-[9px] tracking-[0.14em] uppercase text-white/40 mt-0.5 hidden min-[380px]:block">
                                 {PROFESSIONAL_TITLE}
                             </span>
                         </div>
@@ -134,13 +149,13 @@ export default function Navbar() {
                         </a>
                     </div>
 
-                    {/* Mobile right cluster */}
+                    {/* Mobile right cluster — 44px touch targets */}
                     <div className="flex items-center gap-1.5 lg:hidden">
                         <a
                             href={buildWhatsappLink()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 print:hidden"
+                            className="inline-flex items-center justify-center min-w-11 min-h-11 w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 print:hidden"
                             aria-label="WhatsApp Abdullah"
                         >
                             <MessageCircle className="w-4 h-4" />
@@ -148,11 +163,12 @@ export default function Navbar() {
                         <PrintButton />
                         <button
                             type="button"
-                            className="text-white p-1.5 rounded-md hover:bg-white/5 transition-colors print:hidden"
+                            className="text-white inline-flex items-center justify-center min-w-11 min-h-11 p-2.5 rounded-md hover:bg-white/5 transition-colors print:hidden"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             aria-label={
                                 mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
                             }
+                            aria-expanded={mobileMenuOpen}
                         >
                             <AnimatePresence mode="wait" initial={false}>
                                 {mobileMenuOpen ? (
@@ -202,7 +218,7 @@ export default function Navbar() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-                            className="lg:hidden absolute top-full left-3 right-3 mt-2 z-50 rounded-2xl bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden print:hidden"
+                            className="lg:hidden absolute top-full left-3 right-3 mt-2 z-50 rounded-2xl bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-y-auto max-h-[calc(100dvh-6rem-env(safe-area-inset-top))] print:hidden"
                         >
                             <ul className="py-2">
                                 {navLinks.map((link) => {
@@ -212,7 +228,7 @@ export default function Navbar() {
                                             <a
                                                 href={link.href}
                                                 onClick={() => setMobileMenuOpen(false)}
-                                                className={`flex items-center justify-between px-5 py-3 text-sm font-semibold transition-colors ${
+                                                className={`flex items-center justify-between px-5 py-3.5 min-h-11 text-sm font-semibold transition-colors ${
                                                     isActive
                                                         ? "text-white bg-white/[0.04]"
                                                         : "text-white/70 hover:text-white hover:bg-white/[0.03]"
