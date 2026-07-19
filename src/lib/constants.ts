@@ -91,5 +91,5 @@ export const SITE = {
     NAME: "Abdullah Mirza Portfolio",
     TITLE: "Abdullah Mirza | Founder · Builder · Operator",
     DESCRIPTION:
-        "Friendly founder-operator portfolio of Abdullah Mirza — apps, AI tools, logistics systems, and commerce products built from Riyadh, Saudi Arabia.",
+        "Abdullah Mirza — founder, builder, and operator with 11+ years creating apps, AI tools, logistics systems, and commerce products from Riyadh, Saudi Arabia.",
 } as const;

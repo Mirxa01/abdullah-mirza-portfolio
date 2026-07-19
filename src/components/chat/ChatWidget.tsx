@@ -30,6 +30,7 @@ import ChatMessage from "./ChatMessage";
 import QuickReplies from "./QuickReplies";
 import { useToast } from "../ToastProvider";
 import { CHAT_LIMITS } from "@/lib/chat/validate";
+import { GREETING_MESSAGE } from "@/lib/chat/systemPrompt";
 
 const STORAGE_KEY = "abdullah_chat_v1";
 const MAX_INPUT = CHAT_LIMITS.MAX_CONTENT_LENGTH;
@@ -184,8 +185,7 @@ export default function ChatWidget() {
             const fallback: ChatMessageType = {
                 id: uid(),
                 role: "assistant",
-                content:
-                    "Hi! I'm Aria, Abdullah's friendly assistant. Want a quote, a brainstorm, or a direct WhatsApp intro?",
+                content: GREETING_MESSAGE,
                 createdAt: Date.now(),
             };
             setMessages([fallback]);

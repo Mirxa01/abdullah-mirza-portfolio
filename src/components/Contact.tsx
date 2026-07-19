@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Phone, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { useToast } from "./ToastProvider";
 import { getContactFieldValidity } from "@/lib/contact";
-import { contactInfo } from "@/lib/data";
+import { contactInfo, EMAIL_ADDRESS } from "@/lib/data";
 import { slideInLeft, slideInRight } from "@/lib/constants";
 import type { ContactFormState, ContactApiResponse } from "@/lib/types";
 
@@ -18,10 +18,6 @@ const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
     whatsapp: {
         icon: <MessageCircle className="w-5 h-5 text-emerald-400" />,
         tint: "bg-emerald-500/10 border-emerald-500/25",
-    },
-    phone: {
-        icon: <Phone className="w-5 h-5 text-[var(--color-muted-gold)]" />,
-        tint: "bg-[var(--color-muted-gold)]/10 border-[var(--color-muted-gold)]/20",
     },
     location: {
         icon: <MapPin className="w-5 h-5 text-purple-400" />,
@@ -116,14 +112,16 @@ export default function Contact() {
                         <p className="text-base sm:text-lg text-[var(--color-text-muted)] font-light mb-10 leading-relaxed max-w-lg">
                             Happy to chat about apps and websites, AI integrations, technical
                             co-founder collaborations, or automating the parts of your business
-                            that still feel too manual.
+                            that still feel too manual. Reach me at{" "}
+                            <span className="text-white/80">{EMAIL_ADDRESS}</span>{" "}
+                            (Mirxaa studio) or WhatsApp below.
                         </p>
 
                         <div className="space-y-3">
                             {contactInfo.map((info) => {
                                 const config = contactIcons[info.type];
                                 const isWhatsapp = info.type === "whatsapp";
-                                const isCopyable = info.type === "email" || info.type === "phone";
+                                const isCopyable = info.type === "email";
 
                                 const content = (
                                     <div className="group flex items-center gap-4 w-full text-left p-3 -m-3 rounded-xl hover:bg-white/[0.03] transition-colors">

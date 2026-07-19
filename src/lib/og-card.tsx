@@ -53,7 +53,7 @@ export function renderOgCard(): ImageResponse {
                     Abdullah Mirza
                 </span>
                 <span style={{ color: "#c8d2e0", fontSize: 40, fontWeight: 500, maxWidth: 980 }}>
-                    Friendly software, AI tools &amp; ops systems from Riyadh
+                    Founder · Builder · Operator — apps, AI &amp; ops from Riyadh
                 </span>
             </div>
 

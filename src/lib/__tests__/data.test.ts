@@ -129,11 +129,12 @@ describe("Competencies", () => {
 });
 
 describe("Contact Info", () => {
-    it("should have email, phone, and location", () => {
+    it("should have email, whatsapp, and location", () => {
         const types = contactInfo.map((c) => c.type);
         expect(types).toContain("email");
-        expect(types).toContain("phone");
+        expect(types).toContain("whatsapp");
         expect(types).toContain("location");
+        expect(types).not.toContain("phone");
     });
 
     it("should have valid display values", () => {
@@ -165,9 +166,11 @@ describe("Education", () => {
 
 describe("Printable CV content", () => {
     it("exposes a concise CV summary and consistent title", async () => {
-        const { cvSummary, PROFESSIONAL_TITLE, ventures, stats } = await import("../data");
+        const { cvSummary, PROFESSIONAL_TITLE, ventures, stats, certifications } = await import("../data");
         expect(cvSummary.length).toBeGreaterThan(40);
+        expect(cvSummary).toMatch(/11\+/);
         expect(PROFESSIONAL_TITLE).toMatch(/Founder/);
         expect(ventures.length).toBe(stats.find((s) => s.label.includes("Products"))?.value);
+        expect(stats.find((s) => s.label === "Certifications")?.value).toBe(certifications.length);
     });
 });

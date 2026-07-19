@@ -172,12 +172,12 @@ export default function Services() {
                         transition={{ duration: 0.6, delay: 0.1 }}
                         className="text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed font-light"
                     >
-                        Friendly starting ranges in USD and SAR. We refine the exact scope
-                        together on a discovery call. Prefer a guided estimate?{" "}
+                        Friendly starting ranges in USD and SAR. I&apos;ll refine the exact scope
+                        with you on a discovery call. Prefer a guided estimate?{" "}
                         <span className="text-[var(--color-muted-gold)] font-semibold">
                             Chat with Aria
                         </span>{" "}
-                        in the corner — she&apos;ll walk you through it.
+                        in the corner — Aria can walk you through it.
                     </motion.p>
                 </div>
 

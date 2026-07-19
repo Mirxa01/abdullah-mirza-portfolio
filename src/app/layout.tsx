@@ -20,7 +20,6 @@ export const metadata: Metadata = {
         "Workflow automation",
         "E-commerce",
         "Logistics",
-        "Vision 2030",
     ],
     authors: [{ name: "Abdullah Mirza" }],
     robots: "index, follow",
@@ -28,8 +27,8 @@ export const metadata: Metadata = {
         canonical: "/",
     },
     openGraph: {
-        title: "Abdullah Mirza | Founder · Builder · Operator",
-        description: "Friendly software, AI tools, and operations systems — built from Riyadh.",
+        title: SITE.TITLE,
+        description: SITE.DESCRIPTION,
         url: "/",
         siteName: SITE.NAME,
         locale: "en_US",
@@ -37,8 +36,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Abdullah Mirza | Founder · Builder · Operator",
-        description: "Apps, AI, logistics, and commerce — built with care from Riyadh.",
+        title: SITE.TITLE,
+        description: SITE.DESCRIPTION,
     },
 };
 
@@ -49,8 +48,7 @@ const jsonLd = {
     name: "Abdullah Mirza",
     jobTitle: "Founder · Builder · Operator",
     url: "https://abdullahmirza.com",
-    description:
-        "Founder, builder, and operator with 11 years of experience creating apps, AI tools, and automated workflows from Riyadh.",
+    description: SITE.DESCRIPTION,
     address: {
         "@type": "PostalAddress",
         addressLocality: "Riyadh",

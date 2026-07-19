@@ -7,6 +7,7 @@ import {
     SAR_PER_USD,
     WHATSAPP_DISPLAY,
     buildWhatsappLink,
+    navLinks,
     socialLinks,
     ventures,
     PROFESSIONAL_TITLE,
@@ -18,13 +19,13 @@ const socialIcons: Record<string, React.ReactNode> = {
     Email: <Mail className="w-3.5 h-3.5" />,
 };
 
-const navColumn = [
-    { name: "About", href: "#executive-profile" },
-    { name: "Selected Work", href: "#ventures" },
-    { name: "Services & Pricing", href: "#services" },
-    { name: "Leadership", href: "#leadership" },
+const footerExtraLinks = [
     { name: "Career", href: "#career-progression" },
-    { name: "Contact", href: "#contact" },
+];
+
+const navColumn = [
+    ...navLinks.filter((l) => l.name !== "Expertise"),
+    ...footerExtraLinks,
 ];
 
 export default function Footer() {

@@ -18,7 +18,7 @@ import {
 
 /** Keep the printed CV compact — top highlights only. */
 const CAREER_HIGHLIGHT_LIMIT = 2;
-const LEADERSHIP_POINT_LIMIT = 4;
+const LEADERSHIP_POINT_LIMIT = 5;
 
 interface PrintableCVProps {
     /**

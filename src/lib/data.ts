@@ -64,20 +64,24 @@ export const heroNumbers = [
 
 /** Short executive summary used by the printable CV. */
 export const cvSummary =
-    "Founder-operator and full-stack builder based in Riyadh. I design and ship AI-enabled products, commerce platforms, and operational systems — pairing hands-on engineering with enterprise logistics experience.";
+    "Founder-operator and full-stack builder based in Riyadh with 11+ years of experience. I design and ship AI-enabled products, commerce platforms, and operational systems — pairing hands-on engineering with enterprise logistics experience.";
 
 // ---------------------------------------------------------------------------
 // Executive Profile
 // ---------------------------------------------------------------------------
 
 export const executiveProfileLead =
-    "I'm a hands-on founder and developer with 11 years of experience. I build apps and websites, craft practical AI solutions, and set up automations that remove busywork — so teams can focus on what matters.";
+    "I'm a hands-on founder and developer with 11+ years across logistics, commerce, and SaaS — building apps, practical AI, and automations that give teams their time back.";
+
+/** Intro under the Corporate Leadership section heading. */
+export const leadershipIntro =
+    "Before founding my own products, I led technology and operations inside high-volume logistics and 3PL teams — shipping platforms, hitting SLAs, and closing enterprise deals.";
 
 export const stats: Stat[] = [
     { value: 11, suffix: "+", prefix: "", label: "Years Building" },
     { value: 7, prefix: "", label: "Products & Brands" },
     { value: 50, prefix: "", suffix: "+", label: "Workflows Automated" },
-    { value: 100, prefix: "", suffix: "%", label: "Custom-Built Work" },
+    { value: 12, prefix: "", label: "Certifications" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -152,9 +156,9 @@ export const ventures: Venture[] = [
 ];
 
 export const ventureBulletPoints = [
-    "Design and ship apps, websites, and SaaS that feel clear to use",
-    "Add AI where it genuinely saves time — not where it adds noise",
-    "Automate repetitive ops so people can focus on higher-value work",
+    "Start with the outcome — then pick the stack that fits",
+    "Ship a usable first version, then iterate with real users",
+    "Keep scope honest so launch dates stay real",
     "Stay with you from first idea through launch and iteration",
 ];
 
@@ -269,9 +273,9 @@ export const competencyNames = [
 ];
 
 export const professionalStrengths = [
-    "Ships clear, high-performing websites and mobile apps",
-    "Automates the busywork so teams get hours back every week",
-    "Uses AI to solve real problems — not to add complexity",
+    "Writes clear interfaces people understand on the first try",
+    "Prefers calm systems over clever complexity",
+    "Owns delivery end-to-end — design, build, launch, iterate",
     "Builds sturdy infrastructure from the first prototype onward",
     "Pairs technical craft with practical founder experience",
 ];
@@ -287,15 +291,15 @@ export const education = {
 };
 
 export const certifications = [
-    "CPSM",
+    "CPSM — Certified Professional in Supply Management",
     "Harvard Business School Online – Leadership & Management",
     "Six Sigma Black Belt",
     "Six Sigma Green Belt",
     "Project Management Professional (PMP)",
     "Business Analyst Certification",
     "Full-Stack Web Development Bootcamp",
-    "BI Specialist",
-    "Digital Transformation",
+    "Business Intelligence Specialist",
+    "Digital Transformation Certificate",
     "AWS Certified Solutions Architect",
     "Advanced Workflow Automation (Make/Zapier)",
     "AI Solutions & Prompt Engineering",
@@ -313,6 +317,10 @@ export const EMAIL_ADDRESS = "abdullah@mirxaa.com";
 export const whatsappCtaMessage =
     "Hi Abdullah — I'd love to chat about a project.";
 
+/** Prefill used when sharing an Aria-generated PRD over WhatsApp */
+export const buildWhatsappPrdMessage = (summary: string): string =>
+    `Hi Abdullah — here's a PRD I shaped with Aria:\n\n${summary}\n\nCan we discuss next steps?`;
+
 /** Builds a wa.me deep link with a prefilled message */
 export const buildWhatsappLink = (message: string = whatsappCtaMessage): string =>
     `https://wa.me/${WHATSAPP_NUMBER_RAW}?text=${encodeURIComponent(message)}`;
@@ -327,17 +335,10 @@ export const contactInfo: ContactInfo[] = [
     },
     {
         type: "whatsapp",
-        label: "WhatsApp",
+        label: "WhatsApp / Phone",
         value: WHATSAPP_NUMBER,
         displayValue: WHATSAPP_DISPLAY,
         href: buildWhatsappLink(),
-    },
-    {
-        type: "phone",
-        label: "Phone",
-        value: WHATSAPP_NUMBER,
-        displayValue: WHATSAPP_DISPLAY,
-        href: `tel:${WHATSAPP_NUMBER}`,
     },
     {
         type: "location",
