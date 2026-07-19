@@ -8,6 +8,7 @@ import {
     buildContactEmail,
     escapeHtml,
     FIELD_LIMITS,
+    getContactFieldValidity,
     sanitizeContact,
     validateContact,
     type ContactPayload,
@@ -62,6 +63,26 @@ describe("validateContact", () => {
         expect(validateContact({ ...valid, message: "click onerror=alert(1) here please" })).toMatch(
             /Invalid characters/,
         );
+    });
+});
+
+describe("getContactFieldValidity", () => {
+    it("mirrors server rules including trim and max lengths", () => {
+        expect(getContactFieldValidity(valid).name).toBe(true);
+        expect(getContactFieldValidity({ ...valid, name: "  AB  " }).name).toBe(false);
+        expect(getContactFieldValidity({ ...valid, email: "  Test.User@Example.com  " }).email).toBe(
+            true,
+        );
+        expect(
+            getContactFieldValidity({ ...valid, message: "a".repeat(FIELD_LIMITS.MESSAGE_MAX + 1) })
+                .message,
+        ).toBe(false);
+    });
+
+    it("marks fields with dangerous patterns as invalid", () => {
+        expect(
+            getContactFieldValidity({ ...valid, subject: "javascript:alert(1)" }).subject,
+        ).toBe(false);
     });
 });
 

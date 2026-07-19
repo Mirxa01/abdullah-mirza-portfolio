@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
 
+/**
+ * Security headers applied to every route.
+ *
+ * CSP is intentionally compatible with Next.js App Router (inline JSON-LD,
+ * next/font, and Framer Motion). `unsafe-inline` / `unsafe-eval` are required
+ * for Next's runtime bootstrapping; connect-src stays same-origin because all
+ * AI / contact calls go through our API routes.
+ */
 const securityHeaders = [
     {
         key: "X-DNS-Prefetch-Control",
@@ -24,6 +32,22 @@ const securityHeaders = [
     {
         key: "Strict-Transport-Security",
         value: "max-age=63072000; includeSubDomains; preload",
+    },
+    {
+        key: "Content-Security-Policy",
+        value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https:",
+            "font-src 'self' data:",
+            "connect-src 'self'",
+            "frame-ancestors 'self'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "object-src 'none'",
+            "upgrade-insecure-requests",
+        ].join("; "),
     },
 ];
 

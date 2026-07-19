@@ -13,7 +13,7 @@
 | Animations   | Framer Motion 12                        |
 | Icons        | Lucide React                            |
 | AI           | OpenAI GPT-4o-mini (Aria assistant)     |
-| Deployment   | Vercel (via GitHub Actions)             |
+| Deployment   | Vercel (Git integration) + GitHub Actions quality gate |
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ pnpm dev
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------- |
 | `OPENAI_API_KEY`     | Optional | Powers the Aria AI chat assistant. Falls back to a deterministic rule-based mode if omitted.         |
 | `RESEND_API_KEY`     | Optional | Delivers contact-form submissions via [Resend](https://resend.com). Without it the form returns an honest "temporarily unavailable" response. |
-| `CONTACT_TO_EMAIL`   | Optional | Recipient of contact-form notifications. Defaults to `Abdullah@mirxaa.com`.                          |
+| `CONTACT_TO_EMAIL`   | Optional | Recipient of contact-form notifications. Defaults to `abdullah@mirxaa.com`.                          |
 | `CONTACT_FROM_EMAIL` | Optional | Sender address (must be a Resend-verified domain in production). Defaults to `onboarding@resend.dev`. |
 
 ## AI Chat Assistant — Aria
@@ -97,13 +97,18 @@ src/
 │   ├── Hero.tsx         # Landing section with typewriter
 │   ├── Navbar.tsx       # Responsive navigation
 │   ├── Contact.tsx      # Contact form with API integration
+│   ├── PrintableCV.tsx  # Print-only professional CV layout
 │   └── ...              # Other section & utility components
 └── lib/
     ├── chat/            # AI chat engine
     │   ├── pricing.ts   # Deterministic USD + SAR pricing engine
     │   ├── prd.ts       # PRD markdown generator
     │   ├── systemPrompt.ts
-    │   └── types.ts
+    │   ├── types.ts
+    │   └── validate.ts  # Runtime request validation
+    ├── contact.ts       # Shared contact validation + email templates
+    ├── email.ts         # Resend delivery
+    ├── rate-limit.ts    # Sliding-window IP rate limiter
     ├── constants.ts     # Shared animation presets & validation rules
     ├── data.ts          # Centralized content data + services pricing
     └── types.ts         # Shared TypeScript interfaces
@@ -114,12 +119,29 @@ src/
 - **Data Layer**: All content data is centralized in `src/lib/data.ts` — components import data rather than defining it inline
 - **Type Safety**: Shared interfaces in `src/lib/types.ts` ensure consistency across components
 - **Animation Presets**: Reusable animation configs in `src/lib/constants.ts` (DRY)
-- **API Routes**: Contact form hits `/api/contact` for server-side validation
+- **API Routes**: Contact form hits `/api/contact` for server-side validation; chat hits `/api/chat` with role/length/brief validation
+- **Printable CV**: Open `/cv` (nav Print button) for a clean A4 resume — avoids printing the animated homepage
 - **SEO**: JSON-LD structured data, Open Graph, Twitter cards, dynamic sitemap & robots.txt
+- **Security**: CSP + standard hardening headers; honeypot + rate limits on public APIs
 
 ## Deployment
 
-Automatic via GitHub Actions on push to `main`:
+Full checklist: **[DEPLOY.md](./DEPLOY.md)**.
 
-1. **Quality Gate** — type-check → lint → test
-2. **Deploy** — build & deploy to Vercel (only if quality gate passes)
+- **Preview** — Vercel builds every pull request automatically.
+- **Production** — merge to `main` (or promote a preview in the Vercel dashboard).
+- **Quality Gate** — `.github/workflows/quality-gate.yml` runs type-check → lint → test → build when GitHub Actions minutes are available. Vercel’s own build is the deploy source of truth.
+
+### Required Vercel env vars (Production + Preview)
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENAI_API_KEY` | Aria chat (falls back to basic mode if unset) |
+| `RESEND_API_KEY` | Contact form email delivery |
+| `CONTACT_FROM_EMAIL` | Verified Resend sender for production mail |
+| `CONTACT_TO_EMAIL` | Optional override (defaults to `abdullah@mirxaa.com`) |
+
+```bash
+pnpm verify:deploy   # local preflight before merging
+```
+

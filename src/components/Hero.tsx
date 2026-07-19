@@ -10,6 +10,8 @@ import {
     heroExpertise,
     heroNumbers,
     heroTagline,
+    heroHeadline,
+    heroAvailability,
 } from "@/lib/data";
 
 /**
@@ -23,14 +25,18 @@ const TypewriterText = () => {
     const [index, setIndex] = useState(typewriterText.length);
     const [hasMounted, setHasMounted] = useState(false);
 
-    // On client mount, rewind and re-type the text for the animation effect.
-    // SSR renders the full text (for SEO / no-JS); the rewind is intentionally
-    // client-only, so these one-shot resets belong in a mount effect.
+    // On client mount, optionally rewind and re-type for delight.
+    // Honor reduced-motion: keep the full SSR text and skip the animation.
     useEffect(() => {
         /* eslint-disable react-hooks/set-state-in-effect -- client-only animation kickoff after SSR */
         setHasMounted(true);
-        setDisplayedText("");
-        setIndex(0);
+        const prefersReduced =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!prefersReduced) {
+            setDisplayedText("");
+            setIndex(0);
+        }
         /* eslint-enable react-hooks/set-state-in-effect */
     }, []);
 
@@ -46,13 +52,15 @@ const TypewriterText = () => {
     }, [index, hasMounted]);
 
     return (
-        <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-8 sm:mb-10 max-w-2xl leading-relaxed font-light min-h-[180px] sm:min-h-[140px] md:min-h-[120px]">
+        <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-8 sm:mb-10 max-w-2xl leading-relaxed font-light min-h-[200px] sm:min-h-[150px] md:min-h-[130px]">
             {displayedText}
-            <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ repeat: Infinity, duration: 0.8 }}
-                className="inline-block w-[3px] h-5 bg-[var(--color-electric-blue)] ml-1 align-middle translate-y-0.5"
-            />
+            {hasMounted && index < typewriterText.length && (
+                <motion.span
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ repeat: Infinity, duration: 0.8 }}
+                    className="inline-block w-[3px] h-5 bg-[var(--color-electric-blue)] ml-1 align-middle translate-y-0.5"
+                />
+            )}
         </p>
     );
 };
@@ -86,11 +94,9 @@ export default function Hero() {
 
                         {/* Headline */}
                         <h1 className="heading-hero mb-6">
-                            <span className="heading-accent">Architecting</span>
-                            <br className="hidden sm:block" />
-                            Intelligent Apps,{" "}
-                            <em className="text-gradient-soft">Websites</em>{" "}
-                            &amp; Automated Solutions.
+                            {heroHeadline.lead}{" "}
+                            <span className="heading-accent">{heroHeadline.accent}</span>{" "}
+                            {heroHeadline.rest}
                         </h1>
 
                         <TypewriterText />
@@ -98,11 +104,11 @@ export default function Hero() {
                         {/* CTAs */}
                         <div className="flex flex-wrap gap-3 mb-12">
                             <a href="#services" className="btn btn-primary group">
-                                Get a quote
+                                Start a project
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                             </a>
                             <a href="#ventures" className="btn btn-secondary">
-                                Explore Ventures
+                                See live products
                             </a>
                             <a
                                 href={buildWhatsappLink()}
@@ -111,7 +117,7 @@ export default function Hero() {
                                 className="btn btn-whatsapp"
                             >
                                 <MessageCircle className="w-4 h-4" />
-                                WhatsApp
+                                WhatsApp me
                             </a>
                         </div>
 
@@ -181,7 +187,7 @@ export default function Hero() {
                                         <span className="relative w-2 h-2 rounded-full bg-emerald-400" />
                                     </span>
                                     <span className="text-[11px] font-semibold text-white truncate">
-                                        Available for new projects
+                                        {heroAvailability}
                                     </span>
                                 </div>
                                 <span className="text-[10px] text-white/50 font-mono shrink-0">

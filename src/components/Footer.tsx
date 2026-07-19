@@ -7,8 +7,10 @@ import {
     SAR_PER_USD,
     WHATSAPP_DISPLAY,
     buildWhatsappLink,
+    navLinks,
     socialLinks,
     ventures,
+    PROFESSIONAL_TITLE,
 } from "@/lib/data";
 
 const socialIcons: Record<string, React.ReactNode> = {
@@ -17,13 +19,13 @@ const socialIcons: Record<string, React.ReactNode> = {
     Email: <Mail className="w-3.5 h-3.5" />,
 };
 
-const navColumn = [
-    { name: "Executive Profile", href: "#executive-profile" },
-    { name: "Selected Work", href: "#ventures" },
-    { name: "Services & Pricing", href: "#services" },
-    { name: "Leadership", href: "#leadership" },
+const footerExtraLinks = [
     { name: "Career", href: "#career-progression" },
-    { name: "Contact", href: "#contact" },
+];
+
+const navColumn = [
+    ...navLinks.filter((l) => l.name !== "Expertise"),
+    ...footerExtraLinks,
 ];
 
 export default function Footer() {
@@ -70,9 +72,8 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-sm text-white/55 leading-relaxed font-light mb-6">
-                            Founder, engineer, and operator building AI-driven platforms,
-                            logistics infrastructure, and scalable commerce ecosystems from
-                            Riyadh, Saudi Arabia.
+                            {PROFESSIONAL_TITLE}. I ship software people enjoy using —
+                            apps, AI tools, and ops systems from Riyadh, Saudi Arabia.
                         </p>
 
                         <div className="flex flex-wrap gap-2">

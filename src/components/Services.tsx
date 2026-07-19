@@ -163,7 +163,7 @@ export default function Services() {
                         className="heading-display mb-5"
                     >
                         Transparent pricing.{" "}
-                        <span className="heading-accent">Built for outcomes.</span>
+                        <span className="heading-accent">Fast next steps.</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 12 }}
@@ -172,12 +172,13 @@ export default function Services() {
                         transition={{ duration: 0.6, delay: 0.1 }}
                         className="text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed font-light"
                     >
-                        Indicative ranges in USD and SAR for every service. Final scope is
-                        confirmed during a discovery call. Need a precise quote?{" "}
+                        Clear starting ranges in USD and SAR — no guesswork, no surprise
+                        invoices. I&apos;ll refine scope with you on a discovery call.
+                        Prefer a guided estimate?{" "}
                         <span className="text-[var(--color-muted-gold)] font-semibold">
                             Chat with Aria
                         </span>{" "}
-                        — the AI assistant in the corner.
+                        in the corner — Aria walks you through quote, PRD, or a direct WhatsApp intro.
                     </motion.p>
                 </div>
 

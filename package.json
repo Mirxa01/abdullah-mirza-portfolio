@@ -1,9 +1,14 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "Founder-operator portfolio of Abdullah Mirza — AI-driven platforms, logistics infrastructure, and scalable commerce ecosystems.",
+  "description": "Friendly founder-operator portfolio of Abdullah Mirza — apps, AI tools, logistics, and commerce from Riyadh.",
   "author": "Abdullah Mirza",
   "license": "ISC",
+  "private": true,
+  "packageManager": "pnpm@10.33.3",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +17,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "verify:deploy": "pnpm type-check && pnpm lint && pnpm test && pnpm build"
   },
   "keywords": [
     "portfolio",
@@ -21,6 +27,13 @@
     "typescript",
     "tailwindcss"
   ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "framer-motion": "^12.34.4",
     "lucide-react": "^0.576.0",

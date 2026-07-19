@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SITE } from "@/lib/constants";
 
 /**
  * Programmatic robots.txt generation.
@@ -10,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
             userAgent: "*",
             allow: "/",
         },
-        sitemap: "https://abdullahmirza.com/sitemap.xml",
+        sitemap: `${SITE.URL}/sitemap.xml`,
     };
 }

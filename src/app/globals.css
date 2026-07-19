@@ -572,12 +572,435 @@
   list-style: decimal;
 }
 
-/* ============================
-   PRINT / PDF STYLES
-   ============================ */
-@media print {
+/* Chat widget — CSS enter animations (keeps open-click off Framer's main-thread path) */
+@keyframes chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
-  /* Reset to clean white background */
+@keyframes chat-panel-in-mobile {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chat-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes chat-msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chat-dot-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.chat-panel-in {
+  animation: chat-panel-in 0.22s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.chat-panel-in-mobile {
+  animation: chat-panel-in-mobile 0.25s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.chat-backdrop-in {
+  animation: chat-backdrop-in 0.18s ease-out both;
+}
+
+.chat-msg-in {
+  animation: chat-msg-in 0.2s ease-out both;
+}
+
+.chat-dot-bounce {
+  animation: chat-dot-bounce 0.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-panel-in,
+  .chat-panel-in-mobile,
+  .chat-backdrop-in,
+  .chat-msg-in,
+  .chat-dot-bounce {
+    animation: none !important;
+  }
+}
+
+/* ============================
+   PRINT / PDF — dedicated CV
+   Prefer /cv for Print / Save as PDF.
+   Homepage print hides .screen-only and shows .print-only CV.
+   Shared .printable-cv rules keep screen preview and PDF identical.
+   ============================ */
+
+/* Visibility helpers — more reliable than Tailwind print: variants alone */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  .screen-only,
+  .print\:hidden,
+  .glow-effect,
+  #chat-widget-root,
+  [data-chat-widget] {
+    display: none !important;
+  }
+
+  .print-only,
+  #printable-cv {
+    display: block !important;
+  }
+}
+
+/* Dedicated /cv page — always light, print-friendly on screen */
+.cv-shell,
+.cv-page {
+  background: #f7f8fa !important;
+  color: #111111 !important;
+  min-height: 100vh;
+}
+
+body:has(.cv-page) {
+  background: #f7f8fa !important;
+  color: #111111 !important;
+  overflow: auto !important;
+}
+
+/* ---- Shared CV document styles (screen + print) ---- */
+.printable-cv {
+  --cv-ink: #0b0d10;
+  --cv-muted: #4a5563;
+  --cv-subtle: #6b7280;
+  --cv-line: #d8dde6;
+  --cv-chip: #eef3fb;
+  --cv-accent: #0066ff;
+  --cv-accent-soft: rgba(0, 102, 255, 0.12);
+  color: var(--cv-ink);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.45;
+}
+
+.printable-cv .cv-accent-bar {
+  height: 4px;
+  width: 100%;
+  margin: 0 0 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0066ff 0%, #4d9eff 55%, #c5a059 100%);
+}
+
+.printable-cv .cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding-bottom: 0.95rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1.5px solid var(--cv-line);
+}
+
+.printable-cv .cv-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.printable-cv .cv-monogram {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.55rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0066ff 0%, #9810fa 100%);
+  color: #fff;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.printable-cv .cv-name {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.2rem;
+  color: var(--cv-ink);
+  line-height: 1.1;
+}
+
+.printable-cv .cv-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cv-accent);
+  margin: 0 0 0.3rem;
+}
+
+.printable-cv .cv-location {
+  margin: 0;
+  color: var(--cv-subtle);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.printable-cv .cv-contact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--cv-muted);
+}
+
+.printable-cv .cv-contact a {
+  color: var(--cv-ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.printable-cv .cv-contact a:hover {
+  color: var(--cv-accent);
+}
+
+.printable-cv .cv-section {
+  margin-bottom: 1.05rem;
+}
+
+.printable-cv .cv-section h2 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cv-ink);
+  margin: 0 0 0.45rem;
+  padding: 0 0 0.28rem 0.55rem;
+  border-bottom: 1px solid var(--cv-line);
+  border-left: 3px solid var(--cv-accent);
+  line-height: 1.2;
+}
+
+.printable-cv .cv-summary {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #1f2937;
+}
+
+.printable-cv .cv-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.printable-cv .cv-skills li {
+  background: var(--cv-chip);
+  border: 1px solid rgba(0, 102, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.18rem 0.62rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #1e3a5f;
+}
+
+.printable-cv .cv-role {
+  margin-bottom: 0.8rem;
+}
+
+.printable-cv .cv-role-compact {
+  margin-bottom: 0.55rem;
+}
+
+.printable-cv .cv-career-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 1.1rem;
+}
+
+.printable-cv .cv-role-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.printable-cv .cv-role h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--cv-ink);
+  letter-spacing: -0.01em;
+}
+
+.printable-cv .cv-org {
+  margin: 0.08rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--cv-muted);
+}
+
+.printable-cv .cv-period {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cv-accent);
+  white-space: nowrap;
+}
+
+.printable-cv .cv-role ul {
+  margin: 0.2rem 0 0;
+  padding-left: 1.05rem;
+}
+
+.printable-cv .cv-role li {
+  font-size: 0.84rem;
+  color: #1f2937;
+  margin: 0.12rem 0;
+}
+
+.printable-cv .cv-ventures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 1rem;
+}
+
+.printable-cv .cv-ventures li {
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--cv-line);
+  border-radius: 0.55rem;
+  background: #fff;
+  font-size: 0.8rem;
+  color: #1f2937;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.printable-cv .cv-venture-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin-bottom: 0.15rem;
+}
+
+.printable-cv .cv-venture-head strong {
+  font-size: 0.86rem;
+  color: var(--cv-ink);
+}
+
+.printable-cv .cv-domain {
+  color: var(--cv-accent);
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+
+.printable-cv .cv-venture-desc {
+  color: var(--cv-muted);
+  display: block;
+  line-height: 1.4;
+}
+
+.printable-cv .cv-section-split {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 1.25rem;
+}
+
+.printable-cv .cv-edu-degree {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cv-ink);
+}
+
+.printable-cv .cv-certs {
+  columns: 2;
+  column-gap: 1rem;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.printable-cv .cv-certs li {
+  font-size: 0.78rem;
+  color: #1f2937;
+  margin: 0.12rem 0;
+  break-inside: avoid;
+}
+
+.printable-cv .cv-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.15rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--cv-line);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cv-subtle);
+}
+
+/* Screen preview card on /cv */
+@media screen {
+  .cv-page .mx-auto {
+    max-width: 52rem;
+  }
+
+  .cv-page .printable-cv {
+    background: #ffffff;
+    border: 1px solid #e5e9f0;
+    border-radius: 1rem;
+    padding: 1.75rem 1.85rem 1.35rem;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 18px 50px rgba(15, 23, 42, 0.08);
+  }
+}
+
+@media print {
   :root {
     --bg-primary: #ffffff !important;
   }
@@ -587,174 +1010,158 @@
   *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
   }
 
   html,
   body {
-    background: white !important;
-    color: #111 !important;
-    font-size: 11pt !important;
-    line-height: 1.5 !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
     overflow: visible !important;
-    height: auto !important;
-    min-height: auto !important;
-    max-width: none !important;
-    display: block !important;
-    position: static !important;
-  }
-
-  main {
-    display: block !important;
-    overflow: visible !important;
-    height: auto !important;
-  }
-
-  /* Hide purely interactive / decorative elements */
-  .glow-effect,
-  .glow-border::before,
-  .cyber-grid::before,
-  .cyber-grid::after {
-    display: none !important;
-    opacity: 0 !important;
-  }
-
-  /* Disable all blur, glow, backdrop-filter */
-  .glass-card,
-  div {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  .glow-border::before {
-    display: none !important;
-  }
-
-  /* Remove animated text effects */
-  .animated-gradient,
-  .text-shimmer,
-  .text-gradient {
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    background-clip: initial !important;
-    -webkit-text-fill-color: #111 !important;
-    animation: none !important;
-  }
-
-  /* Section styling */
-  section {
-    display: block !important;
     height: auto !important;
     min-height: 0 !important;
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-    background: transparent !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
+    display: block !important;
     position: static !important;
-    overflow: visible !important;
   }
 
-  /* Typography base for print */
-  body,
-  p,
-  span,
-  div,
-  li,
-  a {
-    color: #1a1a1a !important;
-    -webkit-text-fill-color: initial !important;
-    text-shadow: none !important;
+  .cv-page,
+  .cv-shell {
+    background: #ffffff !important;
+    min-height: 0 !important;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: #000000 !important;
-    -webkit-text-fill-color: #000000 !important;
+  .cv-page .mx-auto {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  /* Specific overrides for Tailwind's opacity-based text classes */
-  .text-white,
-  .text-gray-200,
-  .text-gray-300,
-  .text-white\/40,
-  .text-white\/50,
-  .text-white\/60,
-  .text-white\/80,
-  .text-gray-400,
-  .text-gray-500 {
-    color: #555555 !important;
-    -webkit-text-fill-color: #555555 !important;
-    opacity: 1 !important;
-  }
-
-  /* Override custom text variables */
-  .text-\[var\(--color-text-muted\)\] {
-    color: #666666 !important;
-    -webkit-text-fill-color: #666666 !important;
-  }
-
-  /* Ensure brand electric blue stays legible */
-  .text-\[var\(--color-electric-blue\)\] {
-    color: #0052cc !important;
-    -webkit-text-fill-color: #0052cc !important;
-  }
-
-
-  /* Ensure images print */
-  img {
+  #printable-cv,
+  .printable-cv {
+    display: block !important;
     max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  #printable-cv a,
+  .printable-cv a {
+    color: #0b0d10 !important;
+    text-decoration: none !important;
+  }
+
+  /* Never append raw URLs after links in the CV */
+  #printable-cv a[href]::after,
+  .printable-cv a[href]::after,
+  .cv-page a[href]::after {
+    content: none !important;
+  }
+
+  .printable-cv .cv-accent-bar {
+    height: 3.5pt;
+    margin-bottom: 0.7rem;
+  }
+
+  .printable-cv .cv-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .printable-cv .cv-monogram {
+    width: 22pt;
+    height: 22pt;
+    font-size: 12pt;
+    border-radius: 4pt;
+  }
+
+  .printable-cv .cv-name {
+    font-size: 18pt !important;
+    margin-bottom: 0.1rem !important;
+  }
+
+  .printable-cv .cv-title {
+    font-size: 8pt !important;
+  }
+
+  .printable-cv .cv-location {
+    font-size: 8.5pt !important;
+  }
+
+  .printable-cv .cv-contact {
+    font-size: 8pt !important;
+  }
+
+  .printable-cv .cv-section {
+    margin-bottom: 0.7rem !important;
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
-  /* Links: show URL after for print */
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 9pt;
-    color: #666;
-    font-style: italic;
+  .printable-cv .cv-section h2 {
+    font-size: 8.5pt !important;
+    margin-bottom: 0.3rem !important;
   }
 
-  a[href^="#"]::after {
-    content: none;
+  .printable-cv .cv-summary {
+    font-size: 9pt !important;
   }
 
-  /* Section dividers for print */
-  .section-divider {
-    background: #ddd !important;
-    height: 1px !important;
-    margin: 1rem auto !important;
+  .printable-cv .cv-skills li {
+    font-size: 7.5pt !important;
+    padding: 0.08rem 0.42rem;
   }
 
-  /* Page break controls */
-  #hero {
-    page-break-after: always;
-    break-after: page;
+  .printable-cv .cv-role {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 0.55rem !important;
   }
 
-  #leadership,
-  #career-progression,
-  #contact {
-    page-break-before: always;
-    break-before: page;
+  .printable-cv .cv-role h3 {
+    font-size: 9.5pt !important;
   }
 
-  /* Reduce motion element sizes */
-  nav {
-    position: static !important;
-    padding: 0.5rem 0 !important;
+  .printable-cv .cv-org,
+  .printable-cv .cv-role li {
+    font-size: 8.5pt !important;
   }
 
-  /* Print margins */
+  .printable-cv .cv-period {
+    font-size: 8pt !important;
+  }
+
+  .printable-cv .cv-ventures li {
+    font-size: 8pt !important;
+    padding: 0.28rem 0.4rem;
+  }
+
+  .printable-cv .cv-venture-head strong {
+    font-size: 8.5pt !important;
+  }
+
+  .printable-cv .cv-edu-degree {
+    font-size: 9.5pt !important;
+  }
+
+  .printable-cv .cv-certs li {
+    font-size: 8pt !important;
+  }
+
+  .printable-cv .cv-footer {
+    font-size: 7pt !important;
+    margin-top: 0.7rem;
+  }
+
   @page {
-    margin: 1.5cm;
+    margin: 1.15cm 1.25cm;
     size: A4;
   }
 }

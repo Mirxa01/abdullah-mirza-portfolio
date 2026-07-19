@@ -84,3 +84,47 @@ describe("generatePRD — graceful defaults", () => {
         expect(prd.markdown).toMatch(/^# .*Project/m);
     });
 });
+
+describe("generatePRD — milestones", () => {
+    it("keeps milestone weeks inside the quote duration and monotonic for short projects", () => {
+        const brief: ProjectBrief = { projectType: "landing", complexity: "MVP" };
+        const quote = computeQuote(brief);
+        const prd = generatePRD(brief, quote);
+        const weeks = [...prd.markdown.matchAll(/\| Week (\d+) \|/g)].map((m) => Number(m[1]));
+        expect(weeks.length).toBeGreaterThan(0);
+        expect(Math.max(...weeks)).toBeLessThanOrEqual(quote.weeks.max);
+        for (let i = 1; i < weeks.length; i++) {
+            expect(weeks[i]).toBeGreaterThan(weeks[i - 1]);
+        }
+    });
+
+    it("escapes markdown metacharacters from user-controlled title/features", () => {
+        const prd = prdFor({
+            projectType: "web_app",
+            title: "Evil # Title\n## Injected",
+            features: ["Auth with *stars*", "Billing | pipe"],
+        });
+        expect(prd.markdown).not.toMatch(/^## Injected/m);
+        expect(prd.markdown).toContain("\\*stars\\*");
+        expect(prd.markdown).toContain("\\|");
+    });
+});
+
+describe("buildMilestones", () => {
+    it("compresses to two milestones for 1–2 week projects", async () => {
+        const { buildMilestones } = await import("../chat/prd");
+        const ms = buildMilestones(2);
+        expect(ms).toHaveLength(2);
+        expect(ms[0].week).toBe(1);
+        expect(ms[1].week).toBe(2);
+    });
+
+    it("never exceeds total weeks for a 12-week engagement", async () => {
+        const { buildMilestones } = await import("../chat/prd");
+        const ms = buildMilestones(12);
+        expect(ms[ms.length - 1].week).toBe(12);
+        for (let i = 1; i < ms.length; i++) {
+            expect(ms[i].week).toBeGreaterThan(ms[i - 1].week);
+        }
+    });
+});

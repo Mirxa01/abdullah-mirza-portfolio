@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,20 +16,18 @@ export default function ChatMessage({ message }: Props) {
     const isUser = message.role === "user";
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`flex gap-2.5 ${isUser ? "justify-end" : "justify-start"}`}
+        <div
+            className={`flex gap-2.5 chat-msg-in ${isUser ? "justify-end" : "justify-start"}`}
         >
             {!isUser && (
                 <div className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-electric-blue)] to-purple-600 p-[2px]">
                     <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
                         <Image
                             src="/images/profile-hero.png"
-                            alt="Aria"
+                            alt=""
                             width={32}
                             height={32}
+                            sizes="32px"
                             className="object-cover w-full h-full"
                         />
                     </div>
@@ -63,6 +60,6 @@ export default function ChatMessage({ message }: Props) {
                     <Sparkles className="w-4 h-4 text-white/60" />
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }

@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildContactEmail, sanitizeContact, validateContact, type ContactPayload } from "@/lib/contact";
 import { isEmailConfigured, sendContactEmail } from "@/lib/email";
+import { createRateLimiter, getClientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -20,29 +21,11 @@ export const runtime = "nodejs";
 // ---------------------------------------------------------------------------
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 5;
-const ipBuckets = new Map<string, number[]>();
-
-function rateLimit(ip: string): boolean {
-    const now = Date.now();
-    const recent = (ipBuckets.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-    if (recent.length >= RATE_MAX) {
-        ipBuckets.set(ip, recent);
-        return false;
-    }
-    recent.push(now);
-    ipBuckets.set(ip, recent);
-    return true;
-}
-
-function getClientIp(req: NextRequest): string {
-    const fwd = req.headers.get("x-forwarded-for");
-    if (fwd) return fwd.split(",")[0]?.trim() || "unknown";
-    return req.headers.get("x-real-ip") ?? "unknown";
-}
+export const contactRateLimiter = createRateLimiter(RATE_WINDOW_MS, RATE_MAX);
 
 export async function POST(request: NextRequest) {
-    const ip = getClientIp(request);
-    if (!rateLimit(ip)) {
+    const ip = getClientIp(request.headers);
+    if (!contactRateLimiter.check(ip)) {
         return NextResponse.json(
             {
                 success: false,

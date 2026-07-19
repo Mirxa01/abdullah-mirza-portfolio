@@ -51,7 +51,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     return (
         <ToastContext.Provider value={{ addToast, removeToast }}>
             {children}
-            <div className="fixed bottom-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
+            <div className="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none print:hidden">
                 <AnimatePresence>
                     {toasts.map((toast) => (
                         <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
@@ -63,7 +63,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 const toastVariants: Variants = {
-    initial: { opacity: 0, y: 50, scale: 0.9 },
+    initial: { opacity: 0, y: -24, scale: 0.9 },
     animate: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 25 } },
     exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
 };

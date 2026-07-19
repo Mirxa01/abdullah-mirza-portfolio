@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Briefcase, Building2, ChevronRight } from "lucide-react";
-import { leadershipRoles } from "@/lib/data";
+import { leadershipIntro, leadershipRoles } from "@/lib/data";
 
 const roleIcons = [
     <Briefcase key="briefcase" className="w-4 h-4" />,
@@ -22,12 +22,15 @@ export default function CorporateLeadership() {
                 >
                     <span className="kicker mb-5">
                         <span className="kicker-dot" />
-                        Executive Leadership
+                        Leadership
                     </span>
                     <h2 className="heading-display">
-                        Leading at the{" "}
-                        <span className="heading-accent">enterprise frontier.</span>
+                        Teams that{" "}
+                        <span className="heading-accent">ship under pressure.</span>
                     </h2>
+                    <p className="mt-5 text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed font-light">
+                        {leadershipIntro}
+                    </p>
                 </motion.div>
 
                 <div className="space-y-6 sm:space-y-8">

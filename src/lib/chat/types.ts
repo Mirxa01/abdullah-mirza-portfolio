@@ -82,10 +82,13 @@ export interface PRDPayload {
     filename: string;
 }
 
-/** Request body for /api/chat. */
+/**
+ * Request body for /api/chat.
+ * Only user/assistant roles are accepted — system prompts are server-owned.
+ */
 export interface ChatRequest {
-    messages: Array<Pick<ChatMessage, "role" | "content">>;
-    brief: ProjectBrief;
+    messages: Array<{ role: "user" | "assistant"; content: string }>;
+    brief?: ProjectBrief;
 }
 
 /** Response body for /api/chat (non-streaming). */

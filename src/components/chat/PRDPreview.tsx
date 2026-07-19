@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Copy, Download, FileText, Check, MessageCircle } from "lucide-react";
-import { buildWhatsappLink } from "@/lib/data";
+import { buildWhatsappLink, buildWhatsappPrdMessage } from "@/lib/data";
 import type { PRDPayload } from "@/lib/chat/types";
 
 interface Props {
@@ -32,11 +32,11 @@ export default function PRDPreview({ prd }: Props) {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            // ignore
+            setCopied(false);
         }
     };
 
-    const waMessage = `Hi Abdullah, here's a PRD I generated with Aria:\n\n${prd.summary}\n\nCan we discuss next steps?`;
+    const waMessage = buildWhatsappPrdMessage(prd.summary);
 
     return (
         <motion.div

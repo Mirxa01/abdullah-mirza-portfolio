@@ -35,6 +35,42 @@ export const FIELD_LIMITS = {
     MESSAGE_MAX: 5000,
 } as const;
 
+export interface ContactFieldValidity {
+    name: boolean;
+    email: boolean;
+    subject: boolean;
+    message: boolean;
+}
+
+/**
+ * Per-field validity used by the contact UI. Mirrors `validateContact` rules
+ * (trim, max lengths, dangerous-pattern checks) so client and server stay aligned.
+ */
+export function getContactFieldValidity(
+    data: Partial<ContactPayload> | null | undefined,
+): ContactFieldValidity {
+    const name = typeof data?.name === "string" ? data.name.trim() : "";
+    const email = typeof data?.email === "string" ? data.email.trim() : "";
+    const subject = typeof data?.subject === "string" ? data.subject.trim() : "";
+    const message = typeof data?.message === "string" ? data.message.trim() : "";
+
+    return {
+        name:
+            name.length >= VALIDATION.NAME_MIN_LENGTH &&
+            name.length <= FIELD_LIMITS.NAME_MAX &&
+            !DANGEROUS_PATTERN.test(name),
+        email: VALIDATION.EMAIL_REGEX.test(email) && email.length <= FIELD_LIMITS.EMAIL_MAX,
+        subject:
+            subject.length >= VALIDATION.SUBJECT_MIN_LENGTH &&
+            subject.length <= FIELD_LIMITS.SUBJECT_MAX &&
+            !DANGEROUS_PATTERN.test(subject),
+        message:
+            message.length >= VALIDATION.MESSAGE_MIN_LENGTH &&
+            message.length <= FIELD_LIMITS.MESSAGE_MAX &&
+            !DANGEROUS_PATTERN.test(message),
+    };
+}
+
 /**
  * Validate a raw contact payload.
  * Returns `null` when valid, or a human-readable error string when not.

@@ -89,6 +89,7 @@ export const VALIDATION = {
 export const SITE = {
     URL: "https://abdullahmirza.com",
     NAME: "Abdullah Mirza Portfolio",
-    TITLE: "Abdullah Mirza | Entrepreneur | AI Platform Builder | Logistics & E-Commerce Executive",
-    DESCRIPTION: "Founder-operator portfolio of Abdullah Mirza: AI-driven platform architect, logistics and supply chain executive, and Vision 2030-aligned entrepreneur in Riyadh, Saudi Arabia.",
+    TITLE: "Abdullah Mirza | Founder · Builder · Operator",
+    DESCRIPTION:
+        "Abdullah Mirza — founder, builder, and operator. 11+ years shipping apps, AI tools, logistics systems, and commerce products from Riyadh. Available for new collaborations.",
 } as const;

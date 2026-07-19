@@ -42,10 +42,10 @@ export default function CompetenciesGrid() {
                 >
                     <span className="kicker mx-auto mb-5">
                         <span className="kicker-dot" />
-                        Core Capabilities
+                        Craft &amp; capability
                     </span>
                     <h2 className="heading-display">
-                        Strategic <span className="heading-accent">Competencies</span>
+                        Skills that <span className="heading-accent">move the needle</span>
                     </h2>
                 </motion.div>
 
@@ -94,7 +94,7 @@ export default function CompetenciesGrid() {
                         <div className="flex items-center gap-3 mb-5">
                             <span className="block w-1 h-7 rounded-full bg-gradient-to-b from-[var(--color-electric-blue)] to-purple-500" />
                             <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-                                Professional Strengths
+                                How I work
                             </h3>
                         </div>
 

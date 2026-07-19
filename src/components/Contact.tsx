@@ -2,22 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Phone, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { useToast } from "./ToastProvider";
-import { contactInfo } from "@/lib/data";
+import { getContactFieldValidity } from "@/lib/contact";
+import { contactInfo, EMAIL_ADDRESS } from "@/lib/data";
 import { slideInLeft, slideInRight } from "@/lib/constants";
-import { VALIDATION } from "@/lib/constants";
 import type { ContactFormState, ContactApiResponse } from "@/lib/types";
-
-/** Validates form fields against shared validation rules */
-function getValidation(formState: ContactFormState) {
-    return {
-        name: formState.name.length >= VALIDATION.NAME_MIN_LENGTH,
-        email: VALIDATION.EMAIL_REGEX.test(formState.email),
-        subject: formState.subject.length >= VALIDATION.SUBJECT_MIN_LENGTH,
-        message: formState.message.length >= VALIDATION.MESSAGE_MIN_LENGTH,
-    };
-}
 
 /** Maps contact info type to its corresponding icon */
 const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
@@ -29,10 +19,6 @@ const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
         icon: <MessageCircle className="w-5 h-5 text-emerald-400" />,
         tint: "bg-emerald-500/10 border-emerald-500/25",
     },
-    phone: {
-        icon: <Phone className="w-5 h-5 text-[var(--color-muted-gold)]" />,
-        tint: "bg-[var(--color-muted-gold)]/10 border-[var(--color-muted-gold)]/20",
-    },
     location: {
         icon: <MapPin className="w-5 h-5 text-purple-400" />,
         tint: "bg-purple-500/10 border-purple-500/20",
@@ -42,11 +28,13 @@ const contactIcons: Record<string, { icon: React.ReactNode; tint: string }> = {
 export default function Contact() {
     const { addToast } = useToast();
     const [formState, setFormState] = useState<ContactFormState>({ name: "", email: "", subject: "", message: "" });
+    /** Honeypot — real users leave this empty; bots that fill every field get rejected server-side. */
+    const [honeypot, setHoneypot] = useState("");
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const validState = getValidation(formState);
+    const validState = getContactFieldValidity(formState);
     const isReadyToSubmit = Object.values(validState).every(Boolean);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -59,10 +47,16 @@ export default function Contact() {
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formState),
+                body: JSON.stringify({ ...formState, honeypot }),
             });
 
-            const data: ContactApiResponse = await response.json();
+            let data: ContactApiResponse;
+            try {
+                data = (await response.json()) as ContactApiResponse;
+            } catch {
+                addToast("Something went wrong. Please try again.", "error");
+                return;
+            }
 
             if (!response.ok || !data.success) {
                 addToast(data.message || "Something went wrong. Please try again.", "error");
@@ -70,22 +64,27 @@ export default function Contact() {
             }
 
             setIsSuccess(true);
-            addToast("Your message has been successfully sent.", "success");
+            addToast("Message sent — thanks for reaching out!", "success");
 
             setTimeout(() => {
                 setIsSuccess(false);
                 setFormState({ name: "", email: "", subject: "", message: "" });
+                setHoneypot("");
             }, 4000);
         } catch {
-            addToast("Network error. Please check your connection and try again.", "error");
+            addToast("Couldn't send right now. Please check your connection and try again.", "error");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleCopy = (value: string, label: string) => {
-        navigator.clipboard.writeText(value);
-        addToast(`${label} copied to clipboard`, "info");
+    const handleCopy = async (value: string, label: string) => {
+        try {
+            await navigator.clipboard.writeText(value);
+            addToast(`${label} copied to clipboard`, "info");
+        } catch {
+            addToast(`Could not copy ${label}. Please copy it manually.`, "error");
+        }
     };
 
     return (
@@ -103,22 +102,25 @@ export default function Contact() {
                     <motion.div {...slideInLeft}>
                         <span className="kicker mb-5">
                             <span className="kicker-dot" />
-                            Get In Touch
+                            Get in touch
                         </span>
                         <h2 className="heading-display mt-4 mb-5 sm:mb-6">
-                            Let&apos;s build{" "}
-                            <span className="heading-accent">what comes next.</span>
+                            Ready when{" "}
+                            <span className="heading-accent">you are.</span>
                         </h2>
 
                         <p className="text-base sm:text-lg text-[var(--color-text-muted)] font-light mb-10 leading-relaxed max-w-lg">
-                            Open for custom app &amp; website development projects, technical co-founder roles, strategic AI integrations, and automated operational overhauls.
+                            Tell me about the app, AI integration, or ops automation on your
+                            mind — or just say hello. Reach me at{" "}
+                            <span className="text-white/80">{EMAIL_ADDRESS}</span>{" "}
+                            (Mirxaa studio) or WhatsApp below. Usually reply the same day.
                         </p>
 
                         <div className="space-y-3">
                             {contactInfo.map((info) => {
                                 const config = contactIcons[info.type];
                                 const isWhatsapp = info.type === "whatsapp";
-                                const isCopyable = info.type === "email" || info.type === "phone";
+                                const isCopyable = info.type === "email";
 
                                 const content = (
                                     <div className="group flex items-center gap-4 w-full text-left p-3 -m-3 rounded-xl hover:bg-white/[0.03] transition-colors">
@@ -180,6 +182,8 @@ export default function Contact() {
                             <input
                                 type="text"
                                 name="honeypot"
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
                                 tabIndex={-1}
                                 autoComplete="off"
                                 className="absolute opacity-0 w-0 h-0 pointer-events-none"
@@ -202,8 +206,8 @@ export default function Contact() {
                                         >
                                             <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-green-400" />
                                         </motion.div>
-                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Message Sent</h3>
-                                        <p className="text-[var(--color-text-muted)] text-center max-w-[250px] text-sm sm:text-base">Thank you for reaching out. I will respond to your inquiry shortly.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Got it — thanks!</h3>
+                                        <p className="text-[var(--color-text-muted)] text-center max-w-[250px] text-sm sm:text-base">I&apos;ll get back to you soon. Looking forward to chatting.</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -226,7 +230,7 @@ export default function Contact() {
                                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                                         onFocus={() => setFocusedField("name")}
                                         onBlur={() => setFocusedField(null)}
-                                        placeholder="John Doe"
+                                        placeholder="Your name"
                                         className={`w-full bg-white/5 border ${validState.name ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
@@ -247,7 +251,7 @@ export default function Contact() {
                                         onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                                         onFocus={() => setFocusedField("email")}
                                         onBlur={() => setFocusedField(null)}
-                                        placeholder="john@example.com"
+                                        placeholder="you@company.com"
                                         className={`w-full bg-white/5 border ${validState.email ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                     />
                                 </div>
@@ -269,7 +273,7 @@ export default function Contact() {
                                     onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
                                     onFocus={() => setFocusedField("subject")}
                                     onBlur={() => setFocusedField(null)}
-                                    placeholder="Executive Opportunity"
+                                    placeholder="What should we talk about?"
                                     className={`w-full bg-white/5 border ${validState.subject ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all`}
                                 />
                             </div>
@@ -290,7 +294,7 @@ export default function Contact() {
                                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                                     onFocus={() => setFocusedField("message")}
                                     onBlur={() => setFocusedField(null)}
-                                    placeholder="Enter your message..."
+                                    placeholder="Share a bit about your project or idea..."
                                     className={`w-full bg-white/5 border ${validState.message ? 'border-emerald-500/30' : 'border-white/10'} rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white hover:bg-white/10 focus:outline-none focus:border-[var(--color-electric-blue)] focus:ring-2 focus:ring-[var(--color-electric-blue)]/50 focus:shadow-[0_0_15px_rgba(0,102,255,0.2)] transition-all resize-none`}
                                 />
                             </div>
@@ -311,7 +315,7 @@ export default function Contact() {
                                     <>
                                         <Send className={`w-4 h-4 sm:w-5 sm:h-5 ${isReadyToSubmit ? 'group-hover:text-white transition-colors' : 'text-white/30'}`} />
                                         <span className={isReadyToSubmit ? 'group-hover:text-shimmer transition-colors' : ''}>
-                                            {isReadyToSubmit ? 'Send Message' : 'Complete All Fields'}
+                                            {isReadyToSubmit ? 'Send message' : 'Complete all fields'}
                                         </span>
                                     </>
                                 )}

@@ -129,11 +129,12 @@ describe("Competencies", () => {
 });
 
 describe("Contact Info", () => {
-    it("should have email, phone, and location", () => {
+    it("should have email, whatsapp, and location", () => {
         const types = contactInfo.map((c) => c.type);
         expect(types).toContain("email");
-        expect(types).toContain("phone");
+        expect(types).toContain("whatsapp");
         expect(types).toContain("location");
+        expect(types).not.toContain("phone");
     });
 
     it("should have valid display values", () => {
@@ -151,5 +152,25 @@ describe("Hero Content", () => {
 
     it("should have numbers/metrics", () => {
         expect(heroNumbers.length).toBeGreaterThanOrEqual(2);
+    });
+});
+
+describe("Education", () => {
+    it("should include degree and institution", async () => {
+        const { education } = await import("../data");
+        expect(education.degree.length).toBeGreaterThan(0);
+        expect(education.institution).toContain("Punjab");
+        expect(education.location.length).toBeGreaterThan(0);
+    });
+});
+
+describe("Printable CV content", () => {
+    it("exposes a concise CV summary and consistent title", async () => {
+        const { cvSummary, PROFESSIONAL_TITLE, ventures, stats, certifications } = await import("../data");
+        expect(cvSummary.length).toBeGreaterThan(40);
+        expect(cvSummary).toMatch(/11\+/);
+        expect(PROFESSIONAL_TITLE).toMatch(/Founder/);
+        expect(ventures.length).toBe(stats.find((s) => s.label.includes("Products"))?.value);
+        expect(stats.find((s) => s.label === "Certifications")?.value).toBe(certifications.length);
     });
 });
