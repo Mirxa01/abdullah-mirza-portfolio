@@ -126,7 +126,22 @@ src/
 
 ## Deployment
 
-- **Quality Gate** — GitHub Actions runs type-check → lint → test → build on every push and pull request (`.github/workflows/quality-gate.yml`).
-- **Deploy** — Vercel deploys from the connected Git repository. Production deploys from `main`; preview deployments are created for pull requests.
+Full checklist: **[DEPLOY.md](./DEPLOY.md)**.
 
-Set `OPENAI_API_KEY` and `RESEND_API_KEY` in the Vercel project environment for full chat and contact-form delivery. Both features degrade honestly when unset.
+- **Preview** — Vercel builds every pull request automatically.
+- **Production** — merge to `main` (or promote a preview in the Vercel dashboard).
+- **Quality Gate** — `.github/workflows/quality-gate.yml` runs type-check → lint → test → build when GitHub Actions minutes are available. Vercel’s own build is the deploy source of truth.
+
+### Required Vercel env vars (Production + Preview)
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENAI_API_KEY` | Aria chat (falls back to basic mode if unset) |
+| `RESEND_API_KEY` | Contact form email delivery |
+| `CONTACT_FROM_EMAIL` | Verified Resend sender for production mail |
+| `CONTACT_TO_EMAIL` | Optional override (defaults to `abdullah@mirxaa.com`) |
+
+```bash
+pnpm verify:deploy   # local preflight before merging
+```
+
